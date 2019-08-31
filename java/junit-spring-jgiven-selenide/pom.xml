@@ -26,11 +26,14 @@
 
     <!-- Versions -->
 
-    <awaitility.version>3.1.0</awaitility.version>
+    <assertj.version>3.13.2</assertj.version>
+    <awaitility.version>3.1.6</awaitility.version>
+    <guava.version>28.1-jre</guava.version>
+    <jgiven.version>0.17.1</jgiven.version>
     <junit.version>4.12</junit.version>
-    <selenide.version>4.12.2</selenide.version>
-    <spring.version>5.0.7.RELEASE</spring.version>
-    <jgiven.version>0.16.0</jgiven.version>
+    <selenide.version>5.2.8</selenide.version>
+    <spring.version>5.1.9.RELEASE</spring.version>
+    <webdrivermanager.version>3.6.2</webdrivermanager.version>
 
   </properties>
 
@@ -95,13 +98,22 @@
     <dependency>
       <groupId>io.github.bonigarcia</groupId>
       <artifactId>webdrivermanager</artifactId>
-      <version>2.2.4</version>
+      <version>${webdrivermanager.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>25.1-jre</version>
+      <version>${guava.version}</version>
+    </dependency>
+
+    <!-- AssertJ -->
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

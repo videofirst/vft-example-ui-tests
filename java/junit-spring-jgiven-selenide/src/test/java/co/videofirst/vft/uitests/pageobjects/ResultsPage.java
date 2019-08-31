@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 public class ResultsPage {
 
     public ResultsPage searchBoxHas(String search) {
-        $(".gsfi").has(value(search));
+        $(".gsfi").shouldHave(value(search));
         return this;
     }
 
