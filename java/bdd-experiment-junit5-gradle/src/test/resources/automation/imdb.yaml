@@ -1,0 +1,24 @@
+properties:
+  ui: "https://www.imdb.com"
+
+actions:
+
+  open:
+    actions:
+      - "ui_open ${ui}"
+
+  click_search_icon:
+    actions:
+      - "ui_type #suggestion-search $1"
+
+  results_page_contains_only: code
+
+  results_page_is_visible:
+    actions:
+      - "ui_text_contains .findHeader \"Results for\""
+      - "ui_text_contains .findSearchTerm $1"
+
+  search_text:
+    actions:
+      - "ui_type #suggestion-search $1"
+      - "ui_click #suggestion-search-button"

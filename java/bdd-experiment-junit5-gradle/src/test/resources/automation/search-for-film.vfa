@@ -1,0 +1,20 @@
+Feature: Search for a film in various different ways
+
+  This feature will search the IMDB website for various films.
+
+  Scenario: Search for film "The Green Mile"
+
+    Given a user is at the home page                        [ open ${ui} ]
+     When the user types "The Green Mile" into search box   [ type name=q "The Green Mile" ]
+      And the user clicks the search icon                   [ click id=suggestion-search-button ]
+     Then I expect to see the results page                  [ text_contains .findHeader "Results for" ] [ ui_text_contains css=.findSearchTerm "The Green Mile" ]
+      And the top result only contains "The Green Mile"     [ exists "xpath=//td[@class='result_text']/a[text() = 'The Green Mile']" ]
+
+  Scenario: Search for film "Good Will Hunting"
+
+    Given a user is at the home page                  [ imdb.open ]
+     When the user searches for "Good Will Hunting"   [ imdb.search "Good Will Hunting" ]
+     Then I expect to see the results page            [ imdb.results_page_is_visible ]
+      And the top result contains "The Green Mile"    [ imdb.results_page_contains_only "Good Will Hunting" ]
+
+
