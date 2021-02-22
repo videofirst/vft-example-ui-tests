@@ -54,12 +54,15 @@ public class VfaTestRunner {
         print(VfaUtil.padLeft(step.getType().getLabel(), 9) + " ",
             CliColour.step); // TODO improve
         print(step.getLabel());
-        print(VfaUtil.pad(longestLabel - step.getLabel().length()) + "  "); // TODO improve
+        print(VfaUtil.pad(longestLabel - step.getLabel().length()) + "   "); // TODO improve
 
-        for (VfaAction vfaAction : step.getActions()) {
-            executeAction(vfaAction);
+        for (int i = 0; i < step.getActions().size(); i++) {
+            VfaAction vfaAction = step.getActions().get(i);
+            if (i > 0) {
+                print(VfaUtil.pad(longestLabel + 13)); // TODO improve
+            }
+            executeAction(i, vfaAction);
         }
-        println();
     }
 
     private int longestLabel(VfaScenario scenario) {
@@ -72,15 +75,13 @@ public class VfaTestRunner {
         return longest;
     }
 
-    private void executeAction(VfaAction action) {
-        print(" [ ", CliColour.actionSquare);
+    private void executeAction(int index, VfaAction action) {
+        print("# ", CliColour.actionSquare);
 
         print(action.getCommand(), CliColour.actionCommand);
 
         VfaResult result = action.execute();
-        print(" " + result.getArguments(), CliColour.actionArguments);
-
-        print(" ]", CliColour.actionSquare);
+        println(" " + result.getArguments(), CliColour.actionArguments);
     }
 
     // Print methods

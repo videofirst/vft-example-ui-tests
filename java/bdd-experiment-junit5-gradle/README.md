@@ -15,11 +15,11 @@ steps such given, when, then etc) then we would have a feature file as follows: 
     
       Scenario: Search for film "The Green Mile"
     
-        Given a user is at the home page                        [  ]
-         When the user types "The Green Mile" into search box   [  ]
-          And the user clicks the search icon                   [  ]
-         Then I expect to see the results page                  [  ]
-          And the top result only contains "The Green Mile"     [  ]
+        Given a user is at the home page                        #
+         When the user types "The Green Mile" into search box   #
+          And the user clicks the search icon                   #
+         Then I expect to see the results page                  #
+          And the top result only contains "The Green Mile"     # 
 
 > NOTE: Based on https://cucumber.io/docs/gherkin/reference/.
 
@@ -32,11 +32,12 @@ brackets `[ ... ]` i.e.
     
       Scenario: Search for film "The Green Mile"
     
-        Given a user is at the home page                        [ open https://www.imdb.com ]
-         When the user types "The Green Mile" into search box   [ type name=q "The Green Mile" ]
-          And the user clicks the search icon                   [ click id=suggestion-search-button ]
-         Then I expect to see the results page                  [ text_contains .findHeader "Results for" ] [ ui_text_contains css=.findSearchTerm "The Green Mile" ]
-          And the top result only contains "The Green Mile"     [ exists "xpath=//td[@class='result_text']/a[text() = 'The Green Mile']" ]
+        Given a user is at the home page                        # open https://www.imdb.com
+         When the user types "The Green Mile" into search box   # type name=q "The Green Mile"
+          And the user clicks the search icon                   # click id=suggestion-search-button
+         Then I expect to see the results page                  # text_contains .findHeader "Results for" 
+                                                                # ui_text_contains css=.findSearchTerm "The Green Mile"
+          And the top result only contains "The Green Mile"     # exists "xpath=//td[@class='result_text']/a[text() = 'The Green Mile']" 
 
 The actions in the square brackets are as follows: -
 

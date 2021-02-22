@@ -19,7 +19,7 @@ public enum CliColour {
     step(0, 113, 178),
 
     actionSquare(70, 70, 70),
-    actionCommand(175, 87, 0),
+    actionCommand(190, 190, 0),
     actionArguments(138, 138, 138);
 
     private final Attribute attribute;
