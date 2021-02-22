@@ -12,13 +12,13 @@ public class UiTextContains extends AbstractUiAction {
 
     @Override
     public void init(String... args) {
-        initTarget(args);
+        initTargetValue(args);
     }
 
     @Override
     public VfaResult execute() {
-        elm(target).click();
-        return new VfaResult(target);
+        elm(target).text().contains(value);
+        return new VfaResult(target + " \"" + value + "\"");
     }
 
     @Override
