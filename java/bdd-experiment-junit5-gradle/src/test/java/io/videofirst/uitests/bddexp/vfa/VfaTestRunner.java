@@ -76,7 +76,7 @@ public class VfaTestRunner {
     }
 
     private void executeAction(int index, VfaAction action) {
-        print("# ", CliColour.actionSquare);
+        print(": ", CliColour.actionSquare);
 
         print(action.getCommand(), CliColour.actionCommand);
 
