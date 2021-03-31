@@ -28,7 +28,7 @@
 
     <assertj.version>3.13.2</assertj.version>
     <awaitility.version>3.1.6</awaitility.version>
-    <guava.version>28.1-jre</guava.version>
+    <guava.version>29.0-jre</guava.version>
     <jgiven.version>0.17.1</jgiven.version>
     <junit.version>4.12</junit.version>
     <selenide.version>5.2.8</selenide.version>
