@@ -1,7 +1,9 @@
 package io.videofirst.uitests.bddexp.vfa.modules.ui;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.videofirst.uitests.bddexp.vfa.common.VfaAction;
 import org.openqa.selenium.By;
@@ -11,7 +13,7 @@ import org.openqa.selenium.By;
  *
  * @author Bob Marks
  */
-public abstract class AbstractUiAction implements VfaAction {
+public abstract class UiAction implements VfaAction {
 
     protected String target;
     protected String value;
@@ -35,13 +37,17 @@ public abstract class AbstractUiAction implements VfaAction {
         return $(by(target));
     }
 
+    protected static ElementsCollection elms(String target) {
+        return $$(by(target));
+    }
+
     protected static By by(String target) {
         if (target.startsWith("id=")) {
             return By.id(removePrefix("id=", target));
         } else if (target.startsWith("xpath=")) {
             return By.xpath(removePrefix("xpath=", target));
         } else if (target.startsWith("name=")) {
-            return By.xpath(removePrefix("xpath=", target));
+            return By.name(removePrefix("name=", target));
         } else if (target.startsWith("css=")) {
             return By.xpath(removePrefix("css", target));
         } else {

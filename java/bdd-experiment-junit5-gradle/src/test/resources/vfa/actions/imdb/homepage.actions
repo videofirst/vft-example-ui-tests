@@ -1,7 +1,9 @@
 properties:
   homepage_url: "https://www.imdb.com"
 
+
 actions:
 
   open:
     - "ui_open ${homepage_url}"
+

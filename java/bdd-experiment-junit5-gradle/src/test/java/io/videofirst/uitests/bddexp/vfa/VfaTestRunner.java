@@ -8,11 +8,13 @@ import io.videofirst.uitests.bddexp.vfa.util.CliColour;
 import io.videofirst.uitests.bddexp.vfa.util.VfaUtil;
 
 /**
+ * Key class which executes VFA automation.
+ *
  * @author Bob Marks
  */
 public class VfaTestRunner {
 
-    public void executeFeature(VfaFeature feature) {
+    public void executeAll(VfaFeature feature) {
 
         logFeature(feature);
 
@@ -23,9 +25,9 @@ public class VfaTestRunner {
 
     // Feature Methods
 
-    private void logFeature(VfaFeature feature) {
+    public void logFeature(VfaFeature feature) { // FIXME MOVE
         print("Feature: ", CliColour.feature);
-        println(feature.getLabel(), CliColour.strong);
+        println(feature.getName(), CliColour.strong);
         println();
 
         if (feature.getDescription() != null) {
@@ -36,10 +38,14 @@ public class VfaTestRunner {
 
     // Scenario methods
 
-    private void executeScenario(VfaScenario scenario) {
+    public void logScenario(VfaScenario scenario) {  // FIXME MOVE
         print("  Scenario: ", CliColour.scenario);
-        println(scenario.getLabel(), CliColour.strong);
+        println(scenario.getName(), CliColour.strong);
         println();
+    }
+
+    public void executeScenario(VfaScenario scenario) {
+        logScenario(scenario);
 
         for (VfaStep step : scenario.getSteps()) {
             executeStep(scenario, step);
@@ -48,34 +54,27 @@ public class VfaTestRunner {
 
     // Scenario methods
 
-    private void executeStep(VfaScenario scenario, VfaStep step) {
-        int longestLabel = longestLabel(scenario);
-
-        print(VfaUtil.padLeft(step.getType().getLabel(), 9) + " ",
+    public void executeStep(VfaScenario scenario, VfaStep step) {
+        print(VfaUtil.padLeft(step.getType().getName(), 9) + " ",
             CliColour.step); // TODO improve
-        print(step.getLabel());
-        print(VfaUtil.pad(longestLabel - step.getLabel().length()) + "   "); // TODO improve
+        print(step.getName());
+
+        print(VfaUtil.pad(60 - step.getName().length())); // TODO improve
+
+        if (step.getActions() == null) {
+            return;
+        }
 
         for (int i = 0; i < step.getActions().size(); i++) {
             VfaAction vfaAction = step.getActions().get(i);
-            if (i > 0) {
-                print(VfaUtil.pad(longestLabel + 13)); // TODO improve
+            if (i > 0) { // new line
+                print(VfaUtil.pad(10 + 60)); // TODO improve
             }
-            executeAction(i, vfaAction);
+            executeAction(vfaAction);
         }
     }
 
-    private int longestLabel(VfaScenario scenario) {
-        int longest = 0;
-        for (VfaStep step : scenario.getSteps()) {
-            if (step.getLabel().length() > longest) {
-                longest = step.getLabel().length();
-            }
-        }
-        return longest;
-    }
-
-    private void executeAction(int index, VfaAction action) {
+    public void executeAction(VfaAction action) {
         print(": ", CliColour.actionSquare);
 
         print(action.getCommand(), CliColour.actionCommand);

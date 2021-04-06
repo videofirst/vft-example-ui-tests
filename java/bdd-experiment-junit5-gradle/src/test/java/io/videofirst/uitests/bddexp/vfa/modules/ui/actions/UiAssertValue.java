@@ -6,36 +6,36 @@ import io.videofirst.uitests.bddexp.vfa.common.VfaResult;
 import io.videofirst.uitests.bddexp.vfa.modules.ui.UiAction;
 
 /**
- * UI text contains action.
+ * UI assert value of element.
  *
  * @author Bob Marks
  */
-public class UiTextContains extends UiAction {
+public class UiAssertValue extends UiAction {
 
     /**
      * Create a text_contains from a target and value.
      */
-    public static UiTextContains text_contains(String target, String value) {
-        return new UiTextContains().init(target, value);
+    public static UiAssertValue assert_value(String target, String value) {
+        return new UiAssertValue().init(target, value);
     }
 
     @Override
-    public UiTextContains init(String... args) {
+    public UiAssertValue init(String... args) {
         initTargetValue(args);
         return this;
     }
 
     @Override
     public VfaResult execute() {
-        String elmText = elm(target).text();
-        assertThat(elmText).contains(value).withFailMessage(
-            "Expecting element [ " + target + " ] with text [ " + elmText + " ] to contain [ " + value + " ]");
+        String elmValue = elm(target).val();
+        assertThat(elmValue).isEqualTo(value).withFailMessage(
+            "Expecting element [ " + target + " ] with value [ " + value + " ] to be equal to [ " + value + " ]");
         return new VfaResult(quote(target) + " " + quote(value)); // FIXME - DOES FEEL RIGHT HERE
     }
 
     @Override
     public String getCommand() {
-        return "text_contains";
+        return "assert_value";
     }
 
 }

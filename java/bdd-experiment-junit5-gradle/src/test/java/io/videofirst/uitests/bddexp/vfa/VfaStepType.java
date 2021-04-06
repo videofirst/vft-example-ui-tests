@@ -14,14 +14,14 @@ public enum VfaStepType {
     but("But"),
     asterisk("*");
 
-    String label;
+    String name;
 
-    VfaStepType (String label) {
-        this.label = label;
+    VfaStepType(String name) {
+        this.name = name;
     }
 
-    public String getLabel () {
-        return this.label;
+    public String getName() {
+        return this.name;
     }
 
 }

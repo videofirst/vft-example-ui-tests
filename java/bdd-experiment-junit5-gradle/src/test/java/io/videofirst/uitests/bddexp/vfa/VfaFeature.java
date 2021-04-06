@@ -19,7 +19,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class VfaFeature {
 
-    private String label;
+    private long id;
+    private String name;
     private String description;
     private List<VfaScenario> scenarios;
 

@@ -17,7 +17,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class VfaScenario {
 
-    private String label;
+    private long id;
+    private String name;
     private List<VfaStep> steps;
 
 }
