@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group 'io.videofirst'
+version '1.0'
+
+properties {
+    sourceCompatibility = 1.8
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+// issue with auto-service - using META-INF/services/javax.annotation.processing.Processor directly
+//    compileOnly 'com.google.auto.service:auto-service:1.0'
+//    annotationProcessor 'com.google.auto.service:auto-service:1.0'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}

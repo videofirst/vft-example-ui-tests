@@ -17,7 +17,7 @@ public class BbcNewsSearchTest extends VfaSteps {
 
     private UiModule ui = new UiModule(); // FIXME, needs injected I think ???
 
-    @Scenario
+    @Scenario(id = 3363)
     public void should_search_for_Belfast() {
 
         given("I was at the BBC News homepage", ui.open("https://news.bbc.co.uk"));

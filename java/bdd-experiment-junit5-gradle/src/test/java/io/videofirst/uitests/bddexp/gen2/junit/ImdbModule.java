@@ -9,7 +9,7 @@ import static io.videofirst.uitests.bddexp.gen2.junit.VfaActions.actions;
  */
 public class ImdbModule implements VfaModule {
 
-    private String homepage;
+    private String homepage = "https://www.imdb.com";
 
     private UiModule ui = new UiModule();
 

@@ -57,7 +57,7 @@ public class VfaActions implements VfaAction {
 
     @Override
     public VfaResult execute() {
-        return null; // return a list of results?
+        return new VfaResult(""); // return a list of results?
     }
 
 }

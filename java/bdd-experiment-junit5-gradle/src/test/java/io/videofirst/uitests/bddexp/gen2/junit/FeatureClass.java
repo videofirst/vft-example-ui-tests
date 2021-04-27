@@ -1,8 +1,6 @@
 package io.videofirst.uitests.bddexp.gen2.junit;
 
 import io.videofirst.uitests.bddexp.vfa.VfaFeature;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +20,6 @@ public class FeatureClass {
     public VfaFeature vfaFeature;
     private Class featureClass;
 
-    private Map<String, Object> store = new HashMap<>();
+    //private Map<String, Object> store = new HashMap<>();
 
 }

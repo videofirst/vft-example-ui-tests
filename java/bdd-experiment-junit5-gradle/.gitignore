@@ -1,3 +1,4 @@
 .gradle
 build
 out
+/src/test/generated_tests/*

@@ -48,6 +48,8 @@ public class SearchFilmsTest2 extends VfaSteps {
     void search_for_film_by_country() {
         given("a user is at the home page");
 
+        when("the user types <customer> ");
+
     }
 
     //   Scenario: Search for film "Good Will Hunting"     : 3253
