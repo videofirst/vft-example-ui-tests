@@ -11,7 +11,7 @@ public class ImdbModule implements VfaModule {
 
     private String homepage = "https://www.imdb.com";
 
-    private UiModule ui = new UiModule();
+    private UiActions ui = new UiActions();
 
     public VfaActions open_homepage() {
         return actions("open_homepage",

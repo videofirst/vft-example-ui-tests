@@ -9,11 +9,11 @@ import io.videofirst.uitests.bddexp.vfa.modules.ui.actions.UiTextContains;
 import io.videofirst.uitests.bddexp.vfa.modules.ui.actions.UiType;
 
 /**
- * Low-level UI Module interface.
+ * Low-level UI actions.
  *
  * @author Bob Marks
  */
-public class UiModule {
+public class UiActions {
 
     public UiAssertList assert_list(String target, UiAssertList.Match match, String value) {
         return UiAssertList.assert_list(target, match, value);

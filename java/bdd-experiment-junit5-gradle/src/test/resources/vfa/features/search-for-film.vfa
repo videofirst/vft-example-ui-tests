@@ -13,7 +13,17 @@ Feature: Search for a film in various different ways        : 93
 
   Scenario: Search for film "Good Will Hunting"             : 3253
 
-    Given a user is at the home page                        : imdb.homepage.open   # this is a comment
+    Given a user is at the home page                        : imdb.open_homepage   # this is a comment
      When the user searches for "Good Will Hunting"         : imdb.search "Good Will Hunting"
      Then I expect to see the results page                  : imdb.results_page_is_visible
       And the top result contains "Good Will Hunting"       : imdb.results_page_contains_only "Good Will Hunting"
+
+
+# Another idea for creating actions
+
+Actions: imdb-search
+
+   open_homepage         : open ${ui}
+                         : type name=q
+   result_page_is        :
+

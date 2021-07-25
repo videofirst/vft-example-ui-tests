@@ -3,7 +3,7 @@ package io.videofirst.uitests.bddexp.gen2.tests;
 import io.videofirst.uitests.bddexp.gen2.junit.Feature;
 import io.videofirst.uitests.bddexp.gen2.junit.ImdbModule;
 import io.videofirst.uitests.bddexp.gen2.junit.Scenario;
-import io.videofirst.uitests.bddexp.gen2.junit.UiModule;
+import io.videofirst.uitests.bddexp.gen2.junit.UiActions;
 import io.videofirst.uitests.bddexp.gen2.junit.VfaSteps;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 @Feature(id = 23, name = "Search for Films", description = "Search for a film in various different ways")
 public class SearchFilmsTest2 extends VfaSteps {
 
-    private UiModule ui = new UiModule(); // low level module
+    private UiActions ui = new UiActions(); // low level module
     private ImdbModule imdb = new ImdbModule(); // high level module
 
     // Feature: Search for a film in various different ways
@@ -47,6 +47,7 @@ public class SearchFilmsTest2 extends VfaSteps {
     @Scenario(id = 31)
     void search_for_film_by_country() {
         given("a user is at the home page");
+        ui.open("https://www.imdb.com");
 
         when("the user types <customer> ");
 

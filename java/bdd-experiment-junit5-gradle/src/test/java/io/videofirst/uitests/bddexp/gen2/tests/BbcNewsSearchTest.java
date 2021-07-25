@@ -4,7 +4,7 @@ import static io.videofirst.uitests.bddexp.vfa.modules.ui.actions.UiAssertList.M
 
 import io.videofirst.uitests.bddexp.gen2.junit.Feature;
 import io.videofirst.uitests.bddexp.gen2.junit.Scenario;
-import io.videofirst.uitests.bddexp.gen2.junit.UiModule;
+import io.videofirst.uitests.bddexp.gen2.junit.UiActions;
 import io.videofirst.uitests.bddexp.gen2.junit.VfaSteps;
 
 /**
@@ -15,7 +15,7 @@ import io.videofirst.uitests.bddexp.gen2.junit.VfaSteps;
 @Feature(id = 32)
 public class BbcNewsSearchTest extends VfaSteps {
 
-    private UiModule ui = new UiModule(); // FIXME, needs injected I think ???
+    private UiActions ui = new UiActions(); // FIXME, needs injected I think ???
 
     @Scenario(id = 3363)
     public void should_search_for_Belfast() {
