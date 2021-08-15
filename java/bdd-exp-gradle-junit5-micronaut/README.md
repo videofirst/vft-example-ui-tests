@@ -1,9 +1,252 @@
 # BDD Experiment using Gradle, Junit5 + Micronaut.
 
+
 # Thoughts (2) on 15th August 2021
 
+A fair bit of code has now been written and impressions on this experiment are extremely positive. IMO 
+this experiment iteration has been the most successful / positive so far.  This experiments lays the
+foundations for a framework which users can use to very quickly get started on UI testing.
+
+This experiment gets a lot of influence from BDD libraries such as JGiven / Serenity BDD.  However, 
+to take JGiven as an example, it requires a minimum of 4 classes to get started i.e. (1) a feature
+class, (2) Given class, (3) When class and finally a (4) Then.  This does have the advantage of 
+enforcing a strict and potentially DRY approach.  However, it has the following disadvantages: -
+
+1. Off putting for new users as they have to create 4 classes.
+2. Forcing methods inside a Given classes which could reside inside a When class.
+3. Need to decide if Junit or TestNG is the preferred junit framework. Junit 5 is in experimental 
+   state.  Power users may like this flexibility, but another thing for less experimented users to 
+   consider.
+4. To add configurability a typical user would add a DI framework such as Spring.  However, this is 
+   an additional complex step and requires a more advanced user.
+5. Testing user interfaces requires considerable set up e.g. which Java library for Selenium, again  
+   off-putting for new users. 
+   
+However, even with all these disadvantages of JGiven, the fact that it enables the creation of BDD 
+scenarios as pure Java is still (IMO) massively better and more efficient that writing Cucumber 
+style feature files (and complex Java Step regexes to link the two together). 
+    
+A key success principle of Video First Automation is "the ability to convert users from manual UI
+testing to automated UI testing as quickly and as easily as possible".
+
+With all this in mind, the code of this experiment was to take the best bits of JGiven but also
+enable users to create a scenario in a single file. For example: - 
 
 
+    import static io.videofirst.vfa.Vfa.*;  // given, when, then, and methods
+    
+    import io.videofirst.vfa.Feature;
+    import io.videofirst.vfa.Scenario;
+    import io.videofirst.vfa.actions.WebActions;
+    
+    import javax.inject.Inject;
+    
+    @Feature
+    public class SearchFilms {
+    
+        @Inject
+        private WebActions web;
+    
+        @Scenario
+        public void search_for_film_The_Green_Mile() {
+            given("a user is at the homepage");
+            web.type("id=suggestion-search", "The Green Mile");
+    
+            when("the user types the \"The Green Mile\" into the search box");
+            web.type("id=suggestion-search", "The Green Mile");
+    
+            and("the user clicks the search icon");
+            web.click("#suggestion-search-button");
+    
+            then("I expect the see the results page");
+            web.text_contains(".findHeader", "Results for");
+            web.text_contains(".findSearchTerm", "The Green Mile");
+    
+            and("the top result only contains \"The Green Mile\"");
+            web.exists("xpath=.//td[@class='result_text']/a[text() = 'The Green Mile']");
+        }
+        
+    }
+
+When this is run it will produce the following output: -
+
+    Feature: Search Films
+    
+      Scenario: Search for film The Green Mile
+    
+        Given a user is at the homepage                             : open ("https://www.imdb.com")
+         When the user types the "The Green Mile" into search box   : type ("id=suggestion-search", "The Green Mile")
+          And the user clicks the search icon                       : click ("#suggestion-search-button")
+         Then I expect the see the results page                     : text_contains (".findHeader", "Results for")
+                                                                    : text_contains (".findSearchTerm", "The Green Mile")
+          And the top result only contains "The Green Mile"         : exists ("xpath=.//td[@class='result_text']/a[text() = 'The Green Mile']")
+
+As you can see it's extremely fast to get started and users can create a full blown end-to-end test
+in a single method of a single class.  The feature and scenario text is generated automatically from
+the name of the class and method.
+
+VFA has an opinionated structure and enforces 4 levels of abstraction: -
+
+1. **Feature** (e.g. _"Search Films"_) - In VFA, annotate a Java class with the `@Feature`.  A
+   feature contains 1 or more scenarios.
+2. **Scenario** (e.g. _"Search for film The Green Mile"_) - In VFA annotates a Java method with 
+   `@Scenario`.  A scenario contains 1 or more steps.
+3. **Step** (e.g. _"Given a user is at the homepage"_) - A step is defined with standard Guekin BDD 
+  syntax i.e. starting with _given, when, then, and or but_.  In VFA a step is called  using static 
+  methods (like the example above) or annotating a method with the `@Step` annotation. A step 
+  contains 1 or more actions.
+4. **Action** (e.g. `web.open("https://www.imdb.com")`) - An class can inject a lower level action 
+  class using standard Java `@Inject` annotation (JSR330).  The above example injects the VFA 
+  `WebActions` class (which contains Selenium actions). All actions are annotated with the `@Action`
+  annotation.  Actions can call other actions.
+   
+The `@Feature` and `@Scenario` annotations also support `id` fields so source code exported from
+Video First is guaranteed to stay aligned with the Video First app (even if e.g. the method names 
+change in the future).
+
+    @Feature(id = 3830)
+    public class SearchFilms {
+    
+        @Scenario(id = 19843)
+        public void search_for_film_The_Green_Mile() {
+
+As the number of tests scenarios grow - it is easy to refactor into separate classes / methods. For
+example, if we had more than one scenarios which had the following at the top: -
+
+    given("a user is at the homepage");
+    web.type("id=suggestion-search", "The Green Mile"); 
+
+Then we could create a class e.g. `Imdb` with the following method: -
+
+    import io.videofirst.vfa.Step;
+
+    import javax.inject.Inject;
+    import javax.inject.Singleton;
+
+    @Singleton
+    public class Imdb {
+    
+        @Inject
+        private WebActions web;
+    
+        @Step
+        public void given_a_user_is_at_the_homepage() {
+            web.open("https://www.imdb.com");
+        }
+
+To create a re-usable step method it must be annotated with the `@Step` annotation and the method 
+name must start with `given_`, `when_`, `then_`, `and_` or `but_`.
+
+This new `Imdb` class can now be injected and  the `given_a_user_is_at_the_homepage` method can 
+now be used into our feature class i.e.
+
+    @Feature
+    public class SearchFilms {
+    
+        @Inject
+        private WebActions web;          // low level actions
+        
+        @Inject
+        private Imdb imdb;               // higher level
+    
+        @Scenario
+        public void search_for_film_The_Green_Mile() {
+            imdb.given_a_user_is_at_the_homepage();
+    
+            when("the user types the \"The Green Mile\" into the search box");
+            web.type("id=suggestion-search", "The Green Mile");
+            
+            ...
+
+This makes it highly reusable in all tests.  One disadvantage is that the method had to start with
+`given_`.  An alternative to this is for the `Imdb` class to extend `Steps` which gives it access
+to methods such as `given()`, `when()` etc.  
+
+    @Singleton
+    public class Imdb extends Steps<Imdb> {
+    
+        @Inject
+        private WebActions web;
+    
+        @Step
+        public Imdb a_user_is_at_the_homepage() {
+            web.open("https://www.imdb.com");
+            
+            return this;
+        }
+    
+        @Step
+        public Imdb a_user_searches_for_film(String film) {
+            web.type ("id=suggestion-search", film);
+            web.click ("#suggestion-search-button");
+            return this;                 // Returning the same classes makes this fluent
+        }
+
+You will notice that the `Imdb` class extends `Steps<Imdb>`.  There is also a new method 
+`a_user_searches_for_film` which does not have to start with e.g. `given_`.  This new method also
+returns `Imdb` and and last line has `return this`.  This enables this method to be be called in a 
+"fluent" manner which can make the code faster and more readable 
+
+This new method can now be used as follows: -
+
+        @Scenario
+        public void search_for_film_The_Green_Mile() {
+            imdb.given_a_user_is_at_the_homepage();
+            
+            imdb.when().a_user_searches_for_film("The Green Mile");
+            
+            ...
+            
+This method can also be written completely fluently if the user prefers: -
+
+        @Scenario
+        public void search_for_film_The_Green_Mile() {
+            imdb.given_a_user_is_at_the_homepage()
+            
+                .when().a_user_searches_for_film("The Green Mile");
+            
+            ...
+
+The `a_user_searches_for_film` can also be used in a variety of ways (e.g. `.and()` or `.then()`)
+making this approach more flexible than simply prefixing a method with `given_`.
+
+Also, note that `.when().a_user_searches_for_film("The Green Mile");` will output
+
+    When a user searches for film                    type ("id=suggestion-search", "The Green Mile")
+
+We can tell from the low-level action on the right that it's the green mile but it would be nice to 
+see the film on the left step output.  To do this simply add the `$` parameter character to the 
+method name i.e.   
+
+        @Step
+        public Imdb a_user_searches_for_film_$ (String film) {
+            web.type ("id=suggestion-search", film);
+            web.click ("#suggestion-search-button");
+            return this;                 // Returning the same classes makes this fluent
+        }
+
+Calling this method with the same parameter previously will now output the following: -
+
+    When a user searches for film The Green Mile     type ("id=suggestion-search", "The Green Mile")
+
+The step text can be completely customised using by setting the value of the  `@Step` to a String.  
+This can be useful when starting with e.g. numbers as Java doesn't allow methods to start with a 
+number.
+
+          @Step("4 users are added")
+          public void four_users_are_added () {
+              ...
+          }
+          
+Again, the `$` symbol can be used to inject parameters e.g.
+
+          @Step("Type [ $ ] execute")
+          public void type_$_execute (String type) {
+              ...
+          }
+
+> Note the use of special symbols like square brackets which again wouldn't be allowed in method 
+names.
 
 # Thoughts (1) on 25th July 2021
 
