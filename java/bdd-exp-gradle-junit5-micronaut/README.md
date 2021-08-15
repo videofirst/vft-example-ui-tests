@@ -240,9 +240,7 @@ The `a_user_searches_for_film` method can also be used in a variety of ways (e.g
 Also, note that `.when().a_user_searches_for_film("The Green Mile");` method has a par will output
 the following: -
 
-```
-When a user searches for film                    type ("id=suggestion-search", "The Green Mile")
-```
+    When a user searches for film                    type ("id=suggestion-search", "The Green Mile")
 
 We can tell from the low-level action on the right that it's `The Green Mile` but it would be nice 
 to see that the step output on the left.  To do this simply add the `$` parameter character to the 
@@ -259,9 +257,7 @@ method name i.e.
 
 Calling this method with the same parameter previously will now output the following: -
 
-```
-When a user searches for film The Green Mile     type ("id=suggestion-search", "The Green Mile")
-```
+    When a user searches for film The Green Mile     type ("id=suggestion-search", "The Green Mile")
 
 The step text can be completely customised using by setting the value of the  `@Step` to a String.  
 This can be useful when starting with e.g. numbers as Java doesn't allow methods to start with a 
