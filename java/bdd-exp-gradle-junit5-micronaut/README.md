@@ -89,7 +89,7 @@ When this is run it will produce the following output: -
 
 As you can see it's extremely fast to get started and users can create a full blown end-to-end test
 in a single method of a single class.  The feature and scenario text is generated automatically from
-the name of the class and method.
+the class / method names.
 
 VFA has an opinionated structure and enforces 4 levels of abstraction: -
 
@@ -123,7 +123,7 @@ public class SearchFilms {
 ```
 
 As the number of tests scenarios grow - it is easy to refactor into separate classes / methods. For
-example, if we had more than one scenarios which had the following at the top: -
+example, if we had more than one scenario which had the following at the top: -
 
 ```java
 given("a user is at the homepage");
@@ -151,9 +151,11 @@ public class Imdb {
 ```
 
 To create a re-usable step method it must be annotated with the `@Step` annotation and the method 
-name must start with `given_`, `when_`, `then_`, `and_` or `but_`.
+name must start with `given_`, `when_`, `then_`, `and_` or `but_`.  Just like scenario text from 
+scenario methods, the step text will be automatically generated from the method name (underscores
+are converted to spaces).
 
-This new `Imdb` class can now be injected and  the `given_a_user_is_at_the_homepage` method can 
+This new `Imdb` class can now be injected and the `given_a_user_is_at_the_homepage` method can 
 now be used into our feature class i.e.
 
 ```java
@@ -176,9 +178,9 @@ public class SearchFilms {
         ...
 ```
 
-This makes it highly reusable in all tests.  One disadvantage is that the method had to start with
-`given_`.  An alternative to this is for the `Imdb` class to extend `Steps` which gives it access
-to methods such as `given()`, `when()` etc.  
+This makes it reusable from multiple tests.  One disadvantage though is the fact that the method 
+must start with `given_`.  An alternative approach is for the `Imdb` class to extend `Steps` which 
+gives it access to methods such as `given()`, `when()` etc.  
 
 ```java
 @Singleton
@@ -202,10 +204,10 @@ public class Imdb extends Steps<Imdb> {
     }
 ```
 
-You will notice that the `Imdb` class extends `Steps<Imdb>`.  There is also a new method 
-`a_user_searches_for_film` which does not have to start with e.g. `given_`.  This new method also
-returns `Imdb` and and last line has `return this`.  This enables this method to be be called in a 
-"fluent" manner which can make the code faster and more readable 
+You will notice that the `Imdb` class extends `Steps<Imdb>`.  There is also a new step method 
+`a_user_searches_for_film` which does not start with e.g. `given_`.  This new method also
+returns `Imdb` and and last line has `return this`.  This enables the method to be called in a 
+"fluent" manner which can make the code faster and more readable.
 
 This new method can now be used as follows: -
 
@@ -219,7 +221,8 @@ This new method can now be used as follows: -
         ...
 ```
 
-This method can also be written completely fluently if the user prefers: -
+This method can also be written completely fluently (each method chained together) if the user
+prefers: -
 
 ```java
     @Scenario
@@ -231,17 +234,18 @@ This method can also be written completely fluently if the user prefers: -
         ...
 ```
 
-The `a_user_searches_for_film` can also be used in a variety of ways (e.g. `.and()` or `.then()`)
-making this approach more flexible than simply prefixing a method with `given_`.
+The `a_user_searches_for_film` method can also be used in a variety of ways (e.g. `.and()` or 
+`.then()`) making this approach more flexible (than simply prefixing a method with `given_`).
 
-Also, note that `.when().a_user_searches_for_film("The Green Mile");` will output
+Also, note that `.when().a_user_searches_for_film("The Green Mile");` method has a par will output
+the following: -
 
 ```
 When a user searches for film                    type ("id=suggestion-search", "The Green Mile")
 ```
 
-We can tell from the low-level action on the right that it's the green mile but it would be nice to 
-see the film on the left step output.  To do this simply add the `$` parameter character to the 
+We can tell from the low-level action on the right that it's `The Green Mile` but it would be nice 
+to see that the step output on the left.  To do this simply add the `$` parameter character to the 
 method name i.e.   
 
 ```java
@@ -255,7 +259,7 @@ method name i.e.
 
 Calling this method with the same parameter previously will now output the following: -
 
-````
+```
 When a user searches for film The Green Mile     type ("id=suggestion-search", "The Green Mile")
 ```
 
