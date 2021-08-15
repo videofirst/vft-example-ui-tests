@@ -101,14 +101,18 @@ VFA has an opinionated structure and enforces 4 levels of abstraction: -
   syntax i.e. starting with _given, when, then, and or but_.  In VFA a step is called  using static 
   methods (like the example above) or annotating a method with the `@Step` annotation. A step 
   contains 1 or more actions.
-4. **Action** (e.g. `web.open("https://www.imdb.com")`) - An class can inject a lower level action 
-  class using standard Java `@Inject` annotation (JSR330).  The above example injects the VFA 
-  `WebActions` class (which contains Selenium actions). All actions are annotated with the `@Action`
-  annotation.  Actions can call other actions.
+4. **Action** (e.g. `web.open("https://www.imdb.com")`) - In VFA a lower level action class can be
+  injected via the Java `@Inject` annotation ([JSR330](https://jcp.org/en/jsr/detail?id=330)).  The 
+  above example injects the VFA `WebActions` action class (which contains Selenium web actions). All 
+  actions are annotated with the `@Action` annotation.  Note, actions can call other lower-level 
+  actions.
    
-The `@Feature` and `@Scenario` annotations also support `id` fields so source code exported from
-Video First is guaranteed to stay aligned with the Video First app (even if e.g. the method names 
-change in the future).
+When a test run all the above layers are automatically timed and screenshots taken for each action
+which is useful.
+   
+The `@Feature` and `@Scenario` annotations also support `id` fields so that source code exported 
+from Video First is guaranteed to stay aligned with the Video First app (even if e.g. the method 
+names change in the future).
 
 ```java
 @Feature(id = 3830)
