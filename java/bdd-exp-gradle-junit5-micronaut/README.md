@@ -1,12 +1,56 @@
 # BDD Experiment using Gradle, Junit5 + Micronaut.
 
 
-# Thoughts (2) on 15th August 2021
+## Thoughts (1) on 25th July 2021
 
-A fair bit of code has now been written and impressions on this experiment are extremely positive. IMO 
-this experiment iteration has been the most successful / positive so far.  It lays the foundations 
-for a future framework which Video First users can use to very quickly get started on UI testing
-off the ground.
+This experiment is a continuation of the various experiments of `bdd-experiment-junit5-gradle` - 
+this time around we've changed focus slightly i.e.
+
+1. *Move from VFA DSL to pure Java* - creating a new and usable DSL is a massive amount of work and 
+   even when completed with the necessary tooling etc there is a huge risk that a lot of people may 
+   not even be interested. The focus has (for now) changed to a pure Java solution, but one which is
+   VERY easy and quite opinionated.  The main advantage here is the raw power of Java.  The idea 
+   would be similar to e.g. JGiven, but much lighter i.e. not forcing creating `Given`, `When` and 
+   `Then` classes but rather using annotations and creating much lighter "custom" action classes 
+   e.g. `ImdbActions` and also avoid inheritance as much as possible.
+    
+2. *Light-weight DI Framework* - Using a DI framework can bring many advantages to coding including
+   (1) easy management / injection of action classes, (2) AOP capabilities which can massively
+   simplify test code and (3) advanced configuration capabilities out of the box.  Of course, Spring
+   framework is super popular but suffers from speed and size.  Two alternatives were investigated
+   (1) PicoContainer (very light) and (2) Micronaut (very small / fast). For now, Micronaut was 
+   chosen as it is extremely fast, small library size, easy Action injection, OAP capabilities and
+   configuration very similar to Spring. 
+
+3. *Laser focus on debugging* - Using Java is obviously more heavy-weight than a DSL but another
+   clear advantages (in addition to the raw power of Java) is debugging - especially when a test 
+   breaks.  The design of the Java DSL will be influenced heavily by that e.g. instead of 
+   the `given` text and `action` in one line in previous experiments e.g.
+   
+       given("a user clicks on the search button", ui.click("#search-button"));
+       
+   ... it will be spread over 2 lines ...
+   
+       given("a user clicks on the search button");
+       ui.click("#search-button");
+   
+   This is more verbose and mixes the `given`, `when`, `then` labels along with action calls,
+   however the big advantage is that a user can click on the start of the `ui.click` line to easily
+   debug this.
+   
+4. *Easy to program* - it's still super important that novice programmers can pick this up as easily
+   as possible.  All code design decisions will have this as a focus.  However, more advanced coders
+   will appreciate the raw power of Java.
+   
+5. *Output as DSL* - even though we're not using a DSL as an input - the output will be the same 
+   format. In the future we may reconsider this DSL as an input if users request it.  
+
+## Thoughts (2) on 15th August 2021
+
+A fair bit of code has now been written and impressions on this experiment are extremely positive. 
+IMO this experiment iteration has been the most successful / positive so far.  It lays the 
+foundations for a future framework which Video First users can use to very quickly get started on UI 
+testing off the ground.
 
 This experiment takes a lot of influence from BDD libraries such as [JGiven](https://jgiven.org/) or
 [Serenity BDD](http://www.thucydides.info/#/).  However, to take JGiven as an example, it requires a
@@ -14,15 +58,15 @@ minimum of 4 classes to get started i.e. (1) a feature class, (2) Given class, (
 finally a (4) Then class.  This does have the advantage of enforcing a strict and potentially DRY 
 approach.  However, it is felt that it has the following disadvantages: -
 
-1. Off-putting for new users as they have to create 4 classes.
-2. Forcing methods inside e.g. a `Given` class and therefore cannot be used in a `Then` step.
-3. Need to decide if Junit or TestNG is the preferred unit testing framework. Also, as of writing 
-   this Junit 5 with JGiven is in experimental state.  Advanced users may like this flexibility, but
-   it is another thing for less experienced users to consider / figure out.
-4. To add configurability a typical user would add a DI framework such as Spring.  However, this is 
+1. *Getting Started*- creating 4 classes is off-putting for new users.
+2. *Flexibility* - a step method inside a `Given` cannot be used in a `Then` step.
+3. *Unit Testing Library* - user needs to decide if Junit or TestNG is the preferred unit 
+   testing framework. Also, as of writing this Junit 5 with JGiven is in experimental state.  
+   Advanced users may like this flexibility, but it is another thing for less experienced users to consider / figure out.
+4. *Configurability* - to add configurability a typical user would add a DI framework such as Spring.  However, this is 
    an additional complex step and requires a more advanced user to understand.
-5. Testing user interfaces requires considerable setup e.g. which Java library for Selenium do we
-   use, again off-putting for new users. 
+5. *Selenium Libraries* - testing user interfaces requires considerable setup e.g. which Java 
+   library for Selenium do we use, again off-putting for new users. 
    
 However, even with all these disadvantages of JGiven, the fact that it enables the creation of BDD 
 scenarios as pure Java is still (IMO) a fantastic idea and much more efficient that writing Cucumber 
@@ -214,7 +258,7 @@ This new method can now be used as follows: -
 ```java
     @Scenario
     public void search_for_film_The_Green_Mile() {
-        imdb.given_a_user_is_at_the_homepage();
+        imdb.given().a_user_is_at_the_homepage();
         
         imdb.when().a_user_searches_for_film("The Green Mile");
         
@@ -227,7 +271,7 @@ prefers: -
 ```java
     @Scenario
     public void search_for_film_The_Green_Mile() {
-        imdb.given_a_user_is_at_the_homepage()
+        imdb.given().a_user_is_at_the_homepage()
         
             .when().a_user_searches_for_film("The Green Mile");
         
@@ -281,49 +325,6 @@ Again, the `$` symbol can be used to inject parameters values e.g.
 > Note the use of special symbols like square brackets which again wouldn't be allowed in method 
 names.
 
-# Thoughts (1) on 25th July 2021
-
-This experiment is a continuation of the various experiments of `bdd-experiment-junit5-gradle` - 
-this time around we've changed focus slightly i.e.
-
-1. *Move from VFA DSL to pure Java* - creating a new and usable DSL is a massive amount of work and 
-   even when completed with the necessary tooling etc there is a huge risk that a lot of people may 
-   not even be interested. The focus has (for now) changed to a pure Java solution, but one which is
-   VERY easy and quite opinionated.  The main advantage here is the raw power of Java.  The idea 
-   would be similar to e.g. JGiven, but much lighter i.e. not forcing creating `Given`, `When` and 
-   `Then` classes but rather using annotations and creating much lighter "custom" action classes 
-   e.g. `ImdbActions` and also avoid inheritance as much as possible.
-    
-2. *Light-weight DI Framework* - Using a DI framework can bring many advantages to coding including
-   (1) easy management / injection of action classes, (2) AOP capabilities which can massively
-   simplify test code and (3) advanced configuration capabilities out of the box.  Of course, Spring
-   framework is super popular but suffers from speed and size.  Two alternatives were investigated
-   (1) PicoContainer (very light) and (2) Micronaut (very small / fast). For now, Micronaut was 
-   chosen as it is extremely fast, small library size, easy Action injection, OAP capabilities and
-   configuration very similar to Spring. 
-
-3. *Laser focus on debugging* - Using Java is obviously more heavy-weight than a DSL but another
-   clear advantages (in addition to the raw power of Java) is debugging - especially when a test 
-   breaks.  The design of the Java DSL will be influenced heavily by that e.g. instead of 
-   the `given` text and `action` in one line in previous experiments e.g.
-   
-       given("a user clicks on the search button", ui.click("#search-button"));
-       
-   ... it will be spread over 2 lines ...
-   
-       given("a user clicks on the search button");
-       ui.click("#search-button");
-   
-   This is more verbose and mixes the `given`, `when`, `then` labels along with action calls,
-   however the big advantage is that a user can click on the start of the `ui.click` line to easily
-   debug this.
-   
-4. *Easy to program* - it's still super important that novice programmers can pick this up as easily
-   as possible.  All code design decisions will have this as a focus.  However, more advanced coders
-   will appreciate the raw power of Java.
-   
-5. *Output as DSL* - even though we're not using a DSL as an input - the output will be the same 
-   format. We may in future reconsider this DSL as an input.  
 
 ### Next Steps
 
