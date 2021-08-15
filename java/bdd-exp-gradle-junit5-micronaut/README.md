@@ -255,13 +255,12 @@ method name i.e.
     }
 ```
 
-Calling this method with the same parameter previously will now output the following: -
+Calling this method now will output the following: -
 
     When a user searches for film The Green Mile     type ("id=suggestion-search", "The Green Mile")
 
-The step text can be completely customised using by setting the value of the  `@Step` to a String.  
-This can be useful when starting with e.g. numbers as Java doesn't allow methods to start with a 
-number.
+The step text can be further customised by setting the value of the  `@Step`. This can be useful 
+when starting with numbers as the Java language spec doesn't allow methods to start with a number.
 
 ```java
       @Step("4 users are added")
@@ -270,7 +269,7 @@ number.
       }
 ```
 
-Again, the `$` symbol can be used to inject parameters e.g.
+Again, the `$` symbol can be used to inject parameters values e.g.
 
 ```java
       @Step("Type [ $ ] execute")
