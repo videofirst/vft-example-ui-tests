@@ -255,7 +255,7 @@ method name i.e.
 
 Calling this method with the same parameter previously will now output the following: -
 
-``
+````
 When a user searches for film The Green Mile     type ("id=suggestion-search", "The Green Mile")
 ```
 
