@@ -23,8 +23,7 @@ steps such given, when, then etc) then we would have a feature file as follows: 
 
 > NOTE: Based on https://cucumber.io/docs/gherkin/reference/.
 
-The idea is to move from manual to automated testing is simply a matter of filling in the square
-brackets `[ ... ]` i.e.
+The idea is to move from manual to automated testing is declaring actions after each step i.e.
 
     Feature: Search for a film in various different ways
     

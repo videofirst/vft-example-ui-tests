@@ -5,7 +5,7 @@ import io.videofirst.vfa.annotation.person.Builder;
 /**
  * @author Bob Marks
  */
-@Builder
+//@Builder
 public class Person {
 
     private int age;

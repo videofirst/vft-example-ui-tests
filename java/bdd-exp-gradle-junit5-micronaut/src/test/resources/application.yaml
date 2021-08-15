@@ -1,0 +1,80 @@
+# IMDB config
+
+imdb:
+  homepage: https://www.imdb.com
+
+# VFA properties
+
+# NOTE - Deploying as a library will include doing somnething like this: -
+#   https://medium.com/agorapulse-stories/how-to-set-the-default-configuration-properties-for-a-micronaut-library-8a7914ea2050
+
+vfa:
+
+  # -------------------------------------------------------------------------------
+  # 1) Top level properties
+  # -------------------------------------------------------------------------------
+
+  # Turning strict-mode on. When on, all features, scenarios must have an id which
+  # exists in a VF project (recommended).         - FIXME TODO
+  strict-mode: false
+
+  # -------------------------------------------------------------------------------
+  # 2) Logger properties
+  # -------------------------------------------------------------------------------
+
+  logger:
+
+    # Level (none, scenario, step, action)        - FIXME TODO
+    level: action
+
+    # Which theme to display (plain, standard)
+    theme: standard
+
+    # Max level of actions to show (-1 = no limit)
+    action-depth: 2
+
+    # Number of characters to start the right column (increase if step text is longer)
+    right-column-chars: 80
+
+    # Number of characters to indent
+    indent-chars: 2
+
+    # Prefix ignore (comma separated)
+    ignore-prefixes:
+      - "web"
+
+    # Themes (based loosely on https://github.com/radarsh/gradle-test-logger-plugin)
+    themes:
+
+      # Plain theme (no colours)
+      plain:
+        use-colours: false
+
+      # Standard theme
+      standard:
+        use-colours: true
+        colours:
+          feature-label: "#9999ee"
+          feature-colon: "#666666"
+          feature-text: "#eeeeee"
+          feature-description: "#bbbbbb"
+          feature-id: "#9999ee"
+
+          scenario-label: "#5599ee"
+          scenario-colon: "#666666"
+          scenario-text: "#eeeeee"
+          scenario-id: "#5599ee"
+
+          step-label: "#dd9966"
+          step-text: "#bbbbbb"
+
+          action-prefix: "#aa77aa"
+          action-dot: "#bbbbbb"
+          action-method: "#bbbbbb"
+          action-brackets: "#bbbbbb"
+          action-param-string: "#558855"
+          action-param-other: "#ffcc66"
+          action-comma: "#cccc66"
+
+          right-colon: "#666666"
+

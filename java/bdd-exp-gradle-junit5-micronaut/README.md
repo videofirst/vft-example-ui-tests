@@ -1,24 +1,30 @@
 # BDD Experiment using Gradle, Junit5 + Micronaut.
 
-# Thoughts on 25th July 2021
+# Thoughts (2) on 15th August 2021
 
-This experiment is a continuation of the experiments done in `bdd-experiment-junit5-gradle` - this 
-time around we've changed focus slightly i.e.
 
-1. *Move from VFA DSL to pure Java* - creating a useable DSL is a massive amount of work and there 
-   is a risk that a lot of people may not be interested.  The focus has (for now) changed to a pure
-   Java solution, but one which is VERY easy and quite opinionated.  The main advantage here is 
-   the total power of Java.  The idea would be similar to e.g. JGiven, but much lighter i.e. not 
-   forcing creating `Given`, `When`, `Then` classes but rather creating much lighter "custom" action
-   classes e.g. `ImdbActions`.
+
+
+# Thoughts (1) on 25th July 2021
+
+This experiment is a continuation of the various experiments of `bdd-experiment-junit5-gradle` - 
+this time around we've changed focus slightly i.e.
+
+1. *Move from VFA DSL to pure Java* - creating a new and usable DSL is a massive amount of work and 
+   even when completed with the necessary tooling etc there is a huge risk that a lot of people may 
+   not even be interested. The focus has (for now) changed to a pure Java solution, but one which is
+   VERY easy and quite opinionated.  The main advantage here is the raw power of Java.  The idea 
+   would be similar to e.g. JGiven, but much lighter i.e. not forcing creating `Given`, `When` and 
+   `Then` classes but rather using annotations and creating much lighter "custom" action classes 
+   e.g. `ImdbActions` and also avoid inheritance as much as possible.
     
 2. *Light-weight DI Framework* - Using a DI framework can bring many advantages to coding including
    (1) easy management / injection of action classes, (2) AOP capabilities which can massively
-    simplify test code and (3) advanced configuration capabilities as standard.  Of course, Spring
-    framework is super popular but suffers from speed and size.  Two alternatives were investigated
-    (1) PicoContainer (very light) and (2) Micronaut (very small / fast). For now, Micronaut was 
-    chosen as it is extremely fast, small library size, easy Action injection, OAP capabilities and
-    configuration very similar to Spring. 
+   simplify test code and (3) advanced configuration capabilities out of the box.  Of course, Spring
+   framework is super popular but suffers from speed and size.  Two alternatives were investigated
+   (1) PicoContainer (very light) and (2) Micronaut (very small / fast). For now, Micronaut was 
+   chosen as it is extremely fast, small library size, easy Action injection, OAP capabilities and
+   configuration very similar to Spring. 
 
 3. *Laser focus on debugging* - Using Java is obviously more heavy-weight than a DSL but another
    clear advantages (in addition to the raw power of Java) is debugging - especially when a test 
@@ -40,8 +46,8 @@ time around we've changed focus slightly i.e.
    as possible.  All code design decisions will have this as a focus.  However, more advanced coders
    will appreciate the raw power of Java.
    
-5. *Output as DSL* - even though we're not using a DSL - the output will be the same. Means in the 
-   future we may provide that as an option. 
+5. *Output as DSL* - even though we're not using a DSL as an input - the output will be the same 
+   format. We may in future reconsider this DSL as an input.  
 
 ### Next Steps
 
