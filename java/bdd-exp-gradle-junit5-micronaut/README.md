@@ -286,9 +286,9 @@ the following: -
 
     When a user searches for film                    type ("id=suggestion-search", "The Green Mile")
 
-We can tell from the low-level action on the right that it's `The Green Mile` but it would be nice 
-to see that the step output on the left.  To do this simply add the `$` parameter character to the 
-method name i.e.   
+The parameter value `The Green Mile` is missing from the step text on the left (although we can see 
+it on the low-level action on the right).  To include the values of parameters in the step output 
+we simply add the `$` parameter character to the method name as follows: -   
 
 ```java
     @Step
@@ -313,11 +313,11 @@ when starting with numbers as the Java language spec doesn't allow methods to st
       }
 ```
 
-Again, the `$` symbol can be used to inject parameters values e.g.
+Again, the `$` symbol can also be used in the `@Step` annotation text to inject parameters values.
 
 ```java
       @Step("Type [ $ ] execute")
-      public void type_$_execute (String type) {
+      public void type_execute (String type) {
           ...
       }
 ```
