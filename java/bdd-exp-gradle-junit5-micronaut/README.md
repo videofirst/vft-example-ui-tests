@@ -45,12 +45,12 @@ this time around we've changed focus slightly i.e.
 5. *Output as DSL* - even though we're not using a DSL as an input - the output will be the same 
    format. In the future we may reconsider this DSL as an input if users request it.  
 
+
 ## Thoughts (2) on 15th August 2021
 
 A fair bit of code has now been written and impressions on this experiment are extremely positive. 
 IMO this experiment iteration has been the most successful / positive so far.  It lays the 
-foundations for a future framework which Video First users can use to very quickly get started on UI 
-testing off the ground.
+foundations for a future framework to enable to jump start their UI automated testing.
 
 This experiment takes a lot of influence from BDD libraries such as [JGiven](https://jgiven.org/) or
 [Serenity BDD](http://www.thucydides.info/#/).  However, to take JGiven as an example, it requires a
@@ -75,9 +75,8 @@ style feature files (and the required complex Java Step regexes to link the two 
 A key success principle of Video First Automation is "the ability to convert users from manual UI
 testing to automated UI testing as quickly and as easily as possible".
 
-With all this in mind, the code of this experiment was to take the best bits of JGiven but also
-enable users to create a scenario in a single class so they can get started extremely quickly. For 
-example: - 
+With all this in mind, the focus of this experiment was to take the best bits of JGiven but also
+enable users to create a scenario in a single class so they can get started extremely quickly. 
 
 ```java
 import static io.videofirst.vfa.Vfa.*;  // given, when, then, and methods
@@ -119,44 +118,48 @@ public class SearchFilms {
 When this is run it will produce the following output: -
 
 ```
-    Feature: Search Films
-    
-      Scenario: Search for film The Green Mile
-    
-        Given a user is at the homepage                             : open ("https://www.imdb.com")
-         When the user types the "The Green Mile" into search box   : type ("id=suggestion-search", "The Green Mile")
-          And the user clicks the search icon                       : click ("#suggestion-search-button")
-         Then I expect the see the results page                     : text_contains (".findHeader", "Results for")
-                                                                    : text_contains (".findSearchTerm", "The Green Mile")
-          And the top result only contains "The Green Mile"         : exists ("xpath=.//td[@class='result_text']/a[text() = 'The Green Mile']")
+Feature: Search Films
+
+  Scenario: Search for film The Green Mile
+
+    Given a user is at the homepage                             : open ("https://www.imdb.com")
+     When the user types the "The Green Mile" into search box   : type ("id=suggestion-search", "The Green Mile")
+      And the user clicks the search icon                       : click ("#suggestion-search-button")
+     Then I expect the see the results page                     : text_contains (".findHeader", "Results for")
+                                                                : text_contains (".findSearchTerm", "The Green Mile")
+      And the top result only contains "The Green Mile"         : exists ("xpath=.//td[@class='result_text']/a[text() = 'The Green Mile']")
 ```
 
 As you can see it's extremely fast to get started and users can create a full blown end-to-end test
 in a single method of a single class.  The feature and scenario text is generated automatically from
-the class / method names.
+the class / method names.  The text on the left is standard [Gherkin](https://cucumber.io/docs/gherkin)
+syntax, the text on the right of the `colon` is "action" text.   
+
+The user can of course refactor this example to multiple classes to make the tests more re-usable / 
+DRY.
 
 VFA has an opinionated structure and enforces 4 levels of abstraction: -
 
-1. **Feature** (e.g. _"Search Films"_) - In VFA, annotate a Java class with the `@Feature`.  A
-   feature contains 1 or more scenarios.
-2. **Scenario** (e.g. _"Search for film The Green Mile"_) - In VFA annotates a Java method with 
-   `@Scenario`.  A scenario contains 1 or more steps.
+1. **Feature** (e.g. _"Search Films"_) - In VFA, this is a Java class which is annotated with
+   `@Feature`.  A feature contains 1 or more scenarios.
+2. **Scenario** (e.g. _"Search for film The Green Mile"_) - In VFA, this is a Java method annotated 
+   with `@Scenario`.  A scenario contains 1 or more steps.
 3. **Step** (e.g. _"Given a user is at the homepage"_) - A step is defined with standard Guekin BDD 
-  syntax i.e. starting with _given, when, then, and or but_.  In VFA a step is called  using static 
-  methods (like the example above) or annotating a method with the `@Step` annotation. A step 
-  contains 1 or more actions.
+   syntax i.e. starting with _given, when, then, and OR but_.  In VFA a step is called either using
+   (a) static methods (like the example above) or (b) annotating a method with `@Step`. A step 
+   contains 1 or more actions.
 4. **Action** (e.g. `web.open("https://www.imdb.com")`) - In VFA a lower level action class can be
-  injected via the Java `@Inject` annotation ([JSR330](https://jcp.org/en/jsr/detail?id=330)).  The 
-  above example injects the VFA `WebActions` action class (which contains Selenium web actions). All 
-  actions are annotated with the `@Action` annotation.  Note, actions can call other lower-level 
-  actions.
+   injected via the Java `@Inject` annotation ([JSR330](https://jcp.org/en/jsr/detail?id=330)).  The 
+   above example injects the VFA `WebActions` action class (which contains Selenium web actions). 
+   All action methods are annotated with `@Action`.  Note, actions can call other lower-level 
+   actions and the _depth_ of action logging can be controlled with configuration.
    
-When a test run all the above layers are automatically timed and screenshots taken for each action
-which is useful.
+When a test executes, all these sections are automatically timed.  In addition, screenshots are 
+automatically captured for each action.
    
-The `@Feature` and `@Scenario` annotations also support `id` fields so that source code exported 
-from Video First is guaranteed to stay aligned with the Video First app (even if e.g. the method 
-names change in the future).
+The `@Feature` and `@Scenario` annotations also support `id` fields so that the source code exported 
+from Video First is guaranteed to stay aligned with the Video First app (even if the method name 
+changes in the future).
 
 ```java
 @Feature(id = 3830)
@@ -304,13 +307,14 @@ Calling this method now will output the following: -
     When a user searches for film The Green Mile     type ("id=suggestion-search", "The Green Mile")
 
 The step text can be further customised by setting the value of the  `@Step`. This can be useful 
-when starting with numbers as the Java language spec doesn't allow methods to start with a number.
+when step text starts with numbers (as the Java language spec doesn't allow methods starting with 
+numbers).
 
 ```java
-      @Step("4 users are added")
-      public void four_users_are_added () {
-          ...
-      }
+    @Step("4 users are added")
+    public void four_users_are_added () {
+        ...
+    }
 ```
 
 Again, the `$` symbol can also be used in the `@Step` annotation text to inject parameters values.
