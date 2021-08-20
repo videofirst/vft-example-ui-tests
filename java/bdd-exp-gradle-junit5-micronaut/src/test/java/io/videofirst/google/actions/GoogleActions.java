@@ -1,7 +1,7 @@
 package io.videofirst.google.actions;
 
 import io.videofirst.vfa.Action;
-import io.videofirst.vfa.actions.WebActions;
+import io.videofirst.vfa.web.actions.WebActions;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

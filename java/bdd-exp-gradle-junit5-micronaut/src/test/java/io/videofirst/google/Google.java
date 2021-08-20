@@ -3,7 +3,7 @@ package io.videofirst.google;
 import io.videofirst.vfa.Action;
 import io.videofirst.vfa.Step;
 import io.videofirst.vfa.Steps;
-import io.videofirst.vfa.actions.WebActions;
+import io.videofirst.vfa.web.actions.WebActions;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

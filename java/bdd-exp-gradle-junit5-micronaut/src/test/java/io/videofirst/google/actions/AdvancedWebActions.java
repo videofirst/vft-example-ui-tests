@@ -1,10 +1,11 @@
-package io.videofirst.vfa.actions;
+package io.videofirst.google.actions;
 
+import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Primary;
 import io.videofirst.vfa.Action;
-import javax.inject.Singleton;
+import io.videofirst.vfa.web.actions.WebActions;
 
-@Singleton
+@Context
 @Primary
 public class AdvancedWebActions extends WebActions {
 

@@ -83,7 +83,7 @@ import static io.videofirst.vfa.Vfa.*;  // given, when, then, and methods
 
 import io.videofirst.vfa.Feature;
 import io.videofirst.vfa.Scenario;
-import io.videofirst.vfa.actions.WebActions;
+import io.videofirst.vfa.web.actions.WebActions;
 
 import javax.inject.Inject;    // Used to inject action classes.
 

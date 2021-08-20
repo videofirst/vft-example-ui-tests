@@ -1,9 +1,9 @@
 package io.videofirst.imdb;
 
 import io.micronaut.context.annotation.Value;
+import io.videofirst.google.actions.AdvancedWebActions;
 import io.videofirst.vfa.Step;
 import io.videofirst.vfa.Steps;
-import io.videofirst.vfa.actions.AdvancedWebActions;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
