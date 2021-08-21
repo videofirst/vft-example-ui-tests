@@ -19,7 +19,7 @@ public interface VfaThemeColours {
     String COLOUR_STEP_LABEL = "step-label";
     String COLOUR_STEP_TEXT = "step-text";
 
-    String COLOUR_ACTION_PREFIX = "action-prefix";
+    String COLOUR_ACTION_ALIAS = "action-alias";
     String COLOUR_ACTION_DOT = "action-dot";
     String COLOUR_ACTION_METHOD = "action-method";
     String COLOUR_ACTION_BRACKETS = "action-brackets";

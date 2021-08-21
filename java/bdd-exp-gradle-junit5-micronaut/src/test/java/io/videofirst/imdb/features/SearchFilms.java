@@ -5,11 +5,11 @@ import static io.videofirst.vfa.Vfa.given;
 import static io.videofirst.vfa.Vfa.then;
 import static io.videofirst.vfa.Vfa.when;
 
+import io.videofirst.google.actions.AdvancedWebActions;
 import io.videofirst.imdb.Imdb;
 import io.videofirst.vfa.Feature;
 import io.videofirst.vfa.Scenario;
 import io.videofirst.vfa.actions.ApiActions;
-import io.videofirst.vfa.web.actions.WebActions;
 import javax.inject.Inject;
 
 @Feature(id = 11, description = "Search for films in a variety of different ways")
@@ -19,7 +19,7 @@ public class SearchFilms {
     private Imdb imdb;
 
     @Inject
-    private WebActions web;
+    private AdvancedWebActions web;
 
     @Scenario(id = 23)
     public void search_for_film_The_Green_Mile() {
@@ -37,6 +37,8 @@ public class SearchFilms {
 
         and("the top result only contains \"The Green Mile\"");
         web.exists("xpath=.//td[@class='result_text']/a[text() = 'The Green Mile']");
+
+        web.advanced_thing("advanced");
     }
 
     @Scenario

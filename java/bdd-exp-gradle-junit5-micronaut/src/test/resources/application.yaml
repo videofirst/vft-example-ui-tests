@@ -39,8 +39,8 @@ vfa:
     # Number of characters to indent
     indent-chars: 2
 
-    # Prefix ignore (comma separated)
-    ignore-prefixes:
+    # Aliases to ignore (comma separated)
+    ignore-aliases:
       - "web"
 
     # Themes (based loosely on https://github.com/radarsh/gradle-test-logger-plugin)
@@ -68,7 +68,7 @@ vfa:
           step-label: "#dd9966"
           step-text: "#bbbbbb"
 
-          action-prefix: "#aa77aa"
+          action-alias: "#aa77aa"
           action-dot: "#bbbbbb"
           action-method: "#bbbbbb"
           action-brackets: "#bbbbbb"

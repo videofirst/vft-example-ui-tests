@@ -18,7 +18,7 @@ public class VfaAction {
 
     private String methodName;
 
-    private String prefix;
+    private String alias;
 
     private LinkedHashMap<String, Object> params;
 

@@ -12,7 +12,6 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.webdriver.ChromeDriverFactory;
-import com.codeborne.selenide.webdriver.MergeableCapabilities;
 import io.micronaut.context.annotation.Context;
 import io.videofirst.vfa.Action;
 import java.io.File;
@@ -23,7 +22,6 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.openqa.selenium.By;
-import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -39,52 +37,18 @@ public class WebActions {
 
     private String seleniumWebBrowser = "chrome"; // FIXME inject from config
 
-//    @Inject
-//    private
-
     public WebActions() {
+        // 1) This line gets rid of
+        //     Aug 19, 2021 8:54:15 AM org.openqa.selenium.remote.ProtocolHandshake createSession
+        //     INFO: Detected dialect: W3C
+        Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
+
         setup();
     }
 
+    // FIXME where does this stuff live?  Configuration file maybe????
     // Ref: https://mbbaig.blog/selenide-webdriverfactory/
     private static class MyFactory extends ChromeDriverFactory {
-
-        @Override
-        @CheckReturnValue
-        @Nonnull
-        public MutableCapabilities createCapabilities(Config config, Browser browser, @Nullable Proxy proxy,
-            File browserDownloadsFolder) {
-            ChromeOptions options = new ChromeOptions();
-
-            // No options then Chrome displays the following: -  (7 log lines)
-            //
-            //     Starting ChromeDriver 92.0.4515.107 (87a818b10553a07434ea9e2b6dccf3cbe7895134-refs/branch-heads/4515@{#1634}) on port 36449
-            //     Only local connections are allowed.
-            //     Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
-            //     ChromeDriver was started successfully.
-            //     Aug 19, 2021 8:52:06 AM org.openqa.selenium.remote.ProtocolHandshake createSession
-            //     INFO: Detected dialect: W3C
-            //     )
-
-            // 1) If we set property "webdriver.chrome.silentOutput" then ...    (3 log lines)
-            System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
-            //
-            //     ChromeDriver was started successfully.
-            //     Aug 19, 2021 8:54:15 AM org.openqa.selenium.remote.ProtocolHandshake createSession
-            //     INFO: Detected dialect: W3C
-
-            // 2) If set set the following log property to off then ... (1 log line)
-            Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
-            //
-            //     ChromeDriver was started successfully.
-
-            // 3) Final log line is done with the `WebDriver create` method.
-
-            // 4) Also, might be useful in future e.g. drive from config
-            // options.addArguments("--incognito", "--incognito");
-
-            return new MergeableCapabilities(options, createCommonCapabilities(config, browser, proxy));
-        }
 
         // REF [ https://stackoverflow.com/a/54301361 ]
         // NOTE: this needs requires much more work and should feed into any experiments in future around logging.
@@ -109,25 +73,18 @@ public class WebActions {
         }
     }
 
-
     private void setup() {
-//        System.setProperty("webdriver.chrome.silentOutput", "true");
-//        System.setProperty(ChromeDriverService.CHROME_DRIVER_SILENT_OUTPUT_PROPERTY, "true");
-//        //System.setProperty("webdriver.chrome.args", "--disable-logging");
-//        System.setProperty("webdriver.chrome.args", "--log-level=3");
-//
-//        Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
-//
-//        // Let Selenide know which browser to use
-//        System.setProperty("selenide.browser", seleniumWebBrowser);
 
-//        if ("chrome".equals(seleniumWebBrowser)) {
+        // Let Selenide know which browser to use
+        System.setProperty("selenide.browser", seleniumWebBrowser);
+
+        if ("chrome".equals(seleniumWebBrowser)) {
+            // Not currently being used
 //            WebDriverManager.chromedriver().setup();
 //            WebDriver driver = new ChromeDriver();
 //            WebDriverRunner.setWebDriver(driver);
-//        }
-
-        Configuration.browser = MyFactory.class.getName();
+            Configuration.browser = MyFactory.class.getName();
+        }
     }
 
     @Action

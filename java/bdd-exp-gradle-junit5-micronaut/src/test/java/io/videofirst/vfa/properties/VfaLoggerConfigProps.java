@@ -28,7 +28,7 @@ public class VfaLoggerConfigProps {
     private int actionDepth;
     private int rightColumnChars;
     private int indentChars;
-    private List<String> ignorePrefixes = asList("web");
+    private List<String> ignoreAliases = asList("web");
     private Map<String, Map<String, Object>> themes;
 
     // Other config

@@ -74,7 +74,7 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
     public void before(VfaAction action) {
 
         if (isLogAction(action)) {
-            printActionPrefix(action);
+            printActionAlias(action);
             printActionName(action);
             printActionParameters(action);
         }
@@ -138,17 +138,17 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         print(TEXT_SPACE + step.getText(), COLOUR_STEP_TEXT);
     }
 
-    protected void printActionPrefix(VfaAction action) {
+    protected void printActionAlias(VfaAction action) {
         boolean isFirstAction = action.getStep().getTotalActions() == 1;
         if (!isFirstAction) {
             println();
         }
         printActionColon(action);
 
-        // Print prefix (unless configured to be ignored) e.g. "web."
-        String prefix = action.getPrefix();
-        if (!isPrefixIgnored(prefix)) {
-            print(prefix, COLOUR_ACTION_PREFIX);
+        // Print alias (unless configured to be ignored) e.g. "web."
+        String alias = action.getAlias();
+        if (!isAliasIgnored(alias)) {
+            print(alias, COLOUR_ACTION_ALIAS);
             print(TEXT_DOT, COLOUR_ACTION_DOT);
         }
     }
@@ -221,12 +221,12 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
 
     // Private methods
 
-    private boolean isPrefixIgnored(String prefix) {
-        if (loggerConfig.getIgnorePrefixes() == null) {
+    private boolean isAliasIgnored(String alias) {
+        if (loggerConfig.getIgnoreAliases() == null) {
             return false;
         }
-        return loggerConfig.getIgnorePrefixes().stream()
-            .anyMatch(p -> p != null && p.trim().equalsIgnoreCase(prefix));
+        return loggerConfig.getIgnoreAliases().stream()
+            .anyMatch(p -> p != null && p.trim().equalsIgnoreCase(alias));
     }
 
 }

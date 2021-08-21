@@ -10,10 +10,11 @@ TODO
 [x] - Add start/finish to service layer + timings.
 [x] - Sort out $ in method names.
 [x] - Remove logs from Chrome driver (hacky for now).
-[.] - Refactor @Prefix to @Alias.
-[ ] - Check out screenshots.
+[x] - Refactor @Prefix to @Alias.
+[.] - Align Junit scenario naming to VFA naming
+[ ] - Check out screenshots (e.g. after @Action).
 [ ] - Add timings to logs (if over threshold).
-[ ] - Create JSON output.
+[ ] - Create JSON output (similar to JGiven)
 [ ] - Investigate documentation.
 [ ] - Refactor into modules - for now (1 platform) + (1 web).
 

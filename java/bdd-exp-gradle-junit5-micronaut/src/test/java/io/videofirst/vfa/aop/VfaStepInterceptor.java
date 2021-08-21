@@ -127,8 +127,9 @@ public class VfaStepInterceptor implements MethodInterceptor<Object, Object> {
             Matcher matcher = METHOD_STEP_AND_TEXT_VALIDATOR.matcher(methodName);
             if (!matcher.find()) {
                 throw new RuntimeException(
-                    "Invalid method name - it must start with one of [ given, when, then, but, and ], " +
-                        "then followed with an underscore and at least one character");
+                    "Invalid method [ " + methodName
+                        + " ] - must start with  [ given, when, then, but, and ], " +
+                        "followed with an underscore and at least one character");
             }
         }
     }
