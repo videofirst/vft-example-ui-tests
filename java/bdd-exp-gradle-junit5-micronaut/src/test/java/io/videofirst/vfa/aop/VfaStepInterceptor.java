@@ -1,6 +1,5 @@
 package io.videofirst.vfa.aop;
 
-
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.videofirst.vfa.Step;
@@ -8,6 +7,7 @@ import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.model.VfaStep;
 import io.videofirst.vfa.service.VfaService;
+import io.videofirst.vfa.util.VfaUtils;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -85,7 +85,7 @@ public class VfaStepInterceptor implements MethodInterceptor<Object, Object> {
             validateMethodName(methodName);
             // ignore first part of method
             String stepText = methodName.replaceAll(METHOD_STEP_START_REGEX, "");
-            return stepText.replaceAll("_", " "); // replace underscores with spaces
+            return VfaUtils.underScoresToSentence(stepText, false);
         }
     }
 

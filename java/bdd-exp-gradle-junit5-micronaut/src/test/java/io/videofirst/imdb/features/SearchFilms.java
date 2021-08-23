@@ -21,7 +21,7 @@ public class SearchFilms {
     @Inject
     private AdvancedWebActions web;
 
-    @Scenario(id = 23)
+    @Scenario(text = "Search for Film \"The Green Mile\"", id = 23)
     public void search_for_film_The_Green_Mile() {
         imdb.given_a_user_is_at_the_homepage();
 

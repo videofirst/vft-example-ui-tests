@@ -26,14 +26,25 @@ public class VfaUtils {
     }
 
     /**
-     * Convert a string from pascal case to a sentence (makes it more readable).
+     * Convert a string from pascal case to title case.
      * <p>
      * Based on https://stackoverflow.com/a/18887130
      */
-    public static String camelCaseToHumanReadable(String input) {
+    public static String camelCaseToTitleCase(String input) {
         return input != null ? StringUtils.join(
             StringUtils.splitByCharacterTypeCamelCase(input), ' '
         ) : null;
+    }
+
+    /**
+     * Convert a string from underscore case to a sentence (makes it more readable).
+     */
+    public static String underScoresToSentence(String input, boolean capFirst) {
+        if (input == null) {
+            return null;
+        }
+        String sentence = input.replaceAll("_", " ");
+        return capFirst ? capFirst(sentence) : sentence;
     }
 
     /**

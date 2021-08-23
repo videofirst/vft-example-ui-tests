@@ -23,7 +23,6 @@ import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.model.VfaFeature;
 import io.videofirst.vfa.model.VfaScenario;
 import io.videofirst.vfa.service.VfaService;
-import io.videofirst.vfa.util.VfaUtils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -54,6 +53,7 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension {
         .create(VfaMicronautJunit5Extension.class);
 
     private VfaService vfaService;
+    private VfaDisplayNameGenerator vfaDisplayNameGenerator = VfaDisplayNameGenerator.INSTANCE; // not currently using Micronaut injection
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
@@ -65,16 +65,14 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension {
         }
         this.vfaService = vfaService;
 
-        // TODO Refactor ???
+        // Extract class / Feature annotation
         final Class<?> testClass = extensionContext.getRequiredTestClass();
         final Feature featureAnnotation = AnnotationSupport.findAnnotation(testClass, Feature.class).get();
 
+        // Extract fields and create VfaFeature model
         long id = featureAnnotation.id();
         String className = testClass.getName();
-        String textFromClass = testClass.getSimpleName().replaceAll("(Feature|Test)$", "");
-        textFromClass = VfaUtils.camelCaseToHumanReadable(textFromClass);
-        String textFromAnnotation = featureAnnotation.text().trim();
-        String text = !textFromAnnotation.isEmpty() ? textFromAnnotation : textFromClass;
+        String text = vfaDisplayNameGenerator.generateDisplayNameForClass(testClass);
         String description = featureAnnotation.description().trim();
 
         VfaFeature feature = VfaFeature.builder()
@@ -163,6 +161,7 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension {
         // =============================================================================================================
         // TODO Refactor
         if (testMethod.isPresent()) {
+            //final Class<?> testClass = extensionContext.getRequiredTestClass();
             final Scenario scenarioAnnotation = testMethod.get().getAnnotation(Scenario.class);
 
             if (scenarioAnnotation == null) {
@@ -171,10 +170,8 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension {
 
             long id = scenarioAnnotation.id();
             String methodName = testMethod.get().getName();
-            String textFromMethod = methodName.replaceAll("_", " ");
-            textFromMethod = VfaUtils.capFirst(textFromMethod);
-            String textFromAnnotation = scenarioAnnotation.text().trim();
-            String text = !textFromAnnotation.isEmpty() ? textFromAnnotation : textFromMethod;
+            String text = vfaDisplayNameGenerator
+                .generateDisplayNameForMethod(testInstance.getClass(), testMethod.get());
 
             VfaScenario scenario = VfaScenario.builder()
                 .id(id)

@@ -1,6 +1,5 @@
 package io.videofirst.vfa.service;
 
-
 import io.micronaut.context.annotation.Context;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.exceptions.VfaException;
@@ -19,7 +18,7 @@ import javax.inject.Inject;
  * Main VfaService - uses ThreadLocal approach so can be accessed easily from anywhere.
  */
 @Context // load immediately
-public class VfaService { // FIXME - BETTER NAME?? :-)
+public class VfaService {
 
     // FIXME Should this be combined in a single object? e.g. meta, current, execution etc,
     private static ThreadLocal<VfaFeature> currentFeature = new ThreadLocal<>();

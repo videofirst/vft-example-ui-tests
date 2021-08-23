@@ -6,6 +6,7 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.test.annotation.TransactionMode;
 import io.micronaut.test.condition.TestActiveCondition;
+import io.videofirst.vfa.junit5.micronaut.VfaDisplayNameGenerator;
 import io.videofirst.vfa.junit5.micronaut.VfaMicronautJunit5Extension;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -13,7 +14,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Requires(condition = TestActiveCondition.class)
 @Executable
 @TestMethodOrder(MethodOrderer.MethodName.class) // TODO create custom order field in @Scenario - otherwise revert
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)  // TODO Create custom which can use annotations
+@DisplayNameGeneration(VfaDisplayNameGenerator.class)
 public @interface Feature {
 
     // Video First annotations
@@ -43,7 +43,10 @@ public @interface Feature {
      */
     String text() default "";
 
-    String description() default "";  // Video First ID.
+    /**
+     * Optional feature text - useful if the default text created from the classname isn't enough.
+     */
+    String description() default "";
 
     // Micronaut annotations
 
