@@ -9,7 +9,7 @@ import io.videofirst.vfa.model.VfaAction;
 import io.videofirst.vfa.model.VfaFeature;
 import io.videofirst.vfa.model.VfaScenario;
 import io.videofirst.vfa.model.VfaStep;
-import io.videofirst.vfa.properties.VfaLoggerConfigProps;
+import io.videofirst.vfa.properties.VfaLoggerProperties;
 import io.videofirst.vfa.properties.model.VfaTheme;
 import io.videofirst.vfa.util.VfaUtils;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
     private static final String TEXT_METHOD_COMMA = ", ";
 
     @Inject
-    private VfaLoggerConfigProps loggerConfig;
+    private VfaLoggerProperties loggerConfig;
 
     // Other fields
 

@@ -9,7 +9,7 @@ import io.videofirst.google.actions.AdvancedWebActions;
 import io.videofirst.imdb.Imdb;
 import io.videofirst.vfa.Feature;
 import io.videofirst.vfa.Scenario;
-import io.videofirst.vfa.actions.ApiActions;
+import io.videofirst.vfa.api.actions.ApiActions;
 import javax.inject.Inject;
 
 @Feature(id = 11, description = "Search for films in a variety of different ways")

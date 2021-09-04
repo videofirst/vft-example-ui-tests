@@ -1,5 +1,6 @@
 package io.videofirst.vfa.model;
 
+import io.micronaut.aop.MethodInvocationContext;
 import java.util.LinkedHashMap;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -26,14 +27,17 @@ public class VfaAction {
 
     private VfaTime time;
 
-    @ToString.Exclude
+    @ToString.Exclude // TODO exclude from JSON as well
     private VfaAction parent; // link to parent action (if applicable)
 
     @ToString.Exclude
     private List<VfaAction> actions; // children actions
 
+    @ToString.Exclude
+    private MethodInvocationContext<Object, Object> methodContext;  // raw method context
+
     public int countParents() {
-        int numOfParents = 0;  // TODO - Java8 stream would be nice
+        int numOfParents = 0;  // TODO - Java8 stream might be nicer
         VfaAction curAction = this;
         while (curAction.getParent() != null) {
             numOfParents++;

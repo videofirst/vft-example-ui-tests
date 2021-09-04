@@ -1,4 +1,4 @@
-package io.videofirst.vfa.actions;
+package io.videofirst.vfa.api.actions;
 
 import io.micronaut.http.HttpResponse;
 import io.videofirst.vfa.Action;

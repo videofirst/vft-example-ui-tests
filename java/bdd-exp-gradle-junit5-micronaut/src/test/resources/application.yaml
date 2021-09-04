@@ -19,7 +19,17 @@ vfa:
   strict-mode: false
 
   # -------------------------------------------------------------------------------
-  # 2) Logger properties
+  # 2) Media properties
+  # -------------------------------------------------------------------------------
+
+  media:
+
+    # What type of media capture?  Currently supports "screenshots", will support
+    # "video" in the future
+    capture: screenshots
+
+  # -------------------------------------------------------------------------------
+  # 3) Logger properties
   # -------------------------------------------------------------------------------
 
   logger:
@@ -31,7 +41,7 @@ vfa:
     theme: standard
 
     # Max level of actions to show (-1 = no limit)
-    action-depth: 2
+    action-depth: 1
 
     # Number of characters to start the right column (increase if step text is longer)
     right-column-chars: 80

@@ -43,7 +43,7 @@ public class VfaDisplayNameGenerator implements DisplayNameGenerator {
         if (!textFromAnnotation.isEmpty()) {
             return textFromAnnotation;
         } else {
-            // First of all remove Feature or Test from end of
+            // First of all remove Feature or Test from end of class name.
             String textFromClass = testClass.getSimpleName().replaceAll(REGEX_CLASS_NAME_REMOVE, "");
 
             // Class names with underscores get precedence

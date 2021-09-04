@@ -17,4 +17,10 @@ import java.lang.annotation.Target;
 @Type(VfaActionInterceptor.class)
 public @interface Action {
 
+    boolean isAssert() default false;
+
+    boolean screenshotBefore() default false;
+
+    boolean screenshotAfter() default true;
+
 }

@@ -11,7 +11,8 @@ TODO
     [x] - Remove logs from Chrome driver (hacky for now).
     [x] - Refactor @Prefix to @Alias.
     [x] - Align Junit scenario naming to VFA naming
-    [.] - Check out screenshots (e.g. after @Action).
+    [x] - Make actions optional / split into 2 BeforeAction / AfterAction classes.  
+    [.] - Check out screenshots (e.g. after @Action) / before and after action methods.
     [ ] - Add timings to logs (if over threshold).
     [ ] - Create JSON output (similar to JGiven)
     [ ] - Investigate documentation.

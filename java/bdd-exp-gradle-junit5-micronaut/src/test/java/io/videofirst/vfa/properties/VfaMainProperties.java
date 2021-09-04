@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 @ConfigurationProperties("vfa")
 @Context
-public class VfaMainConfigProps {
+public class VfaMainProperties {
 
     private boolean strictMode;
 

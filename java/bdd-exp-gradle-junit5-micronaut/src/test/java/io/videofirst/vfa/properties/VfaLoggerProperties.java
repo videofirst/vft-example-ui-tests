@@ -19,7 +19,7 @@ import lombok.Data;
 @Data
 @ConfigurationProperties("vfa.logger")
 @Context
-public class VfaLoggerConfigProps {
+public class VfaLoggerProperties {
 
     // Injected config
 

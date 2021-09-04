@@ -8,12 +8,8 @@ import io.videofirst.vfa.web.actions.WebActions;
 
 @Context
 @Primary
-@Alias("adv_web")
+@Alias("adv")
 public class AdvancedWebActions extends WebActions {
-
-    public AdvancedWebActions() {
-        super();
-    }
 
     @Action
     public void advanced_thing(String xpath) {

@@ -28,6 +28,8 @@ public class VfaScenario {
 
     private VfaTime time;
 
+    private List<String> screenshots; // all screenshots (currently Strings but might change in future).
+
     @ToString.Exclude
     private VfaFeature feature; // link to parent feature
 
