@@ -1,6 +1,7 @@
 package io.videofirst.vfa.model;
 
 import io.micronaut.aop.MethodInvocationContext;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,8 @@ public class VfaAction {
 
     private VfaTime time;
 
+    private List<String> screenshots;
+
     @ToString.Exclude // TODO exclude from JSON as well
     private VfaAction parent; // link to parent action (if applicable)
 
@@ -46,4 +49,23 @@ public class VfaAction {
         return numOfParents;
     }
 
+    public void addAction(VfaAction action, VfaStep step) {
+        action.setParent(this);  // link to this
+        action.setStep(step); // link to step
+        if (this.actions == null) {
+            this.actions = new ArrayList<>();
+        }
+        this.actions.add(action);
+    }
+
+    public void addScreenshot(String screenshot) {
+        if (this.screenshots == null) {
+            this.screenshots = new ArrayList<>();
+            this.screenshots.add(screenshot);
+        }
+        if (this.step != null && this.step.getScenario() != null) {
+            VfaScenario scenario = this.step.getScenario();
+            scenario.addScreenshot(screenshot);
+        }
+    }
 }

@@ -23,6 +23,14 @@ public class VfaFeature {
 
     private VfaTime time;
 
-    private List<VfaScenario> scenarios = new ArrayList<>(); // do we need this ??? DELETE IF NOT THE CASE
+    private List<VfaScenario> scenarios;
+
+    public void addScenario(VfaScenario scenario) {
+        scenario.setFeature(this); // scenario to this object
+        if (this.scenarios == null) {
+            this.scenarios = new ArrayList<>();
+        }
+        this.scenarios.add(scenario);
+    }
 
 }

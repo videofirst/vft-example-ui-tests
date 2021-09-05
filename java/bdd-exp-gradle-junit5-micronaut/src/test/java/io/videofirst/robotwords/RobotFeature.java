@@ -24,18 +24,8 @@ public class RobotFeature {
     @Inject
     private Robot robot;
 
-    @Scenario(id = 1234)
-    public void add_two_words_iteration_two() {
-        robot.given().I_at_the_homepage()
-
-            .when().I_add_the_word_$("Belfast")
-            .and().I_add_the_word_$("Robot")
-
-            .then().I_expect_to_see_the_words_in_a_list("Belfast", "Robot");
-    }
-
-    @Scenario(id = 1234)
-    public void add_two_words_iteration_one() {
+    @Scenario(text = "Add two words (v1)", id = 1234)
+    public void add_two_words_version_one() {
         given("I am at the homepage");
         web.open("https://robotspelling.com/");
 
@@ -47,6 +37,16 @@ public class RobotFeature {
             .click("#actionbtn");
 
         then("I expect to see the two words in the list");
+    }
+
+    @Scenario(text = "Add two words (v2)", id = 1234)
+    public void add_two_words_version_two() {
+        robot.given().I_at_the_homepage()
+
+            .when().I_add_the_word_$("Belfast")
+            .and().I_add_the_word_$("Robot")
+
+            .then().I_expect_to_see_the_words_in_a_list("Belfast", "Robot");
     }
 
 }

@@ -1,6 +1,7 @@
 package io.videofirst.vfa.model;
 
 import io.videofirst.vfa.enums.StepType;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,4 +34,18 @@ public class VfaScenario {
     @ToString.Exclude
     private VfaFeature feature; // link to parent feature
 
+    public void addStep(VfaStep step) {
+        step.setScenario(this); // link to parent
+        if (this.steps == null) {
+            this.steps = new ArrayList<>();
+        }
+        this.steps.add(step);
+    }
+
+    public void addScreenshot(String screenshot) {
+        if (this.screenshots == null) {
+            this.screenshots = (new ArrayList<>());
+            this.screenshots.add(screenshot);
+        }
+    }
 }

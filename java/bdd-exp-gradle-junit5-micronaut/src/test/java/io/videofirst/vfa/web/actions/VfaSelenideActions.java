@@ -4,21 +4,22 @@ import com.codeborne.selenide.Browser;
 import com.codeborne.selenide.Config;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.impl.ScreenShotLaboratory;
 import com.codeborne.selenide.webdriver.ChromeDriverFactory;
 import io.videofirst.vfa.Action;
 import io.videofirst.vfa.AfterAction;
 import io.videofirst.vfa.BeforeAction;
-import io.videofirst.vfa.enums.VfaMediaCapture;
+import io.videofirst.vfa.enums.VfaReportMedia;
 import io.videofirst.vfa.model.VfaAction;
-import io.videofirst.vfa.properties.VfaMediaProperties;
+import io.videofirst.vfa.properties.VfaReportsProperties;
 import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import org.openqa.selenium.Proxy;
@@ -38,16 +39,25 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
     private String seleniumWebBrowser = "chrome"; // FIXME inject from config
 
     @Inject
-    private VfaMediaProperties mediaProperties;
+    private VfaReportsProperties reportProperties;
 
-    private ScreenShotLaboratory screenShotLaboratory = ScreenShotLaboratory.getInstance();
+    private AtomicInteger screenshotIndex = new AtomicInteger();
 
     public VfaSelenideActions() {
         // 1) This line gets rid of
         //     Aug 19, 2021 8:54:15 AM org.openqa.selenium.remote.ProtocolHandshake createSession
         //     INFO: Detected dialect: W3C
         Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
-        setup();
+    }
+
+    @PostConstruct
+    public void setup() {
+        // FIXME - this needs work
+        if ("chrome".equals(seleniumWebBrowser)) {
+            Configuration.browser = MyFactory.class.getName();
+            Configuration.reportsFolder = reportProperties.getFolder();
+            Configuration.screenshots = false;
+        }
     }
 
     @Override
@@ -63,7 +73,7 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
     // Private methods
 
     private void checkScreenshot(VfaAction action, boolean isBefore) {
-        if (mediaProperties.getCapture() != VfaMediaCapture.screenshots) {
+        if (reportProperties.getMedia() != VfaReportMedia.screenshots) {
             return; // nothing more to do
         }
 
@@ -74,14 +84,13 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
         boolean takeScreenshot = beforeScreenshot || afterScreenshot;
 
         if (takeScreenshot) {
-            // File file = Screenshots.takeScreenShotAsFile();
-            // String pngFileName = screenshot("my_file_name");
-            // check ScreenShotLaboratory - especially around setting context etc although I don't think we should be
-            // doing that all the time.
-            Selenide.screenshot("asdfasdf");
-        }
+            // Generate screenshot id
+            String screenshotFilename = getScreenshotFilename();
 
-        // Check UIAssertionError.wrapThrowable()
+            // Add filename to scenario and add to action
+            Selenide.screenshot(screenshotFilename);
+            action.addScreenshot(screenshotFilename);
+        }
     }
 
     /**
@@ -93,18 +102,12 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
         return actionAnnotation;
     }
 
-    private void setup() {
-
-        // Let Selenide know which browser to use
-        System.setProperty("selenide.browser", seleniumWebBrowser);
-
-        if ("chrome".equals(seleniumWebBrowser)) {
-            // Not currently being used
-//            WebDriverManager.chromedriver().setup();
-//            WebDriver driver = new ChromeDriver();
-//            WebDriverRunner.setWebDriver(driver);
-            Configuration.browser = MyFactory.class.getName();
-        }
+    /**
+     * Get screenshot filename - put in another file?
+     */
+    protected String getScreenshotFilename() {
+        String id = System.currentTimeMillis() + "-" + screenshotIndex.getAndIncrement();
+        return id;
     }
 
     // FIXME where does this stuff live?  Configuration file maybe????

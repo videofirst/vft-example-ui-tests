@@ -1,6 +1,6 @@
 package io.videofirst.vfa.enums;
 
-public enum VfaMediaCapture {
+public enum VfaReportMedia {
 
     screenshots,
 

@@ -9,10 +9,13 @@ import io.videofirst.vfa.model.VfaFeature;
 import io.videofirst.vfa.model.VfaScenario;
 import io.videofirst.vfa.model.VfaStep;
 import io.videofirst.vfa.model.VfaTime;
-import java.util.ArrayList;
+import io.videofirst.vfa.properties.VfaReportsProperties;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Stack;
 import javax.inject.Inject;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Main VfaService - uses ThreadLocal approach so can be accessed easily from anywhere.
@@ -25,12 +28,11 @@ public class VfaService {
     private static ThreadLocal<VfaScenario> currentScenario = new ThreadLocal<>();
     private static ThreadLocal<Stack<VfaAction>> currentActionStack = new ThreadLocal<>();
 
+    @Inject
     private VfaLogger logger;
 
     @Inject
-    public VfaService(VfaLogger logger) {
-        this.logger = logger;
-    }
+    private VfaReportsProperties reportsProperties;
 
     // Before methods
 
@@ -38,16 +40,17 @@ public class VfaService {
         currentFeature.set(feature);
         feature.setTime(VfaTime.start());
         logger.before(feature);
+
+        initReportsDirectory();
     }
 
     public void before(VfaScenario scenario) {
         VfaFeature currentFeature = getCurrentFeature();
-        scenario.setFeature(currentFeature); // link to parent
         currentScenario.set(scenario);
+        currentFeature.addScenario(scenario);
 
         // reset the action stack
         currentActionStack.set(new Stack<>());
-
         scenario.setTime(VfaTime.start());
         logger.before(scenario);
     }
@@ -63,12 +66,7 @@ public class VfaService {
             after(previousStep);
         }
 
-        // Update current step
-        step.setScenario(currentScenario); // link to parent
-        if (currentScenario.getSteps() == null) {
-            currentScenario.setSteps(new ArrayList<>());
-        }
-        currentScenario.getSteps().add(step);
+        currentScenario.addStep(step);
         currentScenario.setStepType(null); // reset back again
 
         step.setTime(VfaTime.start());
@@ -79,29 +77,19 @@ public class VfaService {
     public void before(VfaAction action) {
         VfaStep currentStep = getCurrentStep();
         currentStep.setTotalActions(currentStep.getTotalActions() + 1);
-        action.setStep(currentStep); // link to step
 
         // Check the current action and if it has finished or not
         Stack<VfaAction> actionStack = currentActionStack.get();
-        if (actionStack.isEmpty()) {
-            // no parents
-            if (currentStep.getActions() == null) {
-                currentStep.setActions(new ArrayList<>());
-            }
 
-            currentStep.getActions().add(action);
+        boolean noParentAction = actionStack.isEmpty();
+        if (noParentAction) {
+            currentStep.addAction(action);   // just add action to step
         } else {
-            // has parent action
-            VfaAction parent = actionStack.peek();
-            if (parent.getActions() == null) {
-                parent.setActions(new ArrayList<>());
-            }
-            parent.getActions().add(action);
-            action.setParent(parent);
+            VfaAction parentAction = actionStack.peek(); // other wise add this action to parent action + link to step
+            parentAction.addAction(action, currentStep);
         }
 
         currentActionStack.get().push(action);
-
         action.setTime(VfaTime.start());
 
         logger.before(action);
@@ -179,6 +167,20 @@ public class VfaService {
         // Retrieve last step
         VfaStep stepModel = steps.get(steps.size() - 1);
         return stepModel;
+    }
+
+    // Private method
+
+    private void initReportsDirectory() {
+        File reportsFolder = new File(reportsProperties.getFolder()).getAbsoluteFile();
+        try {
+            if (!reportsFolder.exists()) {
+                reportsFolder.mkdirs();
+            }
+            FileUtils.cleanDirectory(reportsFolder);
+        } catch (IOException e) {
+            throw new VfaException("Error deleting reports folder: " + reportsFolder.getAbsolutePath());
+        }
     }
 
 }

@@ -19,14 +19,17 @@ vfa:
   strict-mode: false
 
   # -------------------------------------------------------------------------------
-  # 2) Media properties
+  # 2) Reports properties
   # -------------------------------------------------------------------------------
 
-  media:
+  reports:
 
-    # What type of media capture?  Currently supports "screenshots", will support
-    # "video" in the future
-    capture: screenshots
+    # What type of media?  Currently supports "screenshots", will support"video" in
+    # the future
+    media: screenshots
+
+    # Folder where report assets are stored
+    folder: "reports/vfa"
 
   # -------------------------------------------------------------------------------
   # 3) Logger properties
@@ -41,7 +44,7 @@ vfa:
     theme: standard
 
     # Max level of actions to show (-1 = no limit)
-    action-depth: 1
+    action-depth: 2
 
     # Number of characters to start the right column (increase if step text is longer)
     right-column-chars: 80
@@ -87,4 +90,3 @@ vfa:
           action-comma: "#cccc66"
 
           right-colon: "#666666"
-
