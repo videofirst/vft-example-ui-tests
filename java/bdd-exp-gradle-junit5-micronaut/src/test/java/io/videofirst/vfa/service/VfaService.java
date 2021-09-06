@@ -9,21 +9,22 @@ import io.videofirst.vfa.model.VfaFeature;
 import io.videofirst.vfa.model.VfaScenario;
 import io.videofirst.vfa.model.VfaStep;
 import io.videofirst.vfa.model.VfaTime;
-import io.videofirst.vfa.properties.VfaReportsProperties;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Stack;
 import javax.inject.Inject;
-import org.apache.commons.io.FileUtils;
 
 /**
- * Main VfaService - uses ThreadLocal approach so can be accessed easily from anywhere.
+ * Highest level service.
+ *
+ * Note, uses ThreadLocal approach so can be accessed easily from anywhere.
+ *
+ * TODO (1) - Maybe add an additional service for model transformation as a lot of that is happening in here. TODO (2) -
+ * There is 3 ThreadLocal objects - refactor to one?
  */
 @Context // load immediately
 public class VfaService {
 
-    // FIXME Should this be combined in a single object? e.g. meta, current, execution etc,
+
     private static ThreadLocal<VfaFeature> currentFeature = new ThreadLocal<>();
     private static ThreadLocal<VfaScenario> currentScenario = new ThreadLocal<>();
     private static ThreadLocal<Stack<VfaAction>> currentActionStack = new ThreadLocal<>();
@@ -32,16 +33,16 @@ public class VfaService {
     private VfaLogger logger;
 
     @Inject
-    private VfaReportsProperties reportsProperties;
+    private VfaReportsService reportsService;
 
     // Before methods
 
     public void before(VfaFeature feature) {
         currentFeature.set(feature);
         feature.setTime(VfaTime.start());
-        logger.before(feature);
 
-        initReportsDirectory();
+        logger.before(feature);
+        reportsService.initFeatureFolder(feature);
     }
 
     public void before(VfaScenario scenario) {
@@ -130,6 +131,7 @@ public class VfaService {
         if (!feature.getTime().isFinished()) {
             feature.setTime(feature.getTime().finish());
         }
+        reportsService.saveFeature(feature);
     }
 
     // Other useful methods
@@ -167,20 +169,6 @@ public class VfaService {
         // Retrieve last step
         VfaStep stepModel = steps.get(steps.size() - 1);
         return stepModel;
-    }
-
-    // Private method
-
-    private void initReportsDirectory() {
-        File reportsFolder = new File(reportsProperties.getFolder()).getAbsoluteFile();
-        try {
-            if (!reportsFolder.exists()) {
-                reportsFolder.mkdirs();
-            }
-            FileUtils.cleanDirectory(reportsFolder);
-        } catch (IOException e) {
-            throw new VfaException("Error deleting reports folder: " + reportsFolder.getAbsolutePath());
-        }
     }
 
 }

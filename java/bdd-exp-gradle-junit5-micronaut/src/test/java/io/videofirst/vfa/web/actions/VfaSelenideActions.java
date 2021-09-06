@@ -10,7 +10,9 @@ import io.videofirst.vfa.AfterAction;
 import io.videofirst.vfa.BeforeAction;
 import io.videofirst.vfa.enums.VfaReportMedia;
 import io.videofirst.vfa.model.VfaAction;
+import io.videofirst.vfa.model.VfaFeature;
 import io.videofirst.vfa.properties.VfaReportsProperties;
+import io.videofirst.vfa.service.VfaReportsService;
 import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -41,6 +43,9 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
     @Inject
     private VfaReportsProperties reportProperties;
 
+    @Inject
+    private VfaReportsService reportsService;
+
     private AtomicInteger screenshotIndex = new AtomicInteger();
 
     public VfaSelenideActions() {
@@ -57,6 +62,7 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
             Configuration.browser = MyFactory.class.getName();
             Configuration.reportsFolder = reportProperties.getFolder();
             Configuration.screenshots = false;
+            Configuration.savePageSource = false;
         }
     }
 
@@ -85,7 +91,7 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
 
         if (takeScreenshot) {
             // Generate screenshot id
-            String screenshotFilename = getScreenshotFilename();
+            String screenshotFilename = getScreenshotFilename(action);
 
             // Add filename to scenario and add to action
             Selenide.screenshot(screenshotFilename);
@@ -105,9 +111,11 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
     /**
      * Get screenshot filename - put in another file?
      */
-    protected String getScreenshotFilename() {
+    protected String getScreenshotFilename(VfaAction action) {
+        VfaFeature feature = action.getStep().getScenario().getFeature();
         String id = System.currentTimeMillis() + "-" + screenshotIndex.getAndIncrement();
-        return id;
+        String fullFilenameNoExtension = feature.getClassName() + File.separator + id;
+        return fullFilenameNoExtension;
     }
 
     // FIXME where does this stuff live?  Configuration file maybe????

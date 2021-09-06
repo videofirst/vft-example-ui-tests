@@ -13,13 +13,10 @@ TODO
     [x] - Align Junit scenario naming to VFA naming
     [x] - Make actions optional / split into 2 BeforeAction / AfterAction classes.  
     [x] - Check out screenshots (e.g. after @Action) / before and after action methods.
-    [.] - Save feature model per class.   
-    
+    [x] - Save feature model / screenshots in a class folder.
+    [ ] - Ensure that errors are handled correct + new status in scenario / counts in feature.
     [ ] - Refactor into modules - for now (1 platform) + (1 web).
-    [.] - Check out screenshots (e.g. after @Action) / before and after action methods.
-    
     [ ] - Add timings to logs (if over threshold).
-    [ ] - Create JSON output (similar to JGiven)
     [ ] - Investigate documentation.
 
 Maybe

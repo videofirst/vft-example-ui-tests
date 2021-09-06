@@ -1,5 +1,6 @@
 package io.videofirst.vfa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.videofirst.vfa.enums.StepType;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,13 @@ public class VfaScenario {
 
     private List<String> screenshots; // all screenshots (currently Strings but might change in future).
 
+    // Parent references
+
+    @JsonIgnore
     @ToString.Exclude
     private VfaFeature feature; // link to parent feature
+
+    // Methods
 
     public void addStep(VfaStep step) {
         step.setScenario(this); // link to parent

@@ -1,5 +1,6 @@
 package io.videofirst.vfa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.aop.MethodInvocationContext;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -24,20 +25,27 @@ public class VfaAction {
 
     private LinkedHashMap<String, Object> params;
 
-    private VfaStep step; // link to parent scenario
-
     private VfaTime time;
 
     private List<String> screenshots;
 
-    @ToString.Exclude // TODO exclude from JSON as well
-    private VfaAction parent; // link to parent action (if applicable)
-
     @ToString.Exclude
     private List<VfaAction> actions; // children actions
 
+    // Parent / context objects
+
+    @JsonIgnore
+    private VfaStep step; // link to parent scenario
+
+    @JsonIgnore
+    @ToString.Exclude // TODO exclude from JSON as well
+    private VfaAction parent; // link to parent action (if applicable)
+
+    @JsonIgnore
     @ToString.Exclude
     private MethodInvocationContext<Object, Object> methodContext;  // raw method context
+
+    // Methods
 
     public int countParents() {
         int numOfParents = 0;  // TODO - Java8 stream might be nicer

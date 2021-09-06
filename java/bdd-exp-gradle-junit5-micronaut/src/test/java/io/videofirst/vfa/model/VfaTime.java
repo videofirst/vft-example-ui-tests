@@ -1,5 +1,6 @@
 package io.videofirst.vfa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,7 @@ public class VfaTime {
         return this.toBuilder().finish(System.currentTimeMillis()).build();
     }
 
+    @JsonIgnore
     public boolean isFinished() {
         return finish != null;
     }

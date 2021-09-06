@@ -1,5 +1,6 @@
 package io.videofirst.vfa.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.videofirst.vfa.enums.StepType;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,13 @@ public class VfaStep {
     @ToString.Exclude
     private List<VfaAction> actions;
 
+    // Parent References
+
+    @JsonIgnore
     @ToString.Exclude
     private VfaScenario scenario; // link to parent scenario
+
+    // Methods
 
     public void addAction(VfaAction action) {
         action.setStep(this); // link to parent
