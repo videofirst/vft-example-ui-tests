@@ -20,6 +20,7 @@ public class VfaTheme {
     // Constants
 
     private static final String USE_COLOURS = "use-colours";
+    private static final String UNICODE_CHARACTERS = "unicode-characters";
     private static final String COLOURS = "colours";
 
     private static final Pattern HEX_COLOR_VALIDATOR = Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$");
@@ -28,6 +29,7 @@ public class VfaTheme {
 
     private String name;
     private boolean useColours;
+    private boolean unicodeCharacters; // FIXME refactor to property file
     private Map<String, Attribute> attributeColours;   // Parsed colour
 
     // Public static methods
@@ -37,8 +39,8 @@ public class VfaTheme {
      * (e.g. VfaTheme objects) which contains fields which are maps.
      */
     public static VfaTheme parse(String themeName, Map<String, Object> themeConfig) {
-        boolean useColours = themeConfig.containsKey(USE_COLOURS) && themeConfig.get(USE_COLOURS) instanceof Boolean ?
-            (Boolean) themeConfig.get(USE_COLOURS) : false;
+        boolean useColours = parseBooleanField(themeConfig, USE_COLOURS, false);
+        boolean unicodeCharacters = parseBooleanField(themeConfig, UNICODE_CHARACTERS, false);
         Map<String, Object> colours = themeConfig.containsKey(COLOURS) && themeConfig.get(COLOURS) instanceof Map ?
             (Map) themeConfig.get(COLOURS) : null;
 
@@ -46,6 +48,7 @@ public class VfaTheme {
         VfaTheme theme = VfaTheme.builder()
             .name(themeName)
             .useColours(useColours)
+            .unicodeCharacters(unicodeCharacters)
             .attributeColours(parseAttributeColours(colours))
             .build();
 
@@ -93,6 +96,13 @@ public class VfaTheme {
                 "Theme colour [ " + themeColour + " ] - does not exist in theme [ " + this.name + " ]");
         }
         return attributeColours.get(themeColour);
+    }
+
+    // Private methods
+
+    private static boolean parseBooleanField(Map<String, Object> themeConfig, String field, boolean defaultValue) {
+        return themeConfig.containsKey(field) && themeConfig.get(field) instanceof Boolean ?
+            (Boolean) themeConfig.get(field) : defaultValue;
     }
 
 }

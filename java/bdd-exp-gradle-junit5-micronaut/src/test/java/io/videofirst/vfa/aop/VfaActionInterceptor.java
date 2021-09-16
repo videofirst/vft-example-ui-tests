@@ -6,6 +6,8 @@ import io.micronaut.core.type.MutableArgumentValue;
 import io.videofirst.vfa.AfterAction;
 import io.videofirst.vfa.Alias;
 import io.videofirst.vfa.BeforeAction;
+import io.videofirst.vfa.ErrorAction;
+import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.model.VfaAction;
 import io.videofirst.vfa.service.VfaService;
 import java.util.LinkedHashMap;
@@ -24,45 +26,51 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
         // Retrieve Actions object and model
         VfaAction actionModel = getVfaAction(methodContext);
 
-        // Life cycle is as follows: -
-
-        // 1) High level Service before e.g. start logging /timings
+        // 1) High level Service before e.g. start logging / timings
         vfaService.before(actionModel);
 
-        // 2) Optional Low level action class instance before method
-        BeforeAction beforeAction = getBeforeAction(methodContext);
-        if (beforeAction != null) {
-            beforeAction.before(actionModel);
+        Object object = null;
+        boolean isFinished = actionModel.isFinished();
+        if (isFinished) {
+            // Set status as skip as we're not in progress any more
+            actionModel.setStatus(VfaStatus.ignored);
+        } else {
+            // 2) Optional Low level action class instance before method
+            BeforeAction beforeAction = getBeforeAction(methodContext);
+            if (beforeAction != null) {
+                // fixme - error handling? Maybe re-usable method?
+                beforeAction.before(actionModel);
+            }
+
+            // 3) Run this action e.g. selenium click event
+            try {
+                object = methodContext.proceed();
+
+                actionModel.setStatus(VfaStatus.passed);
+            } catch (Throwable e) { // catch everything
+                actionModel.setStatus(VfaStatus.error);
+
+                // FIXME check for [ AssertionError ]
+                actionModel.setThrowable(e);
+                ErrorAction errorAction = getErrorAction(methodContext);
+                if (errorAction != null) {
+                    errorAction.error(actionModel, e);
+                }
+            }
+
+            // 4) Optional Low level action class instance after method e.g. take screenshot
+            AfterAction afterAction = getAfterAction(methodContext);
+            if (afterAction != null) {
+                // fixme - error handling? Maybe re-usable method?
+                afterAction.after(actionModel);
+            }
         }
 
-        // 3) Run this action e.g. selenium click event
-        Object object = methodContext.proceed();
-
-        // 4) Optional Low level action class instance after method e.g. take screenshot
-        AfterAction afterAction = getAfterAction(methodContext);
-        if (afterAction != null) {
-            afterAction.after(actionModel);
-        }
-
-        // 5) High level Service after e.g. finish logging / timings
+        // 5) High level Service after e.g. finish logging / timings etc
         vfaService.after(actionModel);
 
         actionModel.setMethodContext(null); // remove this context again and return object
         return object;
-    }
-
-    private BeforeAction getBeforeAction(MethodInvocationContext<Object, Object> context) {
-        if (context.getTarget() instanceof BeforeAction) {
-            return (BeforeAction) context.getTarget();
-        }
-        return null;
-    }
-
-    private AfterAction getAfterAction(MethodInvocationContext<Object, Object> context) {
-        if (context.getTarget() instanceof BeforeAction) {
-            return (AfterAction) context.getTarget();
-        }
-        return null;
     }
 
     private VfaAction getVfaAction(MethodInvocationContext<Object, Object> methodContext) {
@@ -105,6 +113,28 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
             params.put(paramName, paramValue);
         }
         return params;
+    }
+
+    private BeforeAction getBeforeAction(MethodInvocationContext<Object, Object> context) {
+        if (context.getTarget() instanceof BeforeAction) {
+            return (BeforeAction) context.getTarget();
+        }
+        //click ("#suggestion-search-button")
+        return null;
+    }
+
+    private AfterAction getAfterAction(MethodInvocationContext<Object, Object> context) {
+        if (context.getTarget() instanceof AfterAction) {
+            return (AfterAction) context.getTarget();
+        }
+        return null;
+    }
+
+    private ErrorAction getErrorAction(MethodInvocationContext<Object, Object> context) {
+        if (context.getTarget() instanceof ErrorAction) {
+            return (ErrorAction) context.getTarget();
+        }
+        return null;
     }
 
 }

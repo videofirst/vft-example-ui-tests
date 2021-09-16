@@ -2,13 +2,17 @@ package io.videofirst.vfa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.aop.MethodInvocationContext;
+import io.videofirst.vfa.enums.VfaStatus;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Data
@@ -29,12 +33,23 @@ public class VfaAction {
 
     private List<String> screenshots;
 
+    @Getter
+    @Setter(AccessLevel.NONE)
+    private Throwable throwable;
+
+    @Getter
+    @Setter(AccessLevel.NONE)
+    private VfaStatus status;
+
+    // children actions
+
     @ToString.Exclude
-    private List<VfaAction> actions; // children actions
+    private List<VfaAction> actions;
 
     // Parent / context objects
 
     @JsonIgnore
+    @ToString.Exclude
     private VfaStep step; // link to parent scenario
 
     @JsonIgnore
@@ -47,6 +62,12 @@ public class VfaAction {
 
     // Methods
 
+    @JsonIgnore
+    public VfaScenario getScenario() {
+        return this.step != null ? this.step.getScenario() : null;
+    }
+
+    @JsonIgnore
     public int countParents() {
         int numOfParents = 0;  // TODO - Java8 stream might be nicer
         VfaAction curAction = this;
@@ -55,6 +76,15 @@ public class VfaAction {
             curAction = curAction.getParent();
         }
         return numOfParents;
+    }
+
+    @JsonIgnore
+    public boolean isFinished() {
+        if (step != null && step.getScenario() != null) {
+            // we are in finished if the status of the scenario is set
+            return step.getScenario().getStatus() != null;
+        }
+        return false;
     }
 
     public void addAction(VfaAction action, VfaStep step) {
@@ -76,4 +106,29 @@ public class VfaAction {
             scenario.addScreenshot(screenshot);
         }
     }
+
+    public void setStatus(VfaStatus status) {
+        if (this.status != null) {
+            return;
+        }
+        this.status = status;
+
+        if (this.parent != null) {
+            this.parent.setStatus(status);
+        }
+        if (this.step != null && status != VfaStatus.passed) { // don't propagate pass statuses up
+            this.step.setStatus(status);
+        }
+    }
+
+    public void setThrowable(Throwable throwable) {
+        if (this.throwable != null) {
+            return;
+        }
+        this.throwable = throwable;
+        if (this.getScenario() != null) {
+            this.getScenario().setThrowable(throwable);
+        }
+    }
+
 }

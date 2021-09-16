@@ -8,6 +8,7 @@ import com.codeborne.selenide.webdriver.ChromeDriverFactory;
 import io.videofirst.vfa.Action;
 import io.videofirst.vfa.AfterAction;
 import io.videofirst.vfa.BeforeAction;
+import io.videofirst.vfa.ErrorAction;
 import io.videofirst.vfa.enums.VfaReportMedia;
 import io.videofirst.vfa.model.VfaAction;
 import io.videofirst.vfa.model.VfaFeature;
@@ -36,7 +37,7 @@ import org.openqa.selenium.remote.service.DriverService;
  *
  * @author Bob Marks
  */
-public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
+public abstract class VfaSelenideActions implements BeforeAction, AfterAction, ErrorAction {
 
     private String seleniumWebBrowser = "chrome"; // FIXME inject from config
 
@@ -73,6 +74,11 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction {
 
     @Override
     public void after(VfaAction action) {
+        checkScreenshot(action, false);
+    }
+
+    @Override
+    public void error(VfaAction action, Throwable throwable) {
         checkScreenshot(action, false);
     }
 

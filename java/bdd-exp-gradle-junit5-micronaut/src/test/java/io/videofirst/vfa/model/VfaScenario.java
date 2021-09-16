@@ -2,12 +2,16 @@ package io.videofirst.vfa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.videofirst.vfa.enums.StepType;
+import io.videofirst.vfa.enums.VfaStatus;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Data
@@ -26,7 +30,16 @@ public class VfaScenario {
 
     private List<VfaStep> steps;
 
-    private StepType stepType;  // used with e.g. given().I_am_at_the_homepage(); // FIXME - move to service layer ????
+    @Getter
+    @Setter(AccessLevel.NONE)
+    private VfaStatus status;
+
+    @Getter
+    @Setter(AccessLevel.NONE)
+    private Throwable throwable;
+
+    // used with e.g. given().I_am_at_the_homepage(); // FIXME - move to service layer ????
+    private StepType stepType;
 
     private VfaTime time;
 
@@ -54,4 +67,19 @@ public class VfaScenario {
             this.screenshots.add(screenshot);
         }
     }
+
+    public void setStatus(VfaStatus status) {
+        if (this.status != null) {
+            return;
+        }
+        this.status = status;
+    }
+
+    public void setThrowable(Throwable throwable) {
+        if (this.throwable != null) {
+            return;
+        }
+        this.throwable = throwable;
+    }
+
 }

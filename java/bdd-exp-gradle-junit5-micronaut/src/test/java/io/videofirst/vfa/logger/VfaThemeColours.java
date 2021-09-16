@@ -1,5 +1,9 @@
 package io.videofirst.vfa.logger;
 
+import com.google.common.collect.ImmutableMap;
+import io.videofirst.vfa.enums.VfaStatus;
+import java.util.Map;
+
 /**
  * Default theme fields.
  */
@@ -26,7 +30,21 @@ public interface VfaThemeColours {
     String COLOUR_ACTION_STRING_PARAM = "action-param-string";
     String COLOUR_ACTION_OTHER_PARAM = "action-param-other";
     String COLOUR_ACTION_COMMA = "action-comma";
+    String COLOUR_ACTION_IGNORED = "action-ignored";
+
+    String COLOUR_STATUS_PASSED = "status-passed";
+    String COLOUR_STATUS_FAILED = "status-failed";
+    String COLOUR_STATUS_ERROR = "status-error";
+    String COLOUR_STATUS_IGNORED = "status-ignored";
 
     String COLOUR_RIGHT_COLON = "right-colon";
+
+    // Status colour map
+
+    Map<VfaStatus, String> STATUS_COLOUR_MAP = ImmutableMap.of(
+        VfaStatus.passed, COLOUR_STATUS_PASSED,
+        VfaStatus.failed, COLOUR_STATUS_FAILED,
+        VfaStatus.error, COLOUR_STATUS_ERROR,
+        VfaStatus.ignored, COLOUR_STATUS_IGNORED);
 
 }

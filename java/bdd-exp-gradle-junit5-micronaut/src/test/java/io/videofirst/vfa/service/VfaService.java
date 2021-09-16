@@ -2,6 +2,7 @@ package io.videofirst.vfa.service;
 
 import io.micronaut.context.annotation.Context;
 import io.videofirst.vfa.enums.StepType;
+import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.logger.VfaLogger;
 import io.videofirst.vfa.model.VfaAction;
@@ -23,7 +24,6 @@ import javax.inject.Inject;
  */
 @Context // load immediately
 public class VfaService {
-
 
     private static ThreadLocal<VfaFeature> currentFeature = new ThreadLocal<>();
     private static ThreadLocal<VfaScenario> currentScenario = new ThreadLocal<>();
@@ -100,6 +100,8 @@ public class VfaService {
 
     public void after(VfaAction action) {
         action.setTime(action.getTime().finish());
+
+        logger.after(action);
         currentActionStack.get().pop();
     }
 
@@ -111,12 +113,16 @@ public class VfaService {
         if (!step.getTime().isFinished()) {
             step.setTime(time.finish());
         }
+        if (step.getStatus() == null) {
+            step.setStatus(VfaStatus.passed);
+        }
+        logger.after(step);
     }
 
     public void after(VfaScenario scenario) {
         // Check if last step of this scenario needs to be closed
         List<VfaStep> steps = scenario.getSteps();
-        if (steps != null || !steps.isEmpty()) {
+        if (steps != null && !steps.isEmpty()) {
             // check if last one has finished
             VfaStep previousStep = steps.get(steps.size() - 1);
             after(previousStep);
@@ -125,6 +131,12 @@ public class VfaService {
         if (!scenario.getTime().isFinished()) {
             scenario.setTime(scenario.getTime().finish());
         }
+
+        if (scenario.getThrowable() != null) {
+            throw new VfaException(scenario.getThrowable());
+        }
+
+        logger.after(scenario);
     }
 
     public void after(VfaFeature feature) {
@@ -132,6 +144,8 @@ public class VfaService {
             feature.setTime(feature.getTime().finish());
         }
         reportsService.saveFeature(feature);
+
+        logger.after(feature);
     }
 
     // Other useful methods
@@ -163,7 +177,7 @@ public class VfaService {
         // Ensure at least one step exists, otherwise throw exception
         List<VfaStep> steps = scenario.getSteps();
         if (steps == null || steps.isEmpty()) {
-            throw new VfaException("Please add a step before adding an action");
+            throw new VfaException("Please set a step (Given, When, Then etc) before executing an action");
         }
 
         // Retrieve last step

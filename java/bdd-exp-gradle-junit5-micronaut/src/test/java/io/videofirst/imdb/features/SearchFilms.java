@@ -38,7 +38,7 @@ public class SearchFilms {
         and("the top result only contains \"The Green Mile\"");
         web.exists("xpath=.//td[@class='result_text']/a[text() = 'The Green Mile']");
 
-        web.advanced_thing("advanced");
+        //web.advanced_thing("advanced");
     }
 
     @Scenario

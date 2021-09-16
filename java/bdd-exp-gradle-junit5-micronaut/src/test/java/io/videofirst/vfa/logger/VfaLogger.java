@@ -18,6 +18,12 @@ public interface VfaLogger {
 
     void before(VfaAction action);
 
-    // TODO add after methods
+    void after(VfaAction action);
+
+    void after(VfaStep step);
+
+    void after(VfaScenario scenario);
+
+    void after(VfaFeature feature);
 
 }

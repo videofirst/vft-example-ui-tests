@@ -59,13 +59,15 @@ vfa:
     # Themes (based loosely on https://github.com/radarsh/gradle-test-logger-plugin)
     themes:
 
-      # Plain theme (no colours)
+      # Plain theme (no colours / uni-code characters)
       plain:
         use-colours: false
+        unicode-characters: false
 
       # Standard theme
       standard:
         use-colours: true
+        unicode-characters: true
         colours:
           feature-label: "#9999ee"
           feature-colon: "#666666"
@@ -85,8 +87,14 @@ vfa:
           action-dot: "#bbbbbb"
           action-method: "#bbbbbb"
           action-brackets: "#bbbbbb"
-          action-param-string: "#558855"
+          action-param-string: "#6a8759"
           action-param-other: "#ffcc66"
           action-comma: "#cccc66"
+          action-ignored: "#777777"
+
+          status-passed: "#499c54"
+          status-failed: "#bd8e3e"
+          status-error: "#af4f4f"
+          status-ignored: "#777777"
 
           right-colon: "#666666"

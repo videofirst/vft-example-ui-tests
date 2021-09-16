@@ -14,14 +14,24 @@ TODO
     [x] - Make actions optional / split into 2 BeforeAction / AfterAction classes.  
     [x] - Check out screenshots (e.g. after @Action) / before and after action methods.
     [x] - Save feature model / screenshots in a class folder.
-    [ ] - Ensure that errors are handled correct + new status in scenario / counts in feature.
+    [x] - Ensure that errors are handled correct + new status in action, steps and scenario.
+    [x] - If error occurs, ensure steps and actions are still displayed (ignored + display grey).
+    [.] - Add action logging based on status which is configurable.
+    [ ] - Ensure failures are handled different to errors.
+    [ ] - Put symbols in configuration
+    [ ] - Make when screenshots / page models are configurable.
+    [ ] - Add counts in feature.
     [ ] - Refactor into modules - for now (1 platform) + (1 web).
-    [ ] - Add timings to logs (if over threshold).
+    [ ] - Add action timings to logs (if over threshold).
     [ ] - Investigate documentation.
+    [ ] - Aim for Alpha Release end of September.
+    [ ] - Aim for Beta Release end of October.
+    [ ] - Aim for Video First integration end of November.
+    [ ] - Aim for Video First marketing end of December.
+    [ ] - Aim for Video First open source E2E testing.
 
 Maybe
 =====
-
-    [ ] - Ensure test methods names are same as scenario names.
-    [ ] - Add validations? - e.g. Feature cannot have @Step or @Action methods.
+    
+    [ ] - Validations? - e.g. Feature cannot have @Step or @Action methods.
     [ ] - Programatic action method?
