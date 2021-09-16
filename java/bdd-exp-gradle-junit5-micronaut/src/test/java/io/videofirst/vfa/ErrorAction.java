@@ -12,6 +12,6 @@ public interface ErrorAction {
     /**
      * Optional after method.
      */
-    void error(VfaAction action, Throwable throwable);
+    void error(VfaAction action);
 
 }

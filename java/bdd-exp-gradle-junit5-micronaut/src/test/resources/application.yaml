@@ -62,12 +62,20 @@ vfa:
       # Plain theme (no colours / uni-code characters)
       plain:
         use-colours: false
-        unicode-characters: false
+        labels:
+          status-passed: "√"
+          status-failed: "X"
+          status-error: "!"
+          status-ignored: ""
 
-      # Standard theme
+      # Standard theme (colours + uni-code characters)
       standard:
         use-colours: true
-        unicode-characters: true
+        labels:
+          status-passed: "✔"
+          status-failed: "✘"
+          status-error: "❗"
+          status-ignored: ""
         colours:
           feature-label: "#9999ee"
           feature-colon: "#666666"

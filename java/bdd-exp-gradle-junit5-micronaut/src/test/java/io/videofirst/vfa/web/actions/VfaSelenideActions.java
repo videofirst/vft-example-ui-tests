@@ -78,7 +78,7 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction, E
     }
 
     @Override
-    public void error(VfaAction action, Throwable throwable) {
+    public void error(VfaAction action) {
         checkScreenshot(action, false);
     }
 

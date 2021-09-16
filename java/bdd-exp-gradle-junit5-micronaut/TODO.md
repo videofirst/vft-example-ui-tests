@@ -16,9 +16,9 @@ TODO
     [x] - Save feature model / screenshots in a class folder.
     [x] - Ensure that errors are handled correct + new status in action, steps and scenario.
     [x] - If error occurs, ensure steps and actions are still displayed (ignored + display grey).
-    [.] - Add action logging based on status which is configurable.
-    [ ] - Ensure failures are handled different to errors.
-    [ ] - Put symbols in configuration
+    [x] - Create labels in configuration theme e.g. to support unicode ticks etc.
+    [.] - Ensure failures are handled different to errors.
+    [ ] - Add action logging based on status which is configurable.
     [ ] - Make when screenshots / page models are configurable.
     [ ] - Add counts in feature.
     [ ] - Refactor into modules - for now (1 platform) + (1 web).

@@ -1,6 +1,8 @@
 package io.videofirst.vfa.properties.model;
 
 import com.diogonunes.jcolor.Attribute;
+import com.google.common.collect.ImmutableMap;
+import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.exceptions.VfaException;
 import java.awt.Color;
 import java.util.HashMap;
@@ -20,8 +22,13 @@ public class VfaTheme {
     // Constants
 
     private static final String USE_COLOURS = "use-colours";
-    private static final String UNICODE_CHARACTERS = "unicode-characters";
+    private static final String LABELS = "labels";
     private static final String COLOURS = "colours";
+
+    private static final Map<String, String> DEFAULT_LABELS = ImmutableMap.of("status-passed", "√",
+        "status-failed", "X",
+        "status-error", "!",
+        "status-ignored", "");
 
     private static final Pattern HEX_COLOR_VALIDATOR = Pattern.compile("^#(?:[0-9a-fA-F]{3}){1,2}$");
 
@@ -29,7 +36,7 @@ public class VfaTheme {
 
     private String name;
     private boolean useColours;
-    private boolean unicodeCharacters; // FIXME refactor to property file
+    private Map<String, String> labels;
     private Map<String, Attribute> attributeColours;   // Parsed colour
 
     // Public static methods
@@ -40,7 +47,7 @@ public class VfaTheme {
      */
     public static VfaTheme parse(String themeName, Map<String, Object> themeConfig) {
         boolean useColours = parseBooleanField(themeConfig, USE_COLOURS, false);
-        boolean unicodeCharacters = parseBooleanField(themeConfig, UNICODE_CHARACTERS, false);
+        Map<String, String> labels = parseMapStringField(themeConfig, LABELS, DEFAULT_LABELS);
         Map<String, Object> colours = themeConfig.containsKey(COLOURS) && themeConfig.get(COLOURS) instanceof Map ?
             (Map) themeConfig.get(COLOURS) : null;
 
@@ -48,7 +55,7 @@ public class VfaTheme {
         VfaTheme theme = VfaTheme.builder()
             .name(themeName)
             .useColours(useColours)
-            .unicodeCharacters(unicodeCharacters)
+            .labels(labels)
             .attributeColours(parseAttributeColours(colours))
             .build();
 
@@ -98,11 +105,22 @@ public class VfaTheme {
         return attributeColours.get(themeColour);
     }
 
+    public String getLabel(VfaStatus status) {
+        String statusLabel = "status-" + status;
+        return this.labels.containsKey(statusLabel) ? this.labels.get(statusLabel) : "";
+    }
+
     // Private methods
 
     private static boolean parseBooleanField(Map<String, Object> themeConfig, String field, boolean defaultValue) {
         return themeConfig.containsKey(field) && themeConfig.get(field) instanceof Boolean ?
             (Boolean) themeConfig.get(field) : defaultValue;
+    }
+
+    private static Map<String, String> parseMapStringField(Map<String, Object> themeConfig, String field,
+        Map<String, String> defaultValue) {
+        return themeConfig.containsKey(field) && themeConfig.get(field) instanceof Map ?
+            (Map) themeConfig.get(field) : defaultValue;
     }
 
 }

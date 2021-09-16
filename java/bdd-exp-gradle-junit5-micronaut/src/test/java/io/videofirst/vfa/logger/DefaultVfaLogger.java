@@ -226,8 +226,7 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         VfaStatus status = action.getStatus();
         VfaScenario scenario = action.getScenario();
         if (status != null) {
-            boolean unicodeSymbols = theme.isUnicodeCharacters();
-            String statusSymbol = action.getStatus().getSymbol(unicodeSymbols);
+            String statusSymbol = theme.getLabel(action.getStatus());
             String themeColour = getStatusColour(status);
 
             if (status.isErrorOrFail()) {

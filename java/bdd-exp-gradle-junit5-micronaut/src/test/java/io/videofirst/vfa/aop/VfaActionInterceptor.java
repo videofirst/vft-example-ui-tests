@@ -54,7 +54,7 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
                 actionModel.setThrowable(e);
                 ErrorAction errorAction = getErrorAction(methodContext);
                 if (errorAction != null) {
-                    errorAction.error(actionModel, e);
+                    errorAction.error(actionModel);
                 }
             }
 
