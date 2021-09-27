@@ -26,6 +26,7 @@ public class VfaExceptionsProperties {
     private List<String> ignores;
     private Integer linesTop;
     private Integer linesBottom;
+    private Integer showParts;
 
     // Other fields
 
@@ -53,6 +54,7 @@ public class VfaExceptionsProperties {
         List<String> filteredStackTrace = Arrays.stream(throwable.getStackTrace())
             .map(elm -> elm.toString())
             .filter(line -> !isIgnoreExceptionLine(line))
+            .map(line -> abbreviateLine(line))
             .collect(Collectors.toList());
         return filteredStackTrace;
     }
@@ -63,6 +65,40 @@ public class VfaExceptionsProperties {
      */
     public boolean isIgnoreExceptionLine(String line) {
         return ignoreExceptionLineCache.computeIfAbsent(line, (key) -> checkIgnorePatternForMatch(line));
+    }
+
+    /**
+     * Abbreviate a line e.g.
+     *
+     * io.videofirst.google.GoogleSearch.search_for_token(GoogleSearch.java:21)
+     *
+     * ... can become ...
+     *
+     * i.v.g.GoogleSearch.search_for_token(GoogleSearch.java:21)
+     *
+     * If the `showParts` property is set to 2.
+     */
+    private String abbreviateLine(String line) {
+        if (showParts != null && showParts != -1 && line.indexOf("(") != -1) {
+            // Shorten line
+            int index = line.indexOf("(");
+            String[] parts = line.substring(0, index).split("\\.");
+            if (parts.length < showParts) {
+                return line; // no change
+            }
+            StringBuilder sb = new StringBuilder();
+            String sep = "";
+            for (int i = 0; i < parts.length; i++) {
+                boolean abbreviate = i < parts.length - showParts;
+                String part = abbreviate ? parts[i].substring(0, 1) : parts[i];
+                sb.append(sep + part);
+                sep = ".";
+            }
+            sb.append(line.substring(index));
+            return sb.toString();
+
+        }
+        return line;
     }
 
     // Private method

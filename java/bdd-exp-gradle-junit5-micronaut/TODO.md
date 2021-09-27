@@ -21,9 +21,9 @@ TODO
     [x] - Remove unnecessary classes from stacktraces.
     [x] - Add new 'exceptions' configurable section.
     [x] - Add method to actions to handle exceptions.
-    [ ] - Make exception position configurable (inline / bottom).
+    [x] - Abbreviate fully qualified class name so a configurable number of parts are displayed. 
+    [.] - Make exception position configurable (inline / bottom).
     [ ] - Wrapper exceptions inside an exception which doesn't output (for Intelli-J support).  
-    [ ] - Make action exceptions configurable based on max top/bottom lines (do we need now?)
     [ ] - Make when screenshots / page models are configurable.
     [ ] - Add counts in feature.
     [ ] - Refactor into modules - for now (1 platform) + (1 web).
