@@ -48,10 +48,10 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
 
                 actionModel.setStatus(VfaStatus.passed);
             } catch (Throwable e) { // catch everything
-                actionModel.setStatus(VfaStatus.error);
+                VfaStatus status = getStatus(e);
+                actionModel.setStatus(status);
+                actionModel.setError(vfaService.getVfaError(e));
 
-                // FIXME check for [ AssertionError ]
-                actionModel.setThrowable(e);
                 ErrorAction errorAction = getErrorAction(methodContext);
                 if (errorAction != null) {
                     errorAction.error(actionModel);
@@ -119,8 +119,7 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
         if (context.getTarget() instanceof BeforeAction) {
             return (BeforeAction) context.getTarget();
         }
-        //click ("#suggestion-search-button")
-        return null;
+        return null; // is Optional better?
     }
 
     private AfterAction getAfterAction(MethodInvocationContext<Object, Object> context) {
@@ -135,6 +134,11 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
             return (ErrorAction) context.getTarget();
         }
         return null;
+    }
+
+    private VfaStatus getStatus(Throwable e) {
+        boolean isAssertion = e instanceof AssertionError;
+        return isAssertion ? VfaStatus.failed : VfaStatus.error;
     }
 
 }

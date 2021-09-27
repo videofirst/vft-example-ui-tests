@@ -14,14 +14,19 @@ TODO
     [x] - Make actions optional / split into 2 BeforeAction / AfterAction classes.  
     [x] - Check out screenshots (e.g. after @Action) / before and after action methods.
     [x] - Save feature model / screenshots in a class folder.
-    [x] - Ensure that errors are handled correct + new status in action, steps and scenario.
+    [x] - Ensure that errors are handled correct + new status in acti   on, steps and scenario.
     [x] - If error occurs, ensure steps and actions are still displayed (ignored + display grey).
     [x] - Create labels in configuration theme e.g. to support unicode ticks etc.
-    [.] - Ensure failures are handled different to errors.
-    [ ] - Add action logging based on status which is configurable.
+    [x] - Ensure failures are handled different to errors.
+    [x] - Remove unnecessary classes from stacktraces.
+    [x] - Add new 'exceptions' configurable section.
+    [ ] - Make exception position configurable (inline / bottom).
+    [ ] - Wrapper exceptions inside an exception which doesn't output (for Intelli-J support).  
+    [ ] - Make action exceptions configurable based on max top/bottom lines (do we need now?)
     [ ] - Make when screenshots / page models are configurable.
     [ ] - Add counts in feature.
     [ ] - Refactor into modules - for now (1 platform) + (1 web).
+    [ ] - put "com.codeborne.selenide.impl" into it's own property hierarchy.
     [ ] - Add action timings to logs (if over threshold).
     [ ] - Investigate documentation.
     [ ] - Aim for Alpha Release end of September.

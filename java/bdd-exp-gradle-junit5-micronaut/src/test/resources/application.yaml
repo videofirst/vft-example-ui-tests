@@ -5,7 +5,7 @@ imdb:
 
 # VFA properties
 
-# NOTE - Deploying as a library will include doing somnething like this: -
+# NOTE - Deploying as a library will include doing something like this: -
 #   https://medium.com/agorapulse-stories/how-to-set-the-default-configuration-properties-for-a-micronaut-library-8a7914ea2050
 
 vfa:
@@ -32,7 +32,34 @@ vfa:
     folder: "reports/vfa"
 
   # -------------------------------------------------------------------------------
-  # 3) Logger properties
+  # 3) Exception handling properties
+  # -------------------------------------------------------------------------------
+
+  exceptions:
+
+    # Position of logs ("inline" or "bottom") TODO
+    position: "inline"
+
+    # Regular expression core exception ignores
+    ignores:
+      - "org\\.junit.*"
+      - "com\\.intellij.*"
+      - ".*\\.reflect.*"
+      - "com\\.sun.*"
+      - "java\\.util\\.ArrayList.*"
+      - "io\\.micronaut\\.(aop|context).*"
+      - "io\\.videofirst\\.vfa.*"
+      - ".*\\.\\$\\w+\\$.*"
+      # FIXME put it's own web module hierarchy - com.codeborne.selenide.impl
+      - "com\\.codeborne\\.selenide\\.impl.*"
+
+    # TODO Num of lines at top / bottom of stack-track to include.  This keeps the stacktrace to a
+    # manageable size. If these are both -1 then the full exception stacktrace is included.
+    #lines-top: 3
+    #lines-bottom: 1
+
+  # -------------------------------------------------------------------------------
+  # 4) Logger properties
   # -------------------------------------------------------------------------------
 
   logger:
@@ -47,7 +74,7 @@ vfa:
     action-depth: 2
 
     # Number of characters to start the right column (increase if step text is longer)
-    right-column-chars: 80
+    right-column-chars: 70
 
     # Number of characters to indent
     indent-chars: 2
@@ -88,7 +115,8 @@ vfa:
           scenario-text: "#eeeeee"
           scenario-id: "#5599ee"
 
-          step-label: "#dd9966"
+          #step-label: "#dd9966"   # Old orange one - quite nice but not at scale
+          step-label: "#66cccc"
           step-text: "#bbbbbb"
 
           action-alias: "#aa77aa"

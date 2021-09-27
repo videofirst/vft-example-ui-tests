@@ -35,11 +35,11 @@ public class VfaAction {
 
     @Getter
     @Setter(AccessLevel.NONE)
-    private Throwable throwable;
+    private VfaStatus status;
 
     @Getter
     @Setter(AccessLevel.NONE)
-    private VfaStatus status;
+    private VfaError error;
 
     // children actions
 
@@ -121,13 +121,13 @@ public class VfaAction {
         }
     }
 
-    public void setThrowable(Throwable throwable) {
-        if (this.throwable != null) {
+    public void setError(VfaError error) {
+        if (this.error != null) {
             return;
         }
-        this.throwable = throwable;
+        this.error = error;
         if (this.getScenario() != null) {
-            this.getScenario().setThrowable(throwable);
+            this.getScenario().setError(error);
         }
     }
 

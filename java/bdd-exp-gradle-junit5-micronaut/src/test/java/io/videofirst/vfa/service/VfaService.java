@@ -6,10 +6,12 @@ import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.logger.VfaLogger;
 import io.videofirst.vfa.model.VfaAction;
+import io.videofirst.vfa.model.VfaError;
 import io.videofirst.vfa.model.VfaFeature;
 import io.videofirst.vfa.model.VfaScenario;
 import io.videofirst.vfa.model.VfaStep;
 import io.videofirst.vfa.model.VfaTime;
+import io.videofirst.vfa.properties.VfaExceptionsProperties;
 import java.util.List;
 import java.util.Stack;
 import javax.inject.Inject;
@@ -19,8 +21,11 @@ import javax.inject.Inject;
  *
  * Note, uses ThreadLocal approach so can be accessed easily from anywhere.
  *
- * TODO (1) - Maybe add an additional service for model transformation as a lot of that is happening in here. TODO (2) -
- * There is 3 ThreadLocal objects - refactor to one?
+ * TODO (1) - Maybe add an additional service for model transformation as a lot of that is happening in here.
+ *
+ * TODO (2) - There is 3 ThreadLocal objects - refactor to one?
+ *
+ * TODO (3) - Add interface.
  */
 @Context // load immediately
 public class VfaService {
@@ -34,6 +39,9 @@ public class VfaService {
 
     @Inject
     private VfaReportsService reportsService;
+
+    @Inject
+    private VfaExceptionsProperties exceptionsProperties;
 
     // Before methods
 
@@ -132,8 +140,8 @@ public class VfaService {
             scenario.setTime(scenario.getTime().finish());
         }
 
-        if (scenario.getThrowable() != null) {
-            throw new VfaException(scenario.getThrowable());
+        if (scenario.getError() != null && scenario.getError().getThrowable() != null) {
+            throw new VfaException(scenario.getError().getThrowable());
         }
 
         logger.after(scenario);
@@ -183,6 +191,15 @@ public class VfaService {
         // Retrieve last step
         VfaStep stepModel = steps.get(steps.size() - 1);
         return stepModel;
+    }
+
+    public VfaError getVfaError(Throwable throwable) {
+        List<String> stackTrace = exceptionsProperties.getFilteredStackTrace(throwable);
+        return VfaError.builder()
+            .message(throwable.getMessage())
+            .stackTrace(stackTrace)
+            .throwable(throwable)
+            .build();
     }
 
 }

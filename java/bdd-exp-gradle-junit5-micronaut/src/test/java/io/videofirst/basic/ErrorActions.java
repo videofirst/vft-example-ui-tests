@@ -11,6 +11,10 @@ import javax.inject.Singleton;
 @Singleton
 public class ErrorActions {
 
+    //    {
+//        Logger.getGlobal().setLevel(Level.OFF);
+//    }
+//
     @Action
     public void error() {
         throw new RuntimeException("action error");

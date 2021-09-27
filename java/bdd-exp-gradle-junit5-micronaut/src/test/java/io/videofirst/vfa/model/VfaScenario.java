@@ -36,7 +36,7 @@ public class VfaScenario {
 
     @Getter
     @Setter(AccessLevel.NONE)
-    private Throwable throwable;
+    private VfaError error;
 
     // used with e.g. given().I_am_at_the_homepage(); // FIXME - move to service layer ????
     private StepType stepType;
@@ -75,11 +75,11 @@ public class VfaScenario {
         this.status = status;
     }
 
-    public void setThrowable(Throwable throwable) {
-        if (this.throwable != null) {
+    public void setError(VfaError error) {
+        if (this.error != null) {
             return;
         }
-        this.throwable = throwable;
+        this.error = error;
     }
 
 }

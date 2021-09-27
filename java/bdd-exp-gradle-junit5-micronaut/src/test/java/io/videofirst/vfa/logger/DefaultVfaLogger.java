@@ -7,6 +7,7 @@ import com.diogonunes.jcolor.Attribute;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.model.VfaAction;
+import io.videofirst.vfa.model.VfaError;
 import io.videofirst.vfa.model.VfaFeature;
 import io.videofirst.vfa.model.VfaScenario;
 import io.videofirst.vfa.model.VfaStep;
@@ -102,12 +103,6 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         // nothing at min
     }
 
-    private boolean isLogAction(VfaAction action) {
-        int actionParentCount = action.countParents();
-        int actionDepth = loggerConfig.getActionDepth();
-        return actionDepth > actionParentCount || actionDepth == NONE;
-    }
-
     // Protected methods
 
     /**
@@ -197,6 +192,12 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         print(repeat(TEXT_SPACE, numberOfSpaces));
     }
 
+    protected void printActionErrorSpaces(VfaAction action) {
+        int numberOfSpaces = loggerConfig.getRightColumnChars() - line.length();
+        numberOfSpaces += (action.countParents() + 1) * loggerConfig.getIndentChars();  // indent for each action level
+        print(repeat(TEXT_SPACE, numberOfSpaces));
+    }
+
     protected void printActionParameters(VfaAction action) {
         // Print parameter
         boolean isFinished = action.isFinished();
@@ -224,26 +225,55 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
 
     protected void printActionStatus(VfaAction action) {
         VfaStatus status = action.getStatus();
-        VfaScenario scenario = action.getScenario();
         if (status != null) {
-            String statusSymbol = theme.getLabel(action.getStatus());
+            String statusSymbol = theme.getLabel(status);
             String themeColour = getStatusColour(status);
 
+            // Has there been an error ?
+            // FIXME refactor maybe into small methods ???
             if (status.isErrorOrFail()) {
-                // put errors / failures on new line
+                VfaScenario scenario = action.getScenario();
+
+                // Put errors / failures on new line
                 println();
-                printActionSpaces(action);
-                print(TEXT_SPACE);
-                print(TEXT_SPACE);
+                printActionErrorSpaces(action);
                 print(statusSymbol, themeColour);
-                print(TEXT_SPACE);
-                if (scenario.getThrowable() != null) {
-                    print(action.getThrowable().getMessage(), themeColour);
+                if (scenario.getError() != null) {
+                    VfaError error = scenario.getError();
+
+                    // Display message
+                    print(TEXT_SPACE);
+                    print(error.getMessage(), themeColour);
+
+                    // Now display link from exception
+                    for (String line : error.getStackTrace()) {
+                        println();
+                        printActionErrorSpaces(action);
+                        print(line, themeColour);
+                    }
                 }
             } else {
                 print(statusSymbol, themeColour);
             }
         }
+    }
+
+    protected boolean isLogAction(VfaAction action) {
+        int actionParentCount = action.countParents();
+        int actionDepth = loggerConfig.getActionDepth();
+        return actionDepth > actionParentCount || actionDepth == NONE;
+    }
+
+    protected boolean isAliasIgnored(String alias) {
+        if (loggerConfig.getIgnoreAliases() == null) {
+            return false;
+        }
+        return loggerConfig.getIgnoreAliases().stream()
+            .anyMatch(p -> p != null && p.trim().equalsIgnoreCase(alias));
+    }
+
+    protected String getStatusColour(VfaStatus status) {
+        return STATUS_COLOUR_MAP.containsKey(status) ? STATUS_COLOUR_MAP.get(status) : null;
     }
 
     // Low level print methods
@@ -276,18 +306,6 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
 
     protected void resetLine() {
         line.setLength(0);
-    }
-
-    protected boolean isAliasIgnored(String alias) {
-        if (loggerConfig.getIgnoreAliases() == null) {
-            return false;
-        }
-        return loggerConfig.getIgnoreAliases().stream()
-            .anyMatch(p -> p != null && p.trim().equalsIgnoreCase(alias));
-    }
-
-    protected String getStatusColour(VfaStatus status) {
-        return STATUS_COLOUR_MAP.containsKey(status) ? STATUS_COLOUR_MAP.get(status) : null;
     }
 
 }

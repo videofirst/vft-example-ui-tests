@@ -8,8 +8,11 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.UIAssertionError;
 import io.micronaut.context.annotation.Context;
 import io.videofirst.vfa.Action;
+import io.videofirst.vfa.web.exception.VfaWebAssertionError;
+import java.util.regex.Pattern;
 import org.openqa.selenium.By;
 
 /**
@@ -36,11 +39,21 @@ public class WebActions extends VfaSelenideActions {
         return this;
     }
 
+    private static final Pattern LINE_SEP_PATTERN = Pattern.compile("\\R");
+
     @Action(isAssert = true)
     public WebActions text_contains(String target, String value) {
-        String elmText = elm(target).text();
-        assertThat(elmText).contains(value).withFailMessage(
-            "Expecting element [ " + target + " ] with text [ " + elmText + " ] to contain [ " + value + " ]");
+        try {
+            // FIXME put in method / class?
+            String elmText = elm(target).text();
+            assertThat(elmText).contains(value).withFailMessage(
+                "Expecting element [ " + target + " ] with text [ " + elmText + " ] to contain [ " + value + " ]");
+        } catch (UIAssertionError e) {
+            String[] parts = LINE_SEP_PATTERN.split(e.getMessage());
+            if (parts != null && parts.length > 0) {
+                throw new VfaWebAssertionError(parts[0], e);
+            }
+        }
         return this;
     }
 

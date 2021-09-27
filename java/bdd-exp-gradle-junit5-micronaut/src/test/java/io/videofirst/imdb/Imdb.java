@@ -16,8 +16,6 @@ public class Imdb extends Steps<Imdb> {
     @Inject
     private AdvancedWebActions web;
 
-    // Steps (Given)
-
     @Step
     public void given_a_user_is_at_the_homepage() {
         web.open(homepage);
