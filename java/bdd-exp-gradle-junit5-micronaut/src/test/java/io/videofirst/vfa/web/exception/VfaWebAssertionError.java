@@ -13,5 +13,4 @@ public class VfaWebAssertionError extends VfaAssertionError {
         super(message, throwable);
     }
 
-
 }

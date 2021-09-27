@@ -97,6 +97,7 @@ public class StacktraceTest {
         "org\\.junit.*",
         "com\\.intellij.*",
         "sun\\.reflect.*",
+        "java\\.lang\\.reflect.*",
         "java\\.util\\.ArrayList.*",
         "io\\.micronaut\\.(aop|context).*",
         "io\\.videofirst\\.vfa.*",
@@ -117,6 +118,16 @@ public class StacktraceTest {
                 System.out.println(lineNum + line);
             }
         }
+        System.out.println();
+        for (String line : STACKTRACE) {  // 82 no filtering
+            if (!ignoreStacktraceLine(line)) {
+                String lineNum = (i++) + "\t";
+                String abbreviatedLine = abbreviate(line);
+                System.out.println(lineNum + abbreviatedLine);
+            }
+        }
+        System.out.println();
+        System.out.println("io.videofirst.google.ErrorActions(ErrorActions.java:21)");
     }
 
     private static boolean ignoreStacktraceLine(String line) {
@@ -127,6 +138,24 @@ public class StacktraceTest {
             }
         }
         return false;
+    }
+
+    private static String abbreviate(String logLine) {
+        int index = logLine.indexOf("(");
+        String[] parts = logLine.substring(0, index).split("\\.");
+        if (parts.length <= 2) {
+            return logLine; // no change
+        }
+        StringBuilder sb = new StringBuilder();
+        String sep = "";
+        for (int i = 0; i < parts.length; i++) {
+            boolean abbreviate = i < parts.length - 3;
+            String part = abbreviate ? parts[i].substring(0, 1) : parts[i];
+            sb.append(sep + part);
+            sep = ".";
+        }
+        sb.append(logLine.substring(index));
+        return sb.toString();
     }
 
 }

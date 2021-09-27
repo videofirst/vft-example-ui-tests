@@ -20,6 +20,7 @@ TODO
     [x] - Ensure failures are handled different to errors.
     [x] - Remove unnecessary classes from stacktraces.
     [x] - Add new 'exceptions' configurable section.
+    [x] - Add method to actions to handle exceptions.
     [ ] - Make exception position configurable (inline / bottom).
     [ ] - Wrapper exceptions inside an exception which doesn't output (for Intelli-J support).  
     [ ] - Make action exceptions configurable based on max top/bottom lines (do we need now?)

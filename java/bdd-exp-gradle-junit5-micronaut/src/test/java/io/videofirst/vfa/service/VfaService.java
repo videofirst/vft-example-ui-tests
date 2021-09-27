@@ -193,6 +193,7 @@ public class VfaService {
         return stepModel;
     }
 
+    // Maybe in another class (SRP).
     public VfaError getVfaError(Throwable throwable) {
         List<String> stackTrace = exceptionsProperties.getFilteredStackTrace(throwable);
         return VfaError.builder()

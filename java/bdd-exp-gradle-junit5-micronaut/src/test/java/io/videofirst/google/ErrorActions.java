@@ -1,4 +1,4 @@
-package io.videofirst.basic;
+package io.videofirst.google;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

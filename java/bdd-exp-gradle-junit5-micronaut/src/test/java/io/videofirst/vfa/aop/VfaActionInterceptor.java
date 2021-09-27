@@ -8,6 +8,7 @@ import io.videofirst.vfa.Alias;
 import io.videofirst.vfa.BeforeAction;
 import io.videofirst.vfa.ErrorAction;
 import io.videofirst.vfa.enums.VfaStatus;
+import io.videofirst.vfa.exceptions.handlers.ThrowableConverter;
 import io.videofirst.vfa.model.VfaAction;
 import io.videofirst.vfa.service.VfaService;
 import java.util.LinkedHashMap;
@@ -48,7 +49,12 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
 
                 actionModel.setStatus(VfaStatus.passed);
             } catch (Throwable e) { // catch everything
+                ThrowableConverter exceptionConverter = getActionExceptionConverter(methodContext);
+                if (exceptionConverter != null) {
+                    e = exceptionConverter.convertThrowable(e);
+                }
                 VfaStatus status = getStatus(e);
+
                 actionModel.setStatus(status);
                 actionModel.setError(vfaService.getVfaError(e));
 
@@ -132,6 +138,13 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
     private ErrorAction getErrorAction(MethodInvocationContext<Object, Object> context) {
         if (context.getTarget() instanceof ErrorAction) {
             return (ErrorAction) context.getTarget();
+        }
+        return null;
+    }
+
+    private ThrowableConverter getActionExceptionConverter(MethodInvocationContext<Object, Object> context) {
+        if (context.getTarget() instanceof ThrowableConverter) {
+            return (ThrowableConverter) context.getTarget();
         }
         return null;
     }

@@ -4,22 +4,26 @@ import com.codeborne.selenide.Browser;
 import com.codeborne.selenide.Config;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.ex.UIAssertionError;
 import com.codeborne.selenide.webdriver.ChromeDriverFactory;
 import io.videofirst.vfa.Action;
 import io.videofirst.vfa.AfterAction;
 import io.videofirst.vfa.BeforeAction;
 import io.videofirst.vfa.ErrorAction;
 import io.videofirst.vfa.enums.VfaReportMedia;
+import io.videofirst.vfa.exceptions.handlers.ThrowableConverter;
 import io.videofirst.vfa.model.VfaAction;
 import io.videofirst.vfa.model.VfaFeature;
 import io.videofirst.vfa.properties.VfaReportsProperties;
 import io.videofirst.vfa.service.VfaReportsService;
+import io.videofirst.vfa.web.exception.VfaWebAssertionError;
 import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
@@ -37,7 +41,7 @@ import org.openqa.selenium.remote.service.DriverService;
  *
  * @author Bob Marks
  */
-public abstract class VfaSelenideActions implements BeforeAction, AfterAction, ErrorAction {
+public abstract class VfaSelenideActions implements BeforeAction, AfterAction, ErrorAction, ThrowableConverter {
 
     private String seleniumWebBrowser = "chrome"; // FIXME inject from config
 
@@ -46,6 +50,8 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction, E
 
     @Inject
     private VfaReportsService reportsService;
+
+    private static final Pattern LINE_SEP_PATTERN = Pattern.compile("\\R");
 
     private AtomicInteger screenshotIndex = new AtomicInteger();
 
@@ -80,6 +86,19 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction, E
     @Override
     public void error(VfaAction action) {
         checkScreenshot(action, false);
+    }
+
+    @Override
+    public Throwable convertThrowable(Throwable throwable) {
+        if (throwable instanceof UIAssertionError) {
+            // Selenide error messages are needlessly complex - Here we are splitting on first line and returning it
+            // only.
+            String[] parts = LINE_SEP_PATTERN.split(throwable.getMessage());
+            if (parts != null && parts.length > 0) {
+                return new VfaWebAssertionError(parts[0], throwable);
+            }
+        }
+        return throwable;
     }
 
     // Private methods

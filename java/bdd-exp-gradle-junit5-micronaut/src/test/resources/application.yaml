@@ -50,6 +50,7 @@ vfa:
       - "io\\.micronaut\\.(aop|context).*"
       - "io\\.videofirst\\.vfa.*"
       - ".*\\.\\$\\w+\\$.*"
+      - ".*convertThrowable.*"
       # FIXME put it's own web module hierarchy - com.codeborne.selenide.impl
       - "com\\.codeborne\\.selenide\\.impl.*"
 
@@ -74,7 +75,7 @@ vfa:
     action-depth: 2
 
     # Number of characters to start the right column (increase if step text is longer)
-    right-column-chars: 70
+    right-column-chars: 80
 
     # Number of characters to indent
     indent-chars: 2
@@ -116,7 +117,7 @@ vfa:
           scenario-id: "#5599ee"
 
           #step-label: "#dd9966"   # Old orange one - quite nice but not at scale
-          step-label: "#66cccc"
+          step-label: "#77cccc"
           step-text: "#bbbbbb"
 
           action-alias: "#aa77aa"
