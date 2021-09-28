@@ -43,13 +43,14 @@ vfa:
     # Regular expression core exception ignores
     ignores:
       - "org\\.junit.*"
-      - "com\\.intellij.*"
+      - "io\\.micronaut\\.(aop|context).*"
+      - "java\\.(util|lang).*"
+      - "io\\.videofirst\\.vfa.*"
       - ".*\\.reflect.*"
       - "com\\.sun.*"
-      - "java\\.util\\.ArrayList.*"
-      - "io\\.micronaut\\.(aop|context).*"
-      - "io\\.videofirst\\.vfa.*"
-      - ".*\\.\\$\\w+\\$.*"
+      - "com\\.intellij.*"
+      - "org\\.gradle\\..*"
+      - ".*\\.\\$\\w+\\$.*"     # Synthetic classes
       - ".*convertThrowable.*"
       # FIXME put it's own web module hierarchy - com.codeborne.selenide.impl
       - "com\\.codeborne\\.selenide\\.impl.*"

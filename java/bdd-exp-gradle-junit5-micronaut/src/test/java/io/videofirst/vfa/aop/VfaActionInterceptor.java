@@ -62,6 +62,9 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
                 if (errorAction != null) {
                     errorAction.error(actionModel);
                 }
+
+                // We don't have a return object so just use the target (so that fluent APIs will still work)
+                object = methodContext.getTarget();
             }
 
             // 4) Optional Low level action class instance after method e.g. take screenshot
@@ -76,6 +79,7 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
         vfaService.after(actionModel);
 
         actionModel.setMethodContext(null); // remove this context again and return object
+
         return object;
     }
 

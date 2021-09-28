@@ -24,13 +24,13 @@ public class RobotFeature {
     @Inject
     private Robot robot;
 
-    @Scenario(text = "Add two words (v1)", id = 1234)
+    @Scenario(text = "Add two words (v1)")
     public void add_two_words_version_one() {
         given("I am at the homepage");
         web.open("https://robotspelling.com/");
 
         when("I add the word 'Belfast'");
-        web.type("#wordbox", "Belfast")
+        web.type("#wordbox2", "Belfast")
             .click("#actionbtn");
         and("I add the word 'Robot'");
         web.type("#wordbox", "Robot")
@@ -39,7 +39,7 @@ public class RobotFeature {
         then("I expect to see the two words in the list");
     }
 
-    @Scenario(text = "Add two words (v2)", id = 1234)
+    @Scenario(text = "Add two words (v2)")
     public void add_two_words_version_two() {
         robot.given().I_at_the_homepage()
 

@@ -23,7 +23,7 @@ TODO
     [x] - Add method to actions to handle exceptions.
     [x] - Abbreviate fully qualified class name so a configurable number of parts are displayed. 
     [.] - Make exception position configurable (inline / bottom).
-    [ ] - Wrapper exceptions inside an exception which doesn't output (for Intelli-J support).  
+    [ ] - Wrapper exceptions so we don't display output (for Intelli-J support).  
     [ ] - Make when screenshots / page models are configurable.
     [ ] - Add counts in feature.
     [ ] - Refactor into modules - for now (1 platform) + (1 web).

@@ -12,6 +12,10 @@ version = "21.0.0"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 dependencies {
 
     testCompileOnly "org.projectlombok:lombok:1.18.20"
@@ -39,6 +43,11 @@ dependencies {
 
 }
 
+compileJava.options.encoding = 'UTF-8'
+
 test {
     useJUnitPlatform()
+    systemProperty "file.encoding", "utf-8"
 }
+
+
