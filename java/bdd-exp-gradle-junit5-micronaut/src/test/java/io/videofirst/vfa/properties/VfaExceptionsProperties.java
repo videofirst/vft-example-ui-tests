@@ -3,6 +3,7 @@ package io.videofirst.vfa.properties;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.core.util.clhm.ConcurrentLinkedHashMap;
+import io.videofirst.vfa.enums.VfaExceptionPosition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ public class VfaExceptionsProperties {
 
     // Injected config
 
+    private VfaExceptionPosition position;
     private List<String> coreIgnores;
     private Optional<List<String>> ignores;
     private Integer linesTop;

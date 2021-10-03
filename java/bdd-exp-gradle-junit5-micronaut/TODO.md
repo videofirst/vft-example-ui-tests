@@ -28,7 +28,7 @@ TODO
       [x] - Add `core-ignores` + optional `ignores` to configuration. 
       [x] - Wrapper exceptions so we don't display output (for Intelli-J support).  
       [x] - Configurable option to show full stacktrace. 
-      [ ] - Make exception position configurable (inline / bottom) using config.
+      [.] - Make exception position configurable (inline / bottom) using config.
     [ ] Debugging
       [ ] IntelliJ options for not saving screenshots when in debug mode.
       [ ] - Make saving screenshots / page models are configurable.

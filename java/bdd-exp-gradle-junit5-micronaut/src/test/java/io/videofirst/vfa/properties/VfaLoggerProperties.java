@@ -1,7 +1,5 @@
 package io.videofirst.vfa.properties;
 
-import static java.util.Arrays.asList;
-
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Context;
 import io.videofirst.vfa.enums.VfaLogLevel;
@@ -9,6 +7,7 @@ import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.properties.model.VfaTheme;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.Data;
@@ -28,7 +27,8 @@ public class VfaLoggerProperties {
     private int actionDepth;
     private int rightColumnChars;
     private int indentChars;
-    private List<String> ignoreAliases = asList("web");
+    private int indentStacktrace;
+    private Optional<List<String>> ignoreAliases;
     private Map<String, Map<String, Object>> themes;
 
     // Other config

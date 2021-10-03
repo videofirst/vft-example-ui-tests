@@ -30,7 +30,7 @@ public class RobotFeature {
         web.open("https://robotspelling.com/");
 
         when("I add the word 'Belfast'");
-        web.type("#wordbo2x", "Belfast")
+        web.type("#wordbox", "Belfast")
             .click("#actionbtn");
         and("I add the word 'Robot'");
         web.type("#wordbox", "Robot")

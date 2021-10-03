@@ -37,7 +37,7 @@ vfa:
 
   exceptions:
 
-    # Position of logs ("inline" or "bottom") TODO
+    # Position of logs ("inline" or "bottom")
     position: "inline"
 
     # Regular expression for core exception ignores.  This list shouldn't change between projects.
@@ -91,10 +91,14 @@ vfa:
     # Number of characters to start the right column (increase if step text is longer)
     right-column-chars: 75
 
-    # Number of characters to indent
+    # Number of characters to indent each level (normally 2 or 4)
     indent-chars: 2
 
-    # Aliases to ignore (comma separated)
+    # Number of characters to indent stacktrace
+    # NOTE: only applicable if 'vfa.exceptions.position' = 'bottom')
+    indent-stacktrace: 10
+
+    # Aliases to ignore
     ignore-aliases:
       - "web"
 
