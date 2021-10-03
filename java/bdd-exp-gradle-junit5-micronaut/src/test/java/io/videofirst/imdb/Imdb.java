@@ -2,6 +2,7 @@ package io.videofirst.imdb;
 
 import io.micronaut.context.annotation.Value;
 import io.videofirst.google.actions.AdvancedWebActions;
+import io.videofirst.vfa.Action;
 import io.videofirst.vfa.Step;
 import io.videofirst.vfa.Steps;
 import javax.inject.Inject;
@@ -18,6 +19,12 @@ public class Imdb extends Steps<Imdb> {
 
     @Step
     public void given_a_user_is_at_the_homepage() {
+        //web.open(homepage);
+        open_homepage();
+    }
+
+    @Action
+    public void open_homepage() {
         web.open(homepage);
     }
 
