@@ -27,7 +27,7 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
         // Retrieve Actions object and model
         VfaAction actionModel = getVfaAction(methodContext);
 
-        // 1) High level Service before e.g. start logging / timings
+        // High level Service before e.g. start logging / timings
         vfaService.before(actionModel);
 
         Object object = null;
@@ -36,25 +36,30 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
             // Set status as skip as we're not in progress any more
             actionModel.setStatus(VfaStatus.ignored);
         } else {
-            // 2) Optional Low level action class instance before method
-            BeforeAction beforeAction = getBeforeAction(methodContext);
-            if (beforeAction != null) {
-                // fixme - error handling? Maybe re-usable method?
-                beforeAction.before(actionModel);
-            }
-
-            // 3) Run this action e.g. selenium click event
             try {
-                object = methodContext.proceed();
+                // Optional Low level action class instance before method
+                BeforeAction beforeAction = getBeforeAction(methodContext);
+                if (beforeAction != null) {
+                    // fixme - error handling? Maybe re-usable method?
+                    beforeAction.before(actionModel);
+                }
 
+                // Run this action e.g. selenium click event
+                object = methodContext.proceed();
                 actionModel.setStatus(VfaStatus.passed);
+
+                // Optional Low level action class instance after method e.g. take screenshot
+                AfterAction afterAction = getAfterAction(methodContext);
+                if (afterAction != null) {
+                    // fixme - error handling? Maybe re-usable method?
+                    afterAction.after(actionModel);
+                }
             } catch (Throwable e) { // catch everything
                 ThrowableConverter exceptionConverter = getActionExceptionConverter(methodContext);
                 if (exceptionConverter != null) {
-                    e = exceptionConverter.convertThrowable(e);
+                    e = exceptionConverter.convertThrowable(e); // should this be a message converter
                 }
                 VfaStatus status = getStatus(e);
-
                 actionModel.setStatus(status);
                 actionModel.setError(vfaService.getVfaError(e));
 
@@ -62,24 +67,18 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
                 if (errorAction != null) {
                     errorAction.error(actionModel);
                 }
-
-                // We don't have a return object so just use the target (so that fluent APIs will still work)
-                object = methodContext.getTarget();
-            }
-
-            // 4) Optional Low level action class instance after method e.g. take screenshot
-            AfterAction afterAction = getAfterAction(methodContext);
-            if (afterAction != null) {
-                // fixme - error handling? Maybe re-usable method?
-                afterAction.after(actionModel);
             }
         }
 
-        // 5) High level Service after e.g. finish logging / timings etc
+        // High level Service after e.g. finish logging / timings etc
         vfaService.after(actionModel);
 
         actionModel.setMethodContext(null); // remove this context again and return object
 
+        // We don't have a return object so just use the target (so that fluent APIs will still work)
+        if (object == null) {
+            object = methodContext.getTarget();
+        }
         return object;
     }
 

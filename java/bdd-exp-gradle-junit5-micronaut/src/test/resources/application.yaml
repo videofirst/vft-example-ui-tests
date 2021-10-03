@@ -40,8 +40,8 @@ vfa:
     # Position of logs ("inline" or "bottom") TODO
     position: "inline"
 
-    # Regular expression core exception ignores
-    ignores:
+    # Regular expression for core exception ignores.  This list shouldn't change between projects.
+    core-ignores:
       - "org\\.junit.*"
       - "io\\.micronaut\\.(aop|context).*"
       - "java\\.(util|lang).*"
@@ -55,9 +55,23 @@ vfa:
       # FIXME put it's own web module hierarchy - com.codeborne.selenide.impl
       - "com\\.codeborne\\.selenide\\.impl.*"
 
+    # Optional ignores - enables each project to have specific additional ignores.  List of regular
+    # expressions in same format as `core-ignores`.
+    ignores:
+
     # Number of parts of a fully-qualified class name to display in an exception trace.  This
-    # ensures that we only show what is necessary (-1 = show all)
+    # ensures that we only show what is necessary (-1 = show every part). Note, the root package is
+    # always displayed.  For example, if `show-parts` = 2 then the following stacktrace ...
+    #
+    #     com.amazon.user.tests.SearchFeature.search_by_id
+    #
+    # ... will be abbreviated to ...
+    #
+    #     com.a.u.t.SearchFeature.search_by_id
     show-parts: 2
+
+    # Boolean to denote if we show the full stack track or not (can be useful for debugging)
+    show-full: false
 
   # -------------------------------------------------------------------------------
   # 4) Logger properties
@@ -110,16 +124,12 @@ vfa:
           feature-text: "#eeeeee"
           feature-description: "#bbbbbb"
           feature-id: "#9999ee"
-
           scenario-label: "#5599ee"
           scenario-colon: "#666666"
           scenario-text: "#eeeeee"
           scenario-id: "#5599ee"
-
-          #step-label: "#dd9966"   # Old orange one - quite nice but not at scale
-          step-label: "#77cccc"
+          step-label: "#88aacc"
           step-text: "#bbbbbb"
-
           action-alias: "#aa77aa"
           action-dot: "#bbbbbb"
           action-method: "#bbbbbb"
@@ -128,10 +138,10 @@ vfa:
           action-param-other: "#ffcc66"
           action-comma: "#cccc66"
           action-ignored: "#777777"
-
           status-passed: "#499c54"
           status-failed: "#bd8e3e"
           status-error: "#af4f4f"
           status-ignored: "#777777"
-
           right-colon: "#666666"
+
+          #step-label: "#dd9966"   # Old orange one - quite nice but not at scale

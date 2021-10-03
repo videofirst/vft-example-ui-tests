@@ -211,16 +211,32 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
             }
 
             Object paramValue = param.getValue();
-            if (paramValue instanceof String) {
-                String quotedParamValue = VfaUtils.quote((String) paramValue);
-                print(quotedParamValue, isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_STRING_PARAM);
+            if (paramValue instanceof Object[]) { // Last parameter can be an array
+                Object[] array = (Object[]) paramValue;
+                for (Object arrayParamValue : array) {
+                    if (index > 0) {
+                        print(TEXT_METHOD_COMMA, isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_COMMA);
+                    }
+                    printActionParameterValue(action, arrayParamValue);
+                    index++;
+                }
             } else {
-                print(String.valueOf(paramValue), isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_OTHER_PARAM);
+                printActionParameterValue(action, paramValue);
+                index++;
             }
-            index++;
         }
         print(TEXT_BRACKET_CLOSE, isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_BRACKETS);
         print(TEXT_SPACE);
+    }
+
+    protected void printActionParameterValue(VfaAction action, Object paramValue) {
+        boolean isFinished = action.isFinished();
+        if (paramValue instanceof String) {
+            String quotedParamValue = VfaUtils.quote((String) paramValue);
+            print(quotedParamValue, isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_STRING_PARAM);
+        } else {
+            print(String.valueOf(paramValue), isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_OTHER_PARAM);
+        }
     }
 
     protected void printActionStatus(VfaAction action) {

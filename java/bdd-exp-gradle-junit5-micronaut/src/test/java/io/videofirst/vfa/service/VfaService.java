@@ -4,6 +4,7 @@ import io.micronaut.context.annotation.Context;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.exceptions.VfaException;
+import io.videofirst.vfa.exceptions.VfaSilentException;
 import io.videofirst.vfa.logger.VfaLogger;
 import io.videofirst.vfa.model.VfaAction;
 import io.videofirst.vfa.model.VfaError;
@@ -140,11 +141,17 @@ public class VfaService {
             scenario.setTime(scenario.getTime().finish());
         }
 
-        if (scenario.getError() != null && scenario.getError().getThrowable() != null) {
-            throw new VfaException(scenario.getError().getThrowable());
-        }
-
         logger.after(scenario);
+
+        // Check if an exception was thrown
+        if (scenario.getError() != null && scenario.getError().getThrowable() != null) {
+            boolean showFull = this.exceptionsProperties.isShowFull();
+            if (showFull) {
+                throw new VfaException(scenario.getError().getThrowable());
+            } else {
+                throw new VfaSilentException(scenario.getError().getThrowable());
+            }
+        }
     }
 
     public void after(VfaFeature feature) {

@@ -6,6 +6,7 @@ import io.micronaut.core.util.clhm.ConcurrentLinkedHashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,10 +24,12 @@ public class VfaExceptionsProperties {
 
     // Injected config
 
-    private List<String> ignores;
+    private List<String> coreIgnores;
+    private Optional<List<String>> ignores;
     private Integer linesTop;
     private Integer linesBottom;
     private Integer showParts;
+    private boolean showFull;
 
     // Other fields
 
@@ -38,12 +41,11 @@ public class VfaExceptionsProperties {
 
     @PostConstruct
     public void init() {
-        if (this.ignores == null || this.ignores.isEmpty()) {
-            return;
-        }
         this.patternIgnores = new ArrayList<>();
-        for (String ignore : ignores) {
-            patternIgnores.add(Pattern.compile("^" + ignore + "$"));
+
+        addIgnores(coreIgnores);
+        if (ignores.isPresent()) {
+            addIgnores(ignores.get());
         }
     }
 
@@ -67,16 +69,27 @@ public class VfaExceptionsProperties {
         return ignoreExceptionLineCache.computeIfAbsent(line, (key) -> checkIgnorePatternForMatch(line));
     }
 
+    // Private method
+
+    private void addIgnores(List<String> ignores) {
+        if (ignores == null || ignores.isEmpty()) {
+            return;
+        }
+        for (String ignore : ignores) {
+            patternIgnores.add(Pattern.compile("^" + ignore + "$"));
+        }
+    }
+
     /**
-     * Abbreviate a line e.g.
+     * Abbreviate a line. For example, if the `showParts` property is set to 2 and a strack trace line is:
      *
      * io.videofirst.google.GoogleSearch.search_for_token(GoogleSearch.java:21)
      *
-     * ... can become ...
+     * ... then the abbreviated line will be ...
      *
-     * i.v.g.GoogleSearch.search_for_token(GoogleSearch.java:21)
+     * io.v.g.GoogleSearch.search_for_token(GoogleSearch.java:21)
      *
-     * If the `showParts` property is set to 2.
+     * (NOTE: the root package is always shown in full as these are generally short e.g. com, io, etc)
      */
     private String abbreviateLine(String line) {
         if (showParts != null && showParts != -1 && line.indexOf("(") != -1) {
@@ -89,7 +102,7 @@ public class VfaExceptionsProperties {
             StringBuilder sb = new StringBuilder();
             String sep = "";
             for (int i = 0; i < parts.length; i++) {
-                boolean abbreviate = i < parts.length - showParts;
+                boolean abbreviate = i > 0 && i < parts.length - showParts;
                 String part = abbreviate ? parts[i].substring(0, 1) : parts[i];
                 sb.append(sep + part);
                 sep = ".";
@@ -100,8 +113,6 @@ public class VfaExceptionsProperties {
         }
         return line;
     }
-
-    // Private method
 
     /**
      * Iterate over each pattern and see if there is match for this line.

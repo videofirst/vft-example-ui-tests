@@ -31,12 +31,12 @@ public class Robot extends Steps<Robot> {
 
     @Step
     public Robot I_expect_to_see_the_words_in_a_list(String... words) {
-        do_something();
+        check_words_in_list(words);
         return this;
     }
 
     @Action
-    public Robot do_something() {
+    public Robot check_words_in_list(String... words) {
         return this;
     }
 
