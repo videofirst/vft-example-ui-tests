@@ -30,7 +30,7 @@ TODO
     [x] Configurable option to show full stacktrace. 
     [x] Make exception position configurable (inline / bottom) using config.
   [.] Create / Modules
-    [.] Fix bug where child actions create multiple statuses.
+    [x] Fix bug where child actions create multiple statuses.
     [ ] Make saving screenshots / page models are configurable.
     [ ] Add counts in feature.
     [ ] Refactor into modules - for now (1 platform) + (1 selenide).
