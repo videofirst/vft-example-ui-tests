@@ -14,7 +14,7 @@ import javax.inject.Inject;
 /**
  * @author Bob Marks
  */
-@Feature
+@Feature(description = "Tests the advanced name search feature in IMDB")
 public class AdvNameSearchFeature {
 
     @Inject

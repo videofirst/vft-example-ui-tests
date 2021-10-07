@@ -29,4 +29,9 @@ public @interface Step {
      */
     String value() default "";
 
+    /**
+     * Boolean to denote if we add quotations around parameters (e.g. double quotes to String).  Defaults to true.
+     */
+    boolean addQuotes() default true;
+
 }

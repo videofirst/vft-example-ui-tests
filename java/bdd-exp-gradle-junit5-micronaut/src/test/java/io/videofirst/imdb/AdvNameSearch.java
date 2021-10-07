@@ -64,7 +64,7 @@ public class AdvNameSearch extends Steps<AdvNameSearch> {
         return this;
     }
 
-    @Step
+    @Step(addQuotes = false)
     public AdvNameSearch I_type_name_$(String name) {
         web.type("name=name", name);
         return this;

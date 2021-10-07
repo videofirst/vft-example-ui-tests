@@ -1,6 +1,7 @@
 package io.videofirst.vfa.logger;
 
 import static com.diogonunes.jcolor.Ansi.colorize;
+import static io.videofirst.vfa.util.VfaUtils.PARAM_CHAR;
 import static io.videofirst.vfa.util.VfaUtils.repeat;
 
 import com.diogonunes.jcolor.Attribute;
@@ -16,7 +17,9 @@ import io.videofirst.vfa.properties.VfaExceptionsProperties;
 import io.videofirst.vfa.properties.VfaLoggerProperties;
 import io.videofirst.vfa.properties.model.VfaTheme;
 import io.videofirst.vfa.util.VfaUtils;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -74,7 +77,8 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
 
     @Override
     public void before(VfaStep step) {
-        printStepTypeAndText(step);
+        printStepType(step);
+        printStepText(step);
     }
 
     @Override
@@ -129,13 +133,14 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
             print(String.valueOf(feature.getId()), COLOUR_FEATURE_ID);
         }
         println();
+        println();
     }
 
     protected void printFeatureDescription(VfaFeature feature) {
         if (feature.getDescription() != null && !feature.getDescription().isEmpty()) {
-            println();
             print(indentSpaces);
             println(feature.getDescription().trim(), COLOUR_FEATURE_DESCRIPTION);
+            println();
         }
     }
 
@@ -152,20 +157,64 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         println();
     }
 
-    protected void printStepTypeAndText(VfaStep step) {
+    protected void printStepType(VfaStep step) {
         println();
 
         // Step label e.g. "Given"
-        boolean isFinished = step.isFinished();
         StepType stepType = step.getType();
-        String colorStepLabel = getStepTypeColor(step, isFinished);
+        String colorStepLabel = getStepTypeColor(step);
         print(indentSpaces + indentSpaces + stepType.label(), colorStepLabel);
-
-        // Step text e.g. "A user is at the homepage"
-        print(TEXT_SPACE + step.getText(), isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_TEXT);
     }
 
-    protected String getStepTypeColor(VfaStep step, boolean isFinished) {
+    protected void printStepText(VfaStep step) {
+
+        // Step text e.g. "A user is at the homepage"
+        print(TEXT_SPACE);
+
+        boolean isFinished = step.isFinished();
+        String stepText = step.getText();
+        String color = isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_TEXT;
+
+        if (VfaUtils.containsParameters(stepText)) {
+            List<Object> paramValues = step.getParams().entrySet().stream().map(p -> p.getValue())
+                .collect(Collectors.toList());
+            String unescapedStepText = VfaUtils.removeParameterEscapeCharacters(stepText);
+
+            // Based loosely on [ https://stackoverflow.com/a/5034592 ]
+            int index = unescapedStepText.indexOf(PARAM_CHAR);
+            int lastIndex = 0, paramIndex = 0;
+            while (index >= 0) {
+                // Print step text
+                print(stepText.substring(lastIndex, index), color);
+
+                // Print step parameter value
+                printStepParameterValue(step, paramValues.get(paramIndex++));
+
+                lastIndex = index + 1;
+                index = unescapedStepText.indexOf(PARAM_CHAR, index + 1);
+            }
+            // Print remaining text (if any exists)
+            if (lastIndex < unescapedStepText.length()) {
+                print(unescapedStepText.substring(lastIndex), color);
+            }
+        } else {
+            print(stepText, color);
+        }
+    }
+
+    protected void printStepParameterValue(VfaStep step, Object paramValue) {
+        boolean isFinished = step.isFinished();
+        if (paramValue instanceof String) {
+            String paramValueString = (String) paramValue;
+            String quotedParamValue = step.isAddQuotes() ? VfaUtils.quote(paramValueString) : paramValueString;
+            print(quotedParamValue, isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_STRING_PARAM);
+        } else {
+            print(String.valueOf(paramValue), isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_OTHER_PARAM);
+        }
+    }
+
+    protected String getStepTypeColor(VfaStep step) {
+        boolean isFinished = step.isFinished();
         if (isFinished) {
             return COLOUR_ACTION_IGNORED;
         } else if (step.getType().isMain()) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.enums.VfaStatus;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,8 @@ public class VfaStep {
 
     private StepType type;
     private String text;
+    private LinkedHashMap<String, Object> params;
+    private boolean addQuotes;
 
     @JsonIgnore
     private int totalActions;   // FIXME - think this would be better as method.

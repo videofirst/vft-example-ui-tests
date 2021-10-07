@@ -2,7 +2,6 @@ package io.videofirst.vfa.aop;
 
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
-import io.micronaut.core.type.MutableArgumentValue;
 import io.videofirst.vfa.AfterAction;
 import io.videofirst.vfa.Alias;
 import io.videofirst.vfa.BeforeAction;
@@ -11,6 +10,7 @@ import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.exceptions.handlers.ThrowableConverter;
 import io.videofirst.vfa.model.VfaAction;
 import io.videofirst.vfa.service.VfaService;
+import io.videofirst.vfa.util.VfaUtils;
 import java.util.LinkedHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -87,7 +87,7 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
         String className = methodContext.getDeclaringType().getName();
         String alias = getAlias(methodContext);
         String methodName = methodContext.getTargetMethod().getName();
-        LinkedHashMap<String, Object> params = getParams(methodContext);
+        LinkedHashMap<String, Object> params = VfaUtils.getParamMapFromMethodContext(methodContext);
 
         // Retrieve parent action (if applicable)
         VfaAction actionModel = VfaAction.builder()
@@ -112,16 +112,6 @@ public class VfaActionInterceptor implements MethodInterceptor<Object, Object> {
                 .toLowerCase();
             return alias;
         }
-    }
-
-    private LinkedHashMap<String, Object> getParams(MethodInvocationContext<Object, Object> context) {
-        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-        for (MutableArgumentValue param : context.getParameters().values()) {
-            String paramName = param.getName();
-            Object paramValue = param.getValue();
-            params.put(paramName, paramValue);
-        }
-        return params;
     }
 
     private BeforeAction getBeforeAction(MethodInvocationContext<Object, Object> context) {

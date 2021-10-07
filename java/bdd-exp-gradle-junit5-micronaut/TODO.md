@@ -31,9 +31,11 @@ TODO
     [x] Make exception position configurable (inline / bottom) using config.
   [.] Tidy-up
     [x] Fix bug where child actions create multiple statuses.
-    [x] Create different colours for step types.
-    [ ] Automatically quote dollar sign parameters to String.
-    [ ] Add ability to override automatic quoting of Strings.
+    [x] Create different colours for main/other step types.
+    [x] Add quotations to String parameters to logs + different colour.
+    [.] Override automatic quoting of step String params based on annotation.
+    [ ] Add default add parameter quoting in config.
+    [ ] Slow debugging - https://youtrack.jetbrains.com/issue/IDEA-27221.
     [ ] Ensure stacktrace from (e.g. invalid step method) are trimmed.
   [ ] Create / Modules
     [ ] Make saving screenshots / page models are configurable.
