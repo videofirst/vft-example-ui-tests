@@ -88,7 +88,7 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
 
     @Override
     public void after(VfaAction action) {
-        if (isLogAction(action)) {
+        if (isLogAction(action) && isLogActionStatus(action)) {
             printActionStatus(action);
         }
     }
@@ -158,10 +158,20 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         // Step label e.g. "Given"
         boolean isFinished = step.isFinished();
         StepType stepType = step.getType();
-        print(indentSpaces + indentSpaces + stepType.label(), isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_LABEL);
+        String colorStepLabel = getStepTypeColor(step, isFinished);
+        print(indentSpaces + indentSpaces + stepType.label(), colorStepLabel);
 
         // Step text e.g. "A user is at the homepage"
         print(TEXT_SPACE + step.getText(), isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_TEXT);
+    }
+
+    protected String getStepTypeColor(VfaStep step, boolean isFinished) {
+        if (isFinished) {
+            return COLOUR_ACTION_IGNORED;
+        } else if (step.getType().isMain()) {
+            return COLOUR_STEP_LABEL;
+        }
+        return COLOUR_STEP_LABEL_OTHER;
     }
 
     protected void printActionAlias(VfaAction action) {
@@ -319,6 +329,11 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         int actionParentCount = action.countParents();
         int actionDepth = loggerConfig.getActionDepth();
         return actionDepth > actionParentCount || actionDepth == NONE;
+    }
+
+    protected boolean isLogActionStatus(VfaAction action) {
+        boolean hasNoChildActions = action.getActions() == null || action.getActions().isEmpty();
+        return hasNoChildActions;
     }
 
     protected boolean isAliasIgnored(String alias) {

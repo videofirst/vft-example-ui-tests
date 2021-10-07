@@ -8,9 +8,23 @@ import static java.lang.String.format;
  */
 public enum StepType {
 
-    given, when, then, and, but, none;
+    // main step types
 
-    private final int longest = 5;
+    given(true),
+    when(true),
+    then(true),
+
+    // other step types
+
+    and(false),
+    but(false),
+    none(false);
+
+    private boolean main;
+
+    StepType(boolean main) {
+        this.main = main;
+    }
 
     /**
      * Convert type to a label i.e. capitalise the first letter and right align.
@@ -18,6 +32,10 @@ public enum StepType {
     public String label() {
         String titledStep = capFirst(this.toString());
         return format("%5s", titledStep);
+    }
+
+    public boolean isMain() {
+        return this.main;
     }
 
 }

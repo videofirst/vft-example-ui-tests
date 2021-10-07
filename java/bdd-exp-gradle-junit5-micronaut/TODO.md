@@ -29,8 +29,13 @@ TODO
     [x] Wrapper exceptions so we don't display output (for Intelli-J support).  
     [x] Configurable option to show full stacktrace. 
     [x] Make exception position configurable (inline / bottom) using config.
-  [.] Create / Modules
+  [.] Tidy-up
     [x] Fix bug where child actions create multiple statuses.
+    [x] Create different colours for step types.
+    [ ] Automatically quote dollar sign parameters to String.
+    [ ] Add ability to override automatic quoting of Strings.
+    [ ] Ensure stacktrace from (e.g. invalid step method) are trimmed.
+  [ ] Create / Modules
     [ ] Make saving screenshots / page models are configurable.
     [ ] Add counts in feature.
     [ ] Refactor into modules - for now (1 platform) + (1 selenide).

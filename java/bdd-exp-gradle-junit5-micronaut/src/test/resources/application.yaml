@@ -133,6 +133,7 @@ vfa:
           scenario-text: "#eeeeee"
           scenario-id: "#5599ee"
           step-label: "#88aacc"
+          step-label-other: "#667788"
           step-text: "#bbbbbb"
           action-alias: "#aa77aa"
           action-dot: "#bbbbbb"
@@ -147,5 +148,3 @@ vfa:
           status-error: "#af4f4f"
           status-ignored: "#777777"
           right-colon: "#666666"
-
-          #step-label: "#dd9966"   # Old orange one - quite nice but not at scale

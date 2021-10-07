@@ -70,6 +70,16 @@ public class Vfa {
         step(StepType.but, text);
     }
 
+    // None
+
+    public static void none() {
+        step(StepType.none);
+    }
+
+    public static void none(String text) {
+        step(StepType.none, text);
+    }
+
     // Private methods
 
     private static void step(StepType type) {

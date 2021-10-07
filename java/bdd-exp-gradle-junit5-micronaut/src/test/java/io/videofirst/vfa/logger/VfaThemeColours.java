@@ -21,6 +21,7 @@ public interface VfaThemeColours {
     String COLOUR_SCENARIO_ID = "scenario-id";
 
     String COLOUR_STEP_LABEL = "step-label";
+    String COLOUR_STEP_LABEL_OTHER = "step-label-other"; // e.g. and, but,
     String COLOUR_STEP_TEXT = "step-text";
 
     String COLOUR_ACTION_ALIAS = "action-alias";
