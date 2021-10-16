@@ -98,6 +98,10 @@ vfa:
     # NOTE: only applicable if 'vfa.exceptions.position' = 'bottom')
     indent-stacktrace: 10
 
+    # Boolean to show if we add quotes around parameters.  Can be overridden using @Step(addQuotes) annotation field
+    # or as an options parameter in a static `step(params, options, text)` call.
+    step-add-quotes: true
+
     # Aliases to ignore
     ignore-aliases:
       - "web"
@@ -135,14 +139,14 @@ vfa:
           step-label: "#88aacc"
           step-label-other: "#777777"
           step-text: "#bbbbbb"
-          step-param-string: "#cc7733"
-          step-param-other: "#ccbb33"
+          step-param-string: "#668855"
+          step-param-other: "#cc7733"
           action-alias: "#aa77aa"
           action-dot: "#bbbbbb"
           action-method: "#bbbbbb"
           action-brackets: "#bbbbbb"
           action-param-string: "#668855"
-          action-param-other: "#ffcc66"
+          action-param-other: "#cc7733"
           action-comma: "#cccc66"
           action-ignored: "#777777"
           status-passed: "#499c54"
@@ -150,3 +154,7 @@ vfa:
           status-error: "#af4f4f"
           status-ignored: "#777777"
           right-colon: "#666666"
+
+          #step-param-string: "#cc7733"    # orange
+          #action-param-other: "#ffcc66"   # yellow
+          #action-param-other: "#6699bb"  blue

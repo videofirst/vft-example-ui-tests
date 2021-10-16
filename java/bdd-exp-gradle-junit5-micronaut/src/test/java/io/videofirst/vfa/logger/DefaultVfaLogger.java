@@ -1,28 +1,22 @@
 package io.videofirst.vfa.logger;
 
-import static com.diogonunes.jcolor.Ansi.colorize;
-import static io.videofirst.vfa.util.VfaUtils.PARAM_CHAR;
-import static io.videofirst.vfa.util.VfaUtils.repeat;
-
 import com.diogonunes.jcolor.Attribute;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.enums.VfaExceptionPosition;
 import io.videofirst.vfa.enums.VfaStatus;
-import io.videofirst.vfa.model.VfaAction;
-import io.videofirst.vfa.model.VfaError;
-import io.videofirst.vfa.model.VfaFeature;
-import io.videofirst.vfa.model.VfaScenario;
-import io.videofirst.vfa.model.VfaStep;
+import io.videofirst.vfa.model.*;
 import io.videofirst.vfa.properties.VfaExceptionsProperties;
 import io.videofirst.vfa.properties.VfaLoggerProperties;
 import io.videofirst.vfa.properties.model.VfaTheme;
 import io.videofirst.vfa.util.VfaUtils;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
+
+import static com.diogonunes.jcolor.Ansi.colorize;
+import static io.videofirst.vfa.util.VfaUtils.repeat;
 
 /**
  * VFA Logger.
@@ -175,27 +169,16 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         String stepText = step.getText();
         String color = isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_TEXT;
 
-        if (VfaUtils.containsParameters(stepText)) {
-            List<Object> paramValues = step.getParams().entrySet().stream().map(p -> p.getValue())
-                .collect(Collectors.toList());
-            String unescapedStepText = VfaUtils.removeParameterEscapeCharacters(stepText);
-
-            // Based loosely on [ https://stackoverflow.com/a/5034592 ]
-            int index = unescapedStepText.indexOf(PARAM_CHAR);
-            int lastIndex = 0, paramIndex = 0;
-            while (index >= 0) {
-                // Print step text
-                print(stepText.substring(lastIndex, index), color);
-
-                // Print step parameter value
-                printStepParameterValue(step, paramValues.get(paramIndex++));
-
-                lastIndex = index + 1;
-                index = unescapedStepText.indexOf(PARAM_CHAR, index + 1);
-            }
-            // Print remaining text (if any exists)
-            if (lastIndex < unescapedStepText.length()) {
-                print(unescapedStepText.substring(lastIndex), color);
+        if (step.hasParameters()) {
+            VfaTextParameters textParameters = step.getTextParameters();
+            for (int i = 0; i < textParameters.getTexts().size(); i++) {
+                String text = textParameters.getTexts().get(i);
+                print(text, color);
+                if (i < textParameters.getIndexes().size()) {
+                    int index = textParameters.getIndexes().get(i);
+                    Object paramValue = textParameters.getValues().get(index);
+                    printStepParameterValue(step, paramValue);
+                }
             }
         } else {
             print(stepText, color);
@@ -206,7 +189,9 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         boolean isFinished = step.isFinished();
         if (paramValue instanceof String) {
             String paramValueString = (String) paramValue;
-            String quotedParamValue = step.isAddQuotes() ? VfaUtils.quote(paramValueString) : paramValueString;
+            boolean addQuotes = step.getOptions() != null && step.getOptions().getAddQuotes() != null ?
+                    step.getOptions().getAddQuotes() : loggerConfig.isStepAddQuotes();
+            String quotedParamValue = addQuotes ? VfaUtils.quote(paramValueString) : paramValueString;
             print(quotedParamValue, isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_STRING_PARAM);
         } else {
             print(String.valueOf(paramValue), isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_OTHER_PARAM);
@@ -390,7 +375,7 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
             return false;
         }
         return loggerConfig.getIgnoreAliases().get().stream()
-            .anyMatch(p -> p != null && p.trim().equalsIgnoreCase(alias));
+                .anyMatch(p -> p != null && p.trim().equalsIgnoreCase(alias));
     }
 
     protected String getStatusColour(VfaStatus status) {

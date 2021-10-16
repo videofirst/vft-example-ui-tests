@@ -1,9 +1,11 @@
 package io.videofirst.imdb;
 
+import io.videofirst.vfa.Action;
 import io.videofirst.vfa.Alias;
 import io.videofirst.vfa.Step;
 import io.videofirst.vfa.Steps;
 import io.videofirst.vfa.web.actions.WebActions;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -41,7 +43,7 @@ public class AdvNameSearch extends Steps<AdvNameSearch> {
 
     // V3
 
-    @Step
+    @Step//(addQuotes = true)
     public void when_I_type_name_$(String name) {
         web.type("name=name", name);
     }
@@ -64,13 +66,14 @@ public class AdvNameSearch extends Steps<AdvNameSearch> {
         return this;
     }
 
-    @Step(addQuotes = false)
+    @Step
     public AdvNameSearch I_type_name_$(String name) {
+        //step("I type name [ {0} ]", NO_QUOTES, name);
         web.type("name=name", name);
         return this;
     }
 
-    @Step
+    @Step(addQuotes = false)
     public AdvNameSearch I_type_birthday_$(String birthday) {
         web.type("name=birth_monthday", birthday);
         return this;
@@ -85,6 +88,17 @@ public class AdvNameSearch extends Steps<AdvNameSearch> {
     @Step
     public AdvNameSearch I_expect_to_see_results_with_name_$(String name) {
         web.exists("xpath=//h1[@class='header' and contains(text(), '" + name + "')]");
+        return this;
+    }
+
+    @Step//("I type number {2}")
+    public AdvNameSearch I_type_number_$(int number) {
+        close(number);
+        return this;
+    }
+
+    @Action
+    public AdvNameSearch close(int number) {
         return this;
     }
 

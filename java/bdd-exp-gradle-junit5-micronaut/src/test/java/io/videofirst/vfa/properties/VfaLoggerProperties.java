@@ -5,12 +5,13 @@ import io.micronaut.context.annotation.Context;
 import io.videofirst.vfa.enums.VfaLogLevel;
 import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.properties.model.VfaTheme;
+import lombok.Data;
+
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import lombok.Data;
 
 /**
  * Configuration associated with logging.
@@ -28,6 +29,7 @@ public class VfaLoggerProperties {
     private int rightColumnChars;
     private int indentChars;
     private int indentStacktrace;
+    private boolean stepAddQuotes;
     private Optional<List<String>> ignoreAliases;
     private Map<String, Map<String, Object>> themes;
 
@@ -42,8 +44,8 @@ public class VfaLoggerProperties {
             throw new VfaException("Theme [ " + theme + " ] doesn't exist - please pick a valid theme!");
         }
         this.vfaThemes = themes.entrySet().stream()
-            .map(rawTheme -> VfaTheme.parse(rawTheme.getKey(), rawTheme.getValue()))
-            .collect(Collectors.toMap(e -> e.getName(), e -> e));
+                .map(rawTheme -> VfaTheme.parse(rawTheme.getKey(), rawTheme.getValue()))
+                .collect(Collectors.toMap(e -> e.getName(), e -> e));
     }
 
     public VfaTheme getCurrentTheme() {

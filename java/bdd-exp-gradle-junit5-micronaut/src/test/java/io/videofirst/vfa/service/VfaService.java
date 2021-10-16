@@ -1,31 +1,30 @@
 package io.videofirst.vfa.service;
 
 import io.micronaut.context.annotation.Context;
+import io.videofirst.vfa.StepOptions;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.exceptions.VfaSilentException;
 import io.videofirst.vfa.logger.VfaLogger;
-import io.videofirst.vfa.model.VfaAction;
-import io.videofirst.vfa.model.VfaError;
-import io.videofirst.vfa.model.VfaFeature;
-import io.videofirst.vfa.model.VfaScenario;
-import io.videofirst.vfa.model.VfaStep;
-import io.videofirst.vfa.model.VfaTime;
+import io.videofirst.vfa.model.*;
 import io.videofirst.vfa.properties.VfaExceptionsProperties;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
-import javax.inject.Inject;
 
 /**
  * Highest level service.
- *
+ * <p>
  * Note, uses ThreadLocal approach so can be accessed easily from anywhere.
- *
+ * <p>
  * TODO (1) - Maybe add an additional service for model transformation as a lot of that is happening in here.
- *
+ * <p>
  * TODO (2) - There is 3 ThreadLocal objects - refactor to one?
- *
+ * <p>
  * TODO (3) - Add interface.
  */
 @Context // load immediately
@@ -170,6 +169,27 @@ public class VfaService {
         scenario.setStepType(stepType);
     }
 
+    public void setStepText(String text, StepOptions options, Object... parameterValues) {
+        if (text == null) {
+            throw new VfaException("Step text cannot be null");
+        }
+        VfaScenario scenario = getCurrentScenario();
+        if (scenario.getStepType() == null) {
+            throw new VfaException("Please set a step (Given, When, Then etc) before setting step text");
+        }
+        List<Object> paramValues = new ArrayList<>(Arrays.asList(parameterValues));
+        VfaTextParameters textParameters = VfaTextParameters.parse(text, paramValues);
+
+        // Create VfaStep object and continue
+        VfaStep step = VfaStep.builder()
+                .type(scenario.getStepType())
+                .options(options)
+                .text(text)
+                .textParameters(textParameters)
+                .build();
+        before(step);
+    }
+
     public VfaFeature getCurrentFeature() {
         VfaFeature feature = currentFeature.get();
         if (feature == null) {
@@ -204,10 +224,10 @@ public class VfaService {
     public VfaError getVfaError(Throwable throwable) {
         List<String> stackTrace = exceptionsProperties.getFilteredStackTrace(throwable);
         return VfaError.builder()
-            .message(throwable.getMessage())
-            .stackTrace(stackTrace)
-            .throwable(throwable)
-            .build();
+                .message(throwable.getMessage())
+                .stackTrace(stackTrace)
+                .throwable(throwable)
+                .build();
     }
 
 }

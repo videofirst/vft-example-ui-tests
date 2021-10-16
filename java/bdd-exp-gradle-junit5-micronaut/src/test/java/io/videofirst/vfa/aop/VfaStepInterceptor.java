@@ -3,17 +3,20 @@ package io.videofirst.vfa.aop;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.videofirst.vfa.Step;
+import io.videofirst.vfa.StepOptions;
 import io.videofirst.vfa.enums.StepType;
-import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.model.VfaStep;
+import io.videofirst.vfa.model.VfaTextParameters;
 import io.videofirst.vfa.service.VfaService;
 import io.videofirst.vfa.util.VfaUtils;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class VfaStepInterceptor implements MethodInterceptor<Object, Object> {
@@ -33,18 +36,21 @@ public class VfaStepInterceptor implements MethodInterceptor<Object, Object> {
 
         StepType stepType = getStepType(method);
         String stepText = getStepText(method);
-        boolean addQuotes = isAddQuotes(method);
         LinkedHashMap<String, Object> params = VfaUtils.getParamMapFromMethodContext(context);
+        StepOptions stepOptions = getStepOptions(method);
 
-        // Validate parameters before continuing
-        validateStepTextParameters(stepText, methodName, params);
+        // Create param text object and validate
+        VfaTextParameters textParameters = VfaTextParameters.parse(stepText, new ArrayList(params.values()), new ArrayList(params.keySet()));
+        validateStepParameters(methodName, stepText, textParameters);
 
+        // Create VfaStep object
         VfaStep step = VfaStep.builder()
-            .type(stepType)
-            .text(stepText)
-            .params(params)
-            .addQuotes(addQuotes)
-            .build();
+                .type(stepType)
+                .text(stepText)
+                .textParameters(textParameters)
+                .options(stepOptions)
+                .build();
+
         vfaService.before(step);
 
         Object object = context.proceed();
@@ -60,7 +66,7 @@ public class VfaStepInterceptor implements MethodInterceptor<Object, Object> {
     }
 
     private StepType getStepType(Method method) {
-        // Step type from a method e.g. given() get's precedence
+        // Step type from a method e.g. given() would get precedence
         StepType stepTypeFromMethod = vfaService.getCurrentScenario().getStepType();
         if (stepTypeFromMethod != null) {
             return stepTypeFromMethod;
@@ -75,6 +81,8 @@ public class VfaStepInterceptor implements MethodInterceptor<Object, Object> {
         Step stepAnnotation = method.getAnnotation(Step.class);
         if (!stepAnnotation.value().trim().isEmpty()) {
             return stepAnnotation.value().trim();
+        } else if (!stepAnnotation.text().trim().isEmpty()) {
+            return stepAnnotation.text().trim();
         } else {
             String methodName = method.getName();
             validateMethodName(methodName);
@@ -84,13 +92,14 @@ public class VfaStepInterceptor implements MethodInterceptor<Object, Object> {
         }
     }
 
-    private void validateStepTextParameters(String stepText, String methodName, LinkedHashMap<String, Object> params) {
-        // Count the number of parameters and ensure that it's not greater than the list of parameter map
-        long paramCount = VfaUtils.countParameters(stepText);
-        if (paramCount > params.size()) {
-            throw new VfaException("Not enough parameters - step text [ " + stepText + " ] has [ " + paramCount +
-                " ] but method [ " + methodName + " only has [ " + params.size() + " ] parameters");
-        }
+    private void validateStepParameters(String methodName, String text, VfaTextParameters textParameters) {
+        // FIXME TODO
+        // Ensure parameter indexes are not greater than number of parameters in method
+        //if (textParameters != null && textParameters.initIndexes().size() > textParameters.getValues().size()) {
+        //    throw new VfaException("Not enough parameters - step text [ " + text + " ] has [ " +
+        //            textParameters.initIndexes().size() + " ] but method [ " + methodName + " only has [ " +
+        //            textParameters.getValues().size() + " ] parameters");
+        //}
     }
 
     private void validateMethodName(String methodName) {
@@ -100,19 +109,20 @@ public class VfaStepInterceptor implements MethodInterceptor<Object, Object> {
             Matcher matcher = METHOD_STEP_AND_TEXT_VALIDATOR.matcher(methodName);
             if (!matcher.find()) {
                 throw new RuntimeException(
-                    "Invalid method [ " + methodName
-                        + " ] - must start with  [ given, when, then, but, and ], " +
-                        "followed with an underscore and at least one character");
+                        "Invalid method [ " + methodName
+                                + " ] - must start with  [ given, when, then, but, and ], " +
+                                "followed with an underscore and at least one character");
             }
         }
     }
 
-    private boolean isAddQuotes(Method method) {
+    private StepOptions getStepOptions(Method method) {
         Step stepAnnotation = method.getAnnotation(Step.class);
-        if (stepAnnotation != null) {
-            return stepAnnotation.addQuotes();
+        StepOptions stepOptions = new StepOptions();
+        if (stepAnnotation != null && stepAnnotation.addQuotes().length > 0) {
+            stepOptions.setAddQuotes(stepAnnotation.addQuotes()[0]);
         }
-        return DEFAULT_ADD_QUOTES;
+        return stepOptions;
     }
 
 }

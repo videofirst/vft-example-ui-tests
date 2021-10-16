@@ -33,14 +33,15 @@ TODO
     [x] Fix bug where child actions create multiple statuses.
     [x] Create different colours for main/other step types.
     [x] Add quotations to String parameters to logs + different colour.
-    [.] Override automatic quoting of step String params based on annotation.
-    [ ] Add default add parameter quoting in config.
-    [ ] Slow debugging - https://youtrack.jetbrains.com/issue/IDEA-27221.
-    [ ] Ensure stacktrace from (e.g. invalid step method) are trimmed.
-  [ ] Create / Modules
-    [ ] Make saving screenshots / page models are configurable.
-    [ ] Add counts in feature.
+    [x] Override automatic quoting of step String params based on annotation.
+    [x] Add default add parameter quoting in config.
+    [x] Add additional complex parameter support using curly brackets.
+    [x] Add parameter and options functionality to static `step` methods.
+    [.] Ensure stacktrace from (e.g. invalid step method) are trimmed.
+  [ ] Modules
+    [ ] Create new vfa repo (in bitbucket?)
     [ ] Refactor into modules - for now (1 platform) + (1 selenide).
+    [ ] Create selenide hierarchy.
     [ ] put "com.codeborne.selenide.impl" into it's own property hierarchy.
   [ ] Release
     [ ] Basic docs (use adoc?)
@@ -51,12 +52,15 @@ TODO
     [ ] Aim for Video First marketing end of December.
     [ ] Aim for Video First open source E2E testing.
   [ ] Extras
+    [ ] Make saving screenshots / page models are configurable.
+    [ ] Add counts in feature.
     [ ] IntelliJ options for not saving screenshots when in debug mode.
     [ ] Strict mode for Video First.
-    [ ] 
+    [ ] Slow debugging - https://youtrack.jetbrains.com/issue/IDEA-27221.
+    [ ] Log levels - show features, scenarios, steps or actions.
 
 Maybe
 =====
-    
+
     [ ] Validations? - e.g. Feature cannot have @Step or @Action methods.
     [ ] Programatic action method?

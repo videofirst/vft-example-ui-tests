@@ -3,8 +3,11 @@ package io.videofirst.vfa;
 import io.micronaut.context.annotation.Context;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.model.VfaStep;
+import io.videofirst.vfa.model.VfaTextParameters;
 import io.videofirst.vfa.service.VfaService;
+
 import javax.inject.Inject;
+import java.util.Arrays;
 
 /**
  * Collection of useful methods which can be called statically.
@@ -26,8 +29,12 @@ public class Vfa {
         step(StepType.given);
     }
 
-    public static void given(String text) {
-        step(StepType.given, text);
+    public static void given(String text, Object... paramValues) {
+        given(text, null, paramValues);
+    }
+
+    public static void given(String text, StepOptions options, Object... paramValues) {
+        step(StepType.given, options, text, paramValues);
     }
 
     // When
@@ -36,8 +43,12 @@ public class Vfa {
         step(StepType.when);
     }
 
-    public static void when(String text) {
-        step(StepType.when, text);
+    public static void when(String text, Object... paramValues) {
+        when(text, null, paramValues);
+    }
+
+    public static void when(String text, StepOptions options, Object... paramValues) {
+        step(StepType.when, options, text, paramValues);
     }
 
     // Then
@@ -46,8 +57,12 @@ public class Vfa {
         step(StepType.then);
     }
 
-    public static void then(String text) {
-        step(StepType.then, text);
+    public static void then(String text, Object... paramValues) {
+        then(text, null, paramValues);
+    }
+
+    public static void then(String text, StepOptions options, Object... paramValues) {
+        step(StepType.then, options, text, paramValues);
     }
 
     // And
@@ -56,8 +71,12 @@ public class Vfa {
         step(StepType.and);
     }
 
-    public static void and(String text) {
-        step(StepType.and, text);
+    public static void and(String text, Object... paramValues) {
+        and(text, null, paramValues);
+    }
+
+    public static void and(String text, StepOptions options, Object... paramValues) {
+        step(StepType.and, options, text, paramValues);
     }
 
     // But
@@ -66,8 +85,12 @@ public class Vfa {
         step(StepType.but);
     }
 
-    public static void but(String text) {
-        step(StepType.but, text);
+    public static void but(String text, Object... paramValues) {
+        but(text, null, paramValues);
+    }
+
+    public static void but(String text, StepOptions options, Object... paramValues) {
+        step(StepType.but, options, text, paramValues);
     }
 
     // None
@@ -76,8 +99,22 @@ public class Vfa {
         step(StepType.none);
     }
 
-    public static void none(String text) {
-        step(StepType.none, text);
+    public static void none(String text, Object... paramValues) {
+        none(text, null, paramValues);
+    }
+
+    public static void none(String text, StepOptions options, Object... paramValues) {
+        step(StepType.none, options, text, paramValues);
+    }
+
+    // Step (note, type must already be set before)
+
+    public static void step(String text, Object... paramValues) {
+        vfaService.setStepText(text, null, paramValues);
+    }
+
+    public static void step(String text, StepOptions options, Object... paramValues) {
+        vfaService.setStepText(text, options, paramValues);
     }
 
     // Private methods
@@ -86,11 +123,14 @@ public class Vfa {
         vfaService.setStepType(type);
     }
 
-    private static void step(StepType type, String text) {
+    private static void step(StepType type, StepOptions options, String text, Object... paramValues) {
+        VfaTextParameters textParameters = VfaTextParameters.parse(text, Arrays.asList(paramValues));
         VfaStep step = VfaStep.builder()
-            .type(type)
-            .text(text)
-            .build();
+                .type(type)
+                .options(options)
+                .text(text)
+                .textParameters(textParameters)
+                .build();
         vfaService.before(step);
     }
 

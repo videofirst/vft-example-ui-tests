@@ -2,17 +2,11 @@ package io.videofirst.vfa.util;
 
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.core.type.MutableArgumentValue;
-import java.util.LinkedHashMap;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.LinkedHashMap;
+
 public class VfaUtils {
-
-    // Constants
-
-    public static final char PARAM_CHAR = '$';
-
-    private static final String PARAM_DOUBLE_CHAR_SEARCH = "\\$\\$";
-    private static final String PARAM_DOUBLE_CHAR_REPLACE = " \\$";
 
     // String utils
 
@@ -44,7 +38,7 @@ public class VfaUtils {
      */
     public static String camelCaseToTitleCase(String input) {
         return input != null ? StringUtils.join(
-            StringUtils.splitByCharacterTypeCamelCase(input), ' '
+                StringUtils.splitByCharacterTypeCamelCase(input), ' '
         ) : null;
     }
 
@@ -73,7 +67,7 @@ public class VfaUtils {
      * Return a LinkedHashMap (natural order) of String/Objects from a method context.
      */
     public static LinkedHashMap<String, Object> getParamMapFromMethodContext(
-        MethodInvocationContext<Object, Object> context) {
+            MethodInvocationContext<Object, Object> context) {
         LinkedHashMap<String, Object> params = new LinkedHashMap<>();
         for (MutableArgumentValue param : context.getParameters().values()) {
             String paramName = param.getName();
@@ -81,38 +75,6 @@ public class VfaUtils {
             params.put(paramName, paramValue);
         }
         return params;
-    }
-
-    /**
-     * Return true of false if a String contains a parameter e.g. "I type the name $ in" will return true.
-     */
-    public static boolean containsParameters(String input) {
-        if (input != null && input.indexOf(PARAM_CHAR) != -1) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Remove parameter escape characters from a String e.g. "The price $$" will return "The price  $"
-     */
-    public static String removeParameterEscapeCharacters(String stepText) {
-        if (stepText == null) {
-            return null;
-        }
-        return stepText.replaceAll(PARAM_DOUBLE_CHAR_SEARCH, PARAM_DOUBLE_CHAR_REPLACE);
-    }
-
-    /**
-     * Count the number of parameters in a String. Note, we remove the escape parameter characters first before then
-     * counting these characters.
-     */
-    public static long countParameters(String input) {
-        if (!containsParameters(input)) {
-            return 0;
-        }
-        String inputWithEscapeCharsRemoved = removeParameterEscapeCharacters(input);
-        return inputWithEscapeCharsRemoved.chars().filter(c -> c == PARAM_CHAR).count();
     }
 
 }

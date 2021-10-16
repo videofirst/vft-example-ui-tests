@@ -1,35 +1,44 @@
 package io.videofirst.vfa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import io.videofirst.vfa.StepOptions;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.enums.VfaStatus;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * TODO (1) - make this more advanced e.g. static create method with "type" + "text" + (optional "params" / "addQuotes").
+ * <p>
+ * TODO (2) - Add array of ints for parameters.  Makes down-stream code much easier.
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VfaStep {
+
+    // Mandatory
 
     private StepType type;
     private String text;
-    private LinkedHashMap<String, Object> params;
-    private boolean addQuotes;
+
+    // Optional
+
+    private VfaTextParameters textParameters;
+
+    private StepOptions options;
+
+    // Internal
+
+    private VfaTime time;
 
     @JsonIgnore
     private int totalActions;   // FIXME - think this would be better as method.
-
-    private VfaTime time;
 
     @Getter
     @Setter(AccessLevel.NONE)
@@ -45,6 +54,10 @@ public class VfaStep {
     private VfaScenario scenario; // link to parent scenario
 
     // Methods
+
+    public boolean hasParameters() {
+        return this.textParameters != null;
+    }
 
     public void addAction(VfaAction action) {
         action.setStep(this); // link to parent

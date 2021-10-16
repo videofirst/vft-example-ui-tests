@@ -1,15 +1,16 @@
 package io.videofirst.vfa;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import io.micronaut.aop.Around;
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.context.annotation.Type;
 import io.videofirst.vfa.aop.VfaStepInterceptor;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
 @Retention(RUNTIME)
@@ -32,6 +33,6 @@ public @interface Step {
     /**
      * Boolean to denote if we add quotations around parameters (e.g. double quotes to String).  Defaults to true.
      */
-    boolean addQuotes() default true;
+    boolean[] addQuotes() default {};
 
 }

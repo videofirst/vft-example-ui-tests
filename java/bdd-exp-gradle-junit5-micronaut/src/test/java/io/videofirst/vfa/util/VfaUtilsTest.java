@@ -1,8 +1,8 @@
 package io.videofirst.vfa.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit test to test the methods of VfaUtils.
