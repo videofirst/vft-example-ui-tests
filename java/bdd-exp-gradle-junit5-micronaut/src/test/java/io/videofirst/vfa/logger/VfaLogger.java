@@ -26,4 +26,6 @@ public interface VfaLogger {
 
     void after(VfaFeature feature);
 
+    void error(VfaScenario error);
+
 }

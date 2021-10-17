@@ -5,7 +5,6 @@ import io.videofirst.vfa.StepOptions;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.exceptions.VfaException;
-import io.videofirst.vfa.exceptions.VfaSilentException;
 import io.videofirst.vfa.logger.VfaLogger;
 import io.videofirst.vfa.model.*;
 import io.videofirst.vfa.properties.VfaExceptionsProperties;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Highest level service.
+ * Highest level service which (should) delegate to lower level services.
  * <p>
  * Note, uses ThreadLocal approach so can be accessed easily from anywhere.
  * <p>
@@ -39,6 +38,9 @@ public class VfaService {
 
     @Inject
     private VfaReportsService reportsService;
+
+    @Inject
+    private VfaExceptionService exceptionService;
 
     @Inject
     private VfaExceptionsProperties exceptionsProperties;
@@ -141,16 +143,6 @@ public class VfaService {
         }
 
         logger.after(scenario);
-
-        // Check if an exception was thrown
-        if (scenario.getError() != null && scenario.getError().getThrowable() != null) {
-            boolean showFull = this.exceptionsProperties.isShowFull();
-            if (showFull) {
-                throw new VfaException(scenario.getError().getThrowable());
-            } else {
-                throw new VfaSilentException(scenario.getError().getThrowable());
-            }
-        }
     }
 
     public void after(VfaFeature feature) {
@@ -220,14 +212,13 @@ public class VfaService {
         return stepModel;
     }
 
-    // Maybe in another class (SRP).
+    public void handleThrowable(Throwable throwable) {
+        VfaScenario scenario = getCurrentScenario();
+        exceptionService.handleThrowable(scenario, throwable);
+    }
+
     public VfaError getVfaError(Throwable throwable) {
-        List<String> stackTrace = exceptionsProperties.getFilteredStackTrace(throwable);
-        return VfaError.builder()
-                .message(throwable.getMessage())
-                .stackTrace(stackTrace)
-                .throwable(throwable)
-                .build();
+        return exceptionService.getVfaError(throwable);
     }
 
 }

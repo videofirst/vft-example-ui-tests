@@ -181,9 +181,7 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension implem
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-        //System.out.println();
-        // Global exception handler TODO Maybe convert to silent exception here ???S
-        throw throwable;
+        vfaService.handleThrowable(throwable);
     }
 
 }

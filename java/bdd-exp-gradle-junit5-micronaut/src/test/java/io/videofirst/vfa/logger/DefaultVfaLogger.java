@@ -58,6 +58,8 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         this.indentSpaces = repeat(TEXT_SPACE, loggerConfig.getIndentChars());
     }
 
+    // Override methods
+
     @Override
     public void before(VfaFeature feature) {
         printFeatureTextAndId(feature);
@@ -106,6 +108,18 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         // nothing at min
     }
 
+    @Override
+    public void error(VfaScenario scenario) {
+        // Top level errors are always errors (is this correct ???)
+        VfaStatus status = VfaStatus.error;
+        int indent = loggerConfig.getIndentChars() * 2;  // scenario indent
+
+        println();
+        println();
+        printErrorMessage(status, scenario.getError(), indent);
+        printStacktrace(status, scenario.getError(), indent);
+    }
+
     // Protected methods
 
     /**
@@ -150,6 +164,8 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         }
         println();
     }
+
+    // Step methods
 
     protected void printStepType(VfaStep step) {
         println();
@@ -207,6 +223,8 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         }
         return COLOUR_STEP_LABEL_OTHER;
     }
+
+    // Action methods
 
     protected void printActionAlias(VfaAction action) {
         boolean isFirstAction = action.getStep().getTotalActions() == 1;
@@ -334,12 +352,11 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         if (error == null || isInlineException()) {
             return;
         }
-
-        println();
-        println();
-
         VfaStatus status = scenario.getStatus();
         int indent = loggerConfig.getIndentStacktrace();
+
+        println();
+        println();
         printErrorMessage(status, scenario.getError(), indent);
         printStacktrace(status, scenario.getError(), indent);
     }

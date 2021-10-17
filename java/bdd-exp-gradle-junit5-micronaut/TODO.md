@@ -37,7 +37,7 @@ TODO
     [x] Add default add parameter quoting in config.
     [x] Add additional complex parameter support using curly brackets.
     [x] Add parameter and options functionality to static `step` methods.
-    [.] Ensure stacktrace from (e.g. invalid step method) are trimmed.
+    [x] Ensure global exceptions are handled / formatted.
   [ ] Modules
     [ ] Create new vfa repo (in bitbucket?)
     [ ] Refactor into modules - for now (1 platform) + (1 selenide).
@@ -58,6 +58,7 @@ TODO
     [ ] Strict mode for Video First.
     [ ] Slow debugging - https://youtrack.jetbrains.com/issue/IDEA-27221.
     [ ] Log levels - show features, scenarios, steps or actions.
+    [ ] Add specific error handling to step interceptor.
 
 Maybe
 =====
