@@ -6,14 +6,19 @@ import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.enums.VfaStatus;
 import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.logger.VfaLogger;
-import io.videofirst.vfa.model.*;
+import io.videofirst.vfa.model.VfaAction;
+import io.videofirst.vfa.model.VfaError;
+import io.videofirst.vfa.model.VfaFeature;
+import io.videofirst.vfa.model.VfaScenario;
+import io.videofirst.vfa.model.VfaStep;
+import io.videofirst.vfa.model.VfaTextParameters;
+import io.videofirst.vfa.model.VfaTime;
 import io.videofirst.vfa.properties.VfaExceptionsProperties;
-
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
+import javax.inject.Inject;
 
 /**
  * Highest level service which (should) delegate to lower level services.
@@ -21,10 +26,13 @@ import java.util.Stack;
  * Note, uses ThreadLocal approach so can be accessed easily from anywhere.
  * <p>
  * TODO (1) - Maybe add an additional service for model transformation as a lot of that is happening in here.
+ * e.g. VfaModelService?
  * <p>
  * TODO (2) - There is 3 ThreadLocal objects - refactor to one?
  * <p>
- * TODO (3) - Add interface.
+ * TODO (3) - Add interface??
+ * <p>
+ * TODO (4) - Add validation service? e.g. VfaValidationService.
  */
 @Context // load immediately
 public class VfaService {
@@ -96,7 +104,7 @@ public class VfaService {
         if (noParentAction) {
             currentStep.addAction(action);   // just add action to step
         } else {
-            VfaAction parentAction = actionStack.peek(); // other wise add this action to parent action + link to step
+            VfaAction parentAction = actionStack.peek(); // otherwise, add this action to parent action + link to step
             parentAction.addAction(action, currentStep);
         }
 
@@ -130,28 +138,44 @@ public class VfaService {
     }
 
     public void after(VfaScenario scenario) {
-        // Check if last step of this scenario needs to be closed
-        List<VfaStep> steps = scenario.getSteps();
-        if (steps != null && !steps.isEmpty()) {
+        try {
+            // Check if last step of this scenario needs to be closed
+            List<VfaStep> steps = scenario.getSteps();
+            if (steps == null || steps.isEmpty()) {
+                throw new VfaException(
+                    "Scenario must contain at one more steps (Given, When, Then etc)");
+            }
+
             // check if last one has finished
             VfaStep previousStep = steps.get(steps.size() - 1);
             after(previousStep);
-        }
 
-        if (!scenario.getTime().isFinished()) {
-            scenario.setTime(scenario.getTime().finish());
-        }
+            // Validate - ensure last step contains at least one action
+            if (previousStep.getActions() == null || previousStep.getActions().isEmpty()) {
+                throw new VfaException("The last step must have at least one action");
+            }
+        } catch (Throwable t) {
+            handleThrowable(t);
+        } finally {
+            if (!scenario.getTime().isFinished()) {
+                scenario.setTime(scenario.getTime().finish());
+            }
 
-        logger.after(scenario);
+            logger.after(scenario);
+        }
     }
 
     public void after(VfaFeature feature) {
-        if (!feature.getTime().isFinished()) {
-            feature.setTime(feature.getTime().finish());
+        try {
+            if (!feature.getTime().isFinished()) {
+                feature.setTime(feature.getTime().finish());
+            }
+            reportsService.saveFeature(feature);
+        } catch (Throwable t) {
+            handleThrowable(t);
+        } finally {
+            logger.after(feature);
         }
-        reportsService.saveFeature(feature);
-
-        logger.after(feature);
     }
 
     // Other useful methods
@@ -167,25 +191,27 @@ public class VfaService {
         }
         VfaScenario scenario = getCurrentScenario();
         if (scenario.getStepType() == null) {
-            throw new VfaException("Please set a step (Given, When, Then etc) before setting step text");
+            throw new VfaException(
+                "Please set a step (Given, When, Then etc) before setting step text");
         }
         List<Object> paramValues = new ArrayList<>(Arrays.asList(parameterValues));
         VfaTextParameters textParameters = VfaTextParameters.parse(text, paramValues);
 
         // Create VfaStep object and continue
         VfaStep step = VfaStep.builder()
-                .type(scenario.getStepType())
-                .options(options)
-                .text(text)
-                .textParameters(textParameters)
-                .build();
+            .type(scenario.getStepType())
+            .options(options)
+            .text(text)
+            .textParameters(textParameters)
+            .build();
         before(step);
     }
 
     public VfaFeature getCurrentFeature() {
         VfaFeature feature = currentFeature.get();
         if (feature == null) {
-            throw new VfaException("No feature set - cannot continue"); // shouldn't happen in theory
+            throw new VfaException(
+                "No feature set - cannot continue"); // shouldn't happen in theory
         }
         return feature;
     }
@@ -204,7 +230,8 @@ public class VfaService {
         // Ensure at least one step exists, otherwise throw exception
         List<VfaStep> steps = scenario.getSteps();
         if (steps == null || steps.isEmpty()) {
-            throw new VfaException("Please set a step (Given, When, Then etc) before executing an action");
+            throw new VfaException(
+                "Please set a step (Given, When, Then etc) before executing an action");
         }
 
         // Retrieve last step

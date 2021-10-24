@@ -38,6 +38,10 @@ TODO
     [x] Add additional complex parameter support using curly brackets.
     [x] Add parameter and options functionality to static `step` methods.
     [x] Ensure global exceptions are handled / formatted.
+  [x] Validation
+    [x] Ensure that @Scenario method can't start with action.
+    [x] Ensure that @Scenario method ends with at least one action after last Step.
+    [x] Must have at least one step in a @Scenario method.
   [ ] Modules
     [ ] Create new vfa repo (in bitbucket?)
     [ ] Refactor into modules - for now (1 platform) + (1 selenide).
@@ -52,8 +56,9 @@ TODO
     [ ] Aim for Video First marketing end of December.
     [ ] Aim for Video First open source E2E testing.
   [ ] Extras
-    [ ] Make saving screenshots / page models are configurable.
     [ ] Add counts in feature.
+    [ ] Make and() optional.
+    [ ] Make saving screenshots / page models are configurable.
     [ ] IntelliJ options for not saving screenshots when in debug mode.
     [ ] Strict mode for Video First.
     [ ] Slow debugging - https://youtrack.jetbrains.com/issue/IDEA-27221.

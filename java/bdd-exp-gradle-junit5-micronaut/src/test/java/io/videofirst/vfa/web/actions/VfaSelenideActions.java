@@ -41,7 +41,8 @@ import org.openqa.selenium.remote.service.DriverService;
  *
  * @author Bob Marks
  */
-public abstract class VfaSelenideActions implements BeforeAction, AfterAction, ErrorAction, ThrowableConverter {
+public abstract class VfaSelenideActions implements BeforeAction, AfterAction, ErrorAction,
+    ThrowableConverter {
 
     private String seleniumWebBrowser = "chrome"; // FIXME inject from config
 
@@ -97,6 +98,11 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction, E
             if (parts != null && parts.length > 0) {
                 return new VfaWebAssertionError(parts[0], throwable);
             }
+        } else if (throwable instanceof org.opentest4j.AssertionFailedError) {
+            String message = throwable.getMessage().trim();
+            message = message.replaceAll("[\\n\\r]", " ") // new lines to space
+                .replaceAll("\\s{2,}", " "); // 2 or more spaces to single space
+            return new VfaWebAssertionError(message, throwable);
         }
         return throwable;
     }
@@ -153,9 +159,11 @@ public abstract class VfaSelenideActions implements BeforeAction, AfterAction, E
         @CheckReturnValue
         @NotNull
         @SuppressWarnings("deprecation")
-        public WebDriver create(Config config, Browser browser, @Nullable Proxy proxy, File browserDownloadsFolder) {
+        public WebDriver create(Config config, Browser browser, @Nullable Proxy proxy,
+            File browserDownloadsFolder) {
 
-            DriverService.Builder serviceBuilder = new ChromeDriverService.Builder().withSilent(true);
+            DriverService.Builder serviceBuilder = new ChromeDriverService.Builder().withSilent(
+                true);
             ChromeOptions options = new ChromeOptions();
             ChromeDriverService chromeDriverService = (ChromeDriverService) serviceBuilder.build();
             chromeDriverService.sendOutputTo(new OutputStream() { // !!!!!!!! THIS WORKS !!!!!!!!

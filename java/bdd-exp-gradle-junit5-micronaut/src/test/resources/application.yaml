@@ -151,7 +151,7 @@ vfa:
           action-ignored: "#777777"
           status-passed: "#499c54"
           status-failed: "#bd8e3e"
-          status-error: "#af4f4f"
+          status-error: "#cc4444"
           status-ignored: "#777777"
           right-colon: "#666666"
 

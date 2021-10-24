@@ -10,23 +10,23 @@ import io.videofirst.vfa.exceptions.VfaException;
 import io.videofirst.vfa.model.VfaFeature;
 import io.videofirst.vfa.model.VfaScenario;
 import io.videofirst.vfa.service.VfaService;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
-import org.junit.platform.commons.support.AnnotationSupport;
-
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.platform.commons.support.AnnotationSupport;
 
 /**
  * Junit5 extension which uses Microanut Framework and Video First Automation annotations.
  * <p>
  */
-public class VfaMicronautJunit5Extension extends MicronautJunit5Extension implements TestExecutionExceptionHandler {
+public class VfaMicronautJunit5Extension extends MicronautJunit5Extension implements
+    TestExecutionExceptionHandler {
 
     private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace
-            .create(VfaMicronautJunit5Extension.class);
+        .create(VfaMicronautJunit5Extension.class);
 
     private VfaService vfaService;
     private VfaDisplayNameGenerator vfaDisplayNameGenerator = VfaDisplayNameGenerator.INSTANCE; // not currently using Micronaut injection
@@ -43,7 +43,8 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension implem
 
         // Extract class / Feature annotation
         final Class<?> testClass = extensionContext.getRequiredTestClass();
-        final Feature featureAnnotation = AnnotationSupport.findAnnotation(testClass, Feature.class).get();
+        final Feature featureAnnotation = AnnotationSupport.findAnnotation(testClass, Feature.class)
+            .get();
 
         // Extract fields and create VfaFeature model (should this be done here or another service - to make more SRP?)
         long id = featureAnnotation.id();
@@ -52,11 +53,11 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension implem
         String description = featureAnnotation.description().trim();
 
         VfaFeature feature = VfaFeature.builder()
-                .id(id)
-                .text(text)
-                .description(description)
-                .className(className)
-                .build();
+            .id(id)
+            .text(text)
+            .description(description)
+            .className(className)
+            .build();
 
         this.vfaService.before(feature);
     }
@@ -82,17 +83,18 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension implem
             long id = scenarioAnnotation.id();
             String methodName = testMethod.get().getName();
             String text = vfaDisplayNameGenerator
-                    .generateDisplayNameForMethod(testInstance.getClass(), testMethod.get());
+                .generateDisplayNameForMethod(testInstance.getClass(), testMethod.get());
 
             VfaScenario scenario = VfaScenario.builder()
-                    .id(id)
-                    .text(text)
-                    .methodName(methodName)
-                    .build();
+                .id(id)
+                .text(text)
+                .methodName(methodName)
+                .build();
             this.vfaService.before(scenario);
         }
 
-        beforeEach(extensionContext, testInstance.orElse(null), testMethod.orElse(null), propertyAnnotations);
+        beforeEach(extensionContext, testInstance.orElse(null), testMethod.orElse(null),
+            propertyAnnotations);
         beforeTestMethod(buildContext(extensionContext));
     }
 
@@ -118,17 +120,20 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension implem
     }
 
     /**
-     * Builds a {@link MicronautTestValue} object from the provided class (e.g. by scanning annotations).
+     * Builds a {@link MicronautTestValue} object from the provided class (e.g. by scanning
+     * annotations).
      *
      * @param testClass the class to extract builder configuration from
      * @return a MicronautTestValue to configure the test application context
      */
     @Override
     protected MicronautTestValue buildMicronautTestValue(Class<?> testClass) {
-        final Optional<Feature> featureAnnotation = AnnotationSupport.findAnnotation(testClass, Feature.class);
+        final Optional<Feature> featureAnnotation = AnnotationSupport.findAnnotation(testClass,
+            Feature.class);
         return featureAnnotation
-                .map(VfaMicronautJunit5Extension::buildValueObject)
-                .orElseThrow(() -> new VfaException("Cannot run extension without Feature annotation present"));
+            .map(VfaMicronautJunit5Extension::buildValueObject)
+            .orElseThrow(
+                () -> new VfaException("Cannot run extension without Feature annotation present"));
     }
 
     /**
@@ -148,16 +153,16 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension implem
     private static MicronautTestValue buildValueObject(Feature feature) {
         if (feature != null) {
             return new MicronautTestValue(
-                    feature.application(),
-                    feature.environments(),
-                    feature.packages(),
-                    feature.propertySources(),
-                    feature.rollback(),
-                    feature.transactional(),
-                    feature.rebuildContext(),
-                    feature.contextBuilder(),
-                    feature.transactionMode(),
-                    feature.startApplication());
+                feature.application(),
+                feature.environments(),
+                feature.packages(),
+                feature.propertySources(),
+                feature.rollback(),
+                feature.transactional(),
+                feature.rebuildContext(),
+                feature.contextBuilder(),
+                feature.transactionMode(),
+                feature.startApplication());
         } else {
             return null;
         }
@@ -165,22 +170,23 @@ public class VfaMicronautJunit5Extension extends MicronautJunit5Extension implem
 
     private TestContext buildContext(ExtensionContext context) {
         return new TestContext(
-                applicationContext,
-                context.getTestClass().orElse(null),
-                context.getTestMethod().orElse(null),
-                context.getTestInstance().orElse(null),
-                context.getExecutionException().orElse(null));
+            applicationContext,
+            context.getTestClass().orElse(null),
+            context.getTestMethod().orElse(null),
+            context.getTestInstance().orElse(null),
+            context.getExecutionException().orElse(null));
     }
 
     private void injectEnclosingTestInstances(ExtensionContext extensionContext) {
         extensionContext.getTestInstances().ifPresent(testInstances -> {
             List<Object> allInstances = testInstances.getAllInstances();
-            allInstances.stream().limit(allInstances.size() - 1).forEach(applicationContext::inject);
+            allInstances.stream().limit(allInstances.size() - 1)
+                .forEach(applicationContext::inject);
         });
     }
 
     @Override
-    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
         vfaService.handleThrowable(throwable);
     }
 

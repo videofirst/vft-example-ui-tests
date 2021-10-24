@@ -1,27 +1,32 @@
 package io.videofirst.vfa.logger;
 
+import static com.diogonunes.jcolor.Ansi.colorize;
+import static io.videofirst.vfa.util.VfaUtils.repeat;
+
 import com.diogonunes.jcolor.Attribute;
 import io.videofirst.vfa.enums.StepType;
 import io.videofirst.vfa.enums.VfaExceptionPosition;
 import io.videofirst.vfa.enums.VfaStatus;
-import io.videofirst.vfa.model.*;
+import io.videofirst.vfa.model.VfaAction;
+import io.videofirst.vfa.model.VfaError;
+import io.videofirst.vfa.model.VfaFeature;
+import io.videofirst.vfa.model.VfaScenario;
+import io.videofirst.vfa.model.VfaStep;
+import io.videofirst.vfa.model.VfaTextParameters;
 import io.videofirst.vfa.properties.VfaExceptionsProperties;
 import io.videofirst.vfa.properties.VfaLoggerProperties;
 import io.videofirst.vfa.properties.model.VfaTheme;
 import io.videofirst.vfa.util.VfaUtils;
-
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
-
-import static com.diogonunes.jcolor.Ansi.colorize;
-import static io.videofirst.vfa.util.VfaUtils.repeat;
 
 /**
  * VFA Logger.
  * <p>
- * This class was built with extensibility in mind - all these methods are either public or protected.
+ * This class was built with extensibility in mind - all these methods are either public or
+ * protected.
  * <p>
  */
 @Singleton
@@ -100,12 +105,14 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
 
     @Override
     public void after(VfaScenario scenario) {
+        println();
+        println();
         printScenarioError(scenario);
     }
 
     @Override
     public void after(VfaFeature feature) {
-        // nothing at min
+        // nothing at min  (link to report - configurable on/off)
     }
 
     @Override
@@ -114,8 +121,6 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         VfaStatus status = VfaStatus.error;
         int indent = loggerConfig.getIndentChars() * 2;  // scenario indent
 
-        println();
-        println();
         printErrorMessage(status, scenario.getError(), indent);
         printStacktrace(status, scenario.getError(), indent);
     }
@@ -205,12 +210,15 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         boolean isFinished = step.isFinished();
         if (paramValue instanceof String) {
             String paramValueString = (String) paramValue;
-            boolean addQuotes = step.getOptions() != null && step.getOptions().getAddQuotes() != null ?
+            boolean addQuotes =
+                step.getOptions() != null && step.getOptions().getAddQuotes() != null ?
                     step.getOptions().getAddQuotes() : loggerConfig.isStepAddQuotes();
-            String quotedParamValue = addQuotes ? VfaUtils.quote(paramValueString) : paramValueString;
+            String quotedParamValue =
+                addQuotes ? VfaUtils.quote(paramValueString) : paramValueString;
             print(quotedParamValue, isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_STRING_PARAM);
         } else {
-            print(String.valueOf(paramValue), isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_OTHER_PARAM);
+            print(String.valueOf(paramValue),
+                isFinished ? COLOUR_ACTION_IGNORED : COLOUR_STEP_OTHER_PARAM);
         }
     }
 
@@ -255,13 +263,15 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
 
     protected void printActionSpaces(VfaAction action) {
         int numberOfSpaces = loggerConfig.getRightColumnChars() - line.length();
-        numberOfSpaces += action.countParents() * loggerConfig.getIndentChars();  // indent for each action level
+        numberOfSpaces +=
+            action.countParents() * loggerConfig.getIndentChars();  // indent for each action level
         printSpaces(numberOfSpaces);
     }
 
     protected int getActionErrorSpaces(VfaAction action) {
         int numberOfSpaces = loggerConfig.getRightColumnChars() - line.length();
-        numberOfSpaces += (action.countParents() + 2) * loggerConfig.getIndentChars();  // indent for each action level
+        numberOfSpaces += (action.countParents() + 2)
+            * loggerConfig.getIndentChars();  // indent for each action level
         return numberOfSpaces;
     }
 
@@ -303,9 +313,11 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
         boolean isFinished = action.isFinished();
         if (paramValue instanceof String) {
             String quotedParamValue = VfaUtils.quote((String) paramValue);
-            print(quotedParamValue, isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_STRING_PARAM);
+            print(quotedParamValue,
+                isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_STRING_PARAM);
         } else {
-            print(String.valueOf(paramValue), isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_OTHER_PARAM);
+            print(String.valueOf(paramValue),
+                isFinished ? COLOUR_ACTION_IGNORED : COLOUR_ACTION_OTHER_PARAM);
         }
     }
 
@@ -392,7 +404,7 @@ public class DefaultVfaLogger implements VfaLogger, VfaThemeColours {
             return false;
         }
         return loggerConfig.getIgnoreAliases().get().stream()
-                .anyMatch(p -> p != null && p.trim().equalsIgnoreCase(alias));
+            .anyMatch(p -> p != null && p.trim().equalsIgnoreCase(alias));
     }
 
     protected String getStatusColour(VfaStatus status) {
