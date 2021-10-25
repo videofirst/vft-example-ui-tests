@@ -3,12 +3,10 @@
 ## VFA (Video First Automation)
 
 VFA is a Java based BDD (Behavior-Driven Development) framework from the same folk who created
-[Video First](https://www.videofirst.io) (a UI testing platform which uses video to capture and
-share UI tests).
+[Video First](https://www.videofirst.io) (a UI testing platform which uses video to capture and share UI tests).
 
-VFA enables developers and testers to _quickly_ and _easily_ create beautiful automated tests with
-zero loss of power or flexibility. It focuses on E2E _(end-to-end)_ user interface tests but also
-supports testing e.g. API endpoints.
+VFA enables developers and testers to _quickly_ and _easily_ create beautiful automated tests with zero loss of power or
+flexibility. It focuses on E2E _(end-to-end)_ user interface tests but also supports testing e.g. API endpoints.
 
 ## Example Test
 
@@ -17,7 +15,7 @@ The best way to show VFA in action is with an example. The following test search
 
 ```java
 
-import static io.videofirst.vfa.Vfa.*;   // e.g. given("a user is at the homepage");
+import static io.videofirst.vfa.Vfa.*;                                  // e.g. given("a user is at the homepage");
 
 import io.videofirst.vfa.Feature;
 import io.videofirst.vfa.Scenario;
@@ -25,16 +23,16 @@ import io.videofirst.vfa.web.actions.WebActions;
 
 import javax.inject.Inject;
 
-@Feature                                             // 1) This marks a class as a VFA feature 
+@Feature                                                                // 1) @Feature marks class as a VFA feature 
 public class SearchFilms {
 
     @Inject
     private WebActions web;
 
-    @Scenario                                        // 2) This marks a method as a VFA scenario
+    @Scenario                                                           // 2) @Scenario marks method as a VFA scenario
     public void search_for_film_The_Green_Mile() {
-        given("a user is at the homepage");          // 3) Static method creates a VFA step
-        web.open("https://www.imdb.com");            // 4) This methods runs Lower-level VFA action 
+        given("a user is at the homepage");                             // 3) Static method creates high-level VFA step
+        web.open("https://www.imdb.com");                               // 4) This method runs a low-level VFA action 
 
         when("the user types the \"The Green Mile\" into search box");
         web.type("id=suggestion-search", "The Green Mile");
@@ -72,36 +70,44 @@ Feature: Search Films
 
 VFA outputs standard BDD format i.e. _Feature_ (e.g. `Search Films`) -> _Scenarios_
 (e.g. `Search for Film The Green Mile`) -> _Steps_ (e.g. `Given a user is at the homepage`).    
-A unique feature of VFA are actions (e.g. `open ("https://www.imdb.com")`) and how they are
-displayed i.e. high level steps are shown on the left (which anyone can understand) and lower level
-actions are displayed on the right-hand-side (useful for engineers / testers).
+A unique feature of VFA are actions (e.g. `open ("https://www.imdb.com")`) and how they are displayed i.e. high level
+steps are shown on the left (which anyone can understand) and lower level actions are displayed on the right-hand-side (
+useful for engineers / testers).
 
-The above test can be executed like any JUnit test. During the execution, JSON files are generated
-that can then be used afterwards to generate test reports.
+The above test can be executed like any JUnit test. During the execution, JSON files are generated that can then be used
+afterwards to generate test reports.
 
 ## What Problems does VFA Solve?
 
-VFA is the result of many chats with lots of testers and engineers about their experiences creating
-and running E2E user interface tests. These problems included: -
+VFA is the result of many chats with lots of testers and engineers about their experiences creating and running E2E user
+interface tests. These problems included: -
 
-1. **Getting Started** - engineers often complain that creating a new UI automation projects takes a
-   long time to set up. VFA removes that time with a project generator   
-   [VFA Starter](https://start.videofirst.io)) which generates everything you need to get started.
+| Problem              | Outline                                       | VFA Solution                                  |
+| -------------------- | --------------------------------------------- | --------------------------------------------- |
+| **Getting Started**  | Creating new UI test automation project takes | VFA provides a starter GitHub project and a   |
+|                      | considerable time and effort.                 | project generator is coming soon.             |
+| -------------------- | --------------------------------------------- | --------------------------------------------- |
+| **Getting Started**  | Creating new UI test automation project takes | VFA provides a starter GitHub project and a   |
+|                      | considerable time and effort.                 | project generator is coming soon.             |
+
+1.
+    - engineers often complain that creating a new UI automation projects takes a long time to set up. VFA removes that
+      time with a project generator   
+      [VFA Starter](https://start.videofirst.io)) which generates everything you need to get started.
 2. **Complexity** - some frameworks like Cucumber require you create multiple files
-   (e.g. a feature file, a class and test code) when creating your first test. This obviously puts
-   off new users. With VFA you can write your first full E2E with a single method of a single class.
-3. **Structure** - it can be confusing for new users to know how to properly structure tests. VFA
-   enforces an opinionated structure (_feature_ -> _scenario_ -> _steps_ -> _actions_) which ensures
-   a high quality structure with many advantages (including scaling the test codebase).
-4. **Confusing Logs** - a common complaint is messy logs where it isn't clear what is happening at
-   either a high or low level. VFA produces beautiful logs and shows high level contextual BDD
-   (steps) on the left-hand-side and lower-level action logs on the right-hand-side which saves
-   users valuable time when understanding / fixing broken tests.
-5. **Java Stack Traces** - another complaint is massive Java exception stack traces. VFA keeps stack
-   traces to a bare minimum which looks better and saves time debugging / fixing broken tests.
-7. **Configurability** - another problem testers encounter is configuring their tests, especially on
-   different environments. VFA uses [Micronaut](https://micronaut.io/) which provides easy and
-   powerful configurability.
+   (e.g. a feature file, a class and test code) when creating your first test. This obviously puts off new users. With
+   VFA you can write your first full E2E with a single method of a single class.
+3. **Structure** - it can be confusing for new users to know how to properly structure tests. VFA enforces an
+   opinionated structure (_feature_ -> _scenario_ -> _steps_ -> _actions_) which ensures a high quality structure with
+   many advantages (including scaling the test codebase).
+4. **Confusing Logs** - a common complaint is messy logs where it isn't clear what is happening at either a high or low
+   level. VFA produces beautiful logs and shows high level contextual BDD
+   (steps) on the left-hand-side and lower-level action logs on the right-hand-side which saves users valuable time when
+   understanding / fixing broken tests.
+5. **Java Stack Traces** - another complaint is massive Java exception stack traces. VFA keeps stack traces to a bare
+   minimum which looks better and saves time debugging / fixing broken tests.
+7. **Configurability** - another problem testers encounter is configuring their tests, especially on different
+   environments. VFA uses [Micronaut](https://micronaut.io/) which provides easy and powerful configurability.
 
 ## What's Next
 
