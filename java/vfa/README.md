@@ -100,7 +100,7 @@ interface tests. These problems included: -
       <td nowrap><b>2. Complexity</b></td>
       <td>
         Some frameworks like Cucumber require you create multiple files - e.g. (1) a feature file, (2) a class with complex 
-        regular expressions to link up the feature file (3) the actual test code. This obviously puts off new users.
+        regular expressions to link up the feature file (3) the actual test code. This can be off putting for new users.
       </td>
       <td>
         VFA you can write your first full E2E with a single method of a single class making it breeze for new users. 
@@ -113,8 +113,8 @@ interface tests. These problems included: -
         the codebase starts to increase.
       </td>
       <td> 
-        VFA enforces an opinionated structure (_feature_ -> _scenario_ -> _steps_ -> _actions_) which ensures a high 
-        quality structure with many advantages (especially when the size of the codebase increases).
+        VFA enforces an opinionated structure (<i>feature -> scenario -> steps -> actions</i>) which ensures a high 
+        quality structure with many advantages </i>(especially when the size of the codebase increases)</i>.
       </td>
     </tr>
     <tr>
@@ -144,7 +144,7 @@ interface tests. These problems included: -
         Configuring tests on e.g. different environments can be tricky. 
       </td>
       <td>
-        VFA uses [Micronaut](https://micronaut.io/) which provides easy and powerful configurability.
+        VFA uses <a href="https://micronaut.io">Micronaut</a> which provides easy and powerful configurability.
       </td>
     </tr>
   </tbody>
