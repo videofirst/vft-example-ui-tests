@@ -82,13 +82,18 @@ afterwards to generate test reports.
 VFA is the result of many chats with lots of testers and engineers about their experiences creating and running E2E user
 interface tests. These problems included: -
 
-| Problem              | Outline                                       | VFA Solution                                  |
-| -------------------- | --------------------------------------------- | --------------------------------------------- |
-| **Getting Started**  | Creating new UI test automation project takes | VFA provides a starter GitHub project and a   |
-|                      | considerable time and effort.                 | project generator is coming soon.             |
-| -------------------- | --------------------------------------------- | --------------------------------------------- |
-| **Getting Started**  | Creating new UI test automation project takes | VFA provides a starter GitHub project and a   |
-|                      | considerable time and effort.                 | project generator is coming soon.             |
+<table>
+  <tr>
+    <th>Problem</th>
+    <th>Outline</th>
+    <th>Solution</th>
+  </tr>
+  <tr>
+    <td>**Getting Started**</td>
+    <td>Creating new UI test automation project takes considerable time and effort.</td>
+    <td>VFA provides a starter GitHub project and a  project generator is coming soon.</td>
+  </tr>
+</table>
 
 1.
     - engineers often complain that creating a new UI automation projects takes a long time to set up. VFA removes that
