@@ -89,32 +89,66 @@ interface tests. These problems included: -
     <th>Solution</th>
   </tr>
   <tr>
-    <td>**Getting Started**</td>
-    <td>Creating new UI test automation project takes considerable time and effort.</td>
-    <td>VFA provides a starter GitHub project and a  project generator is coming soon.</td>
+    <td><b>Getting Started</b></td>
+    <td>Creating a new UI test automation project can take a considerable amount of time.</td>
+    <td>VFA provides a starter GitHub project to quickly get started (a project generator is also coming soon).</td>
+  </tr>  
+  <tr>
+    <td><b>Complexity</b></td>
+    <td>
+      Some frameworks like Cucumber require you create multiple files - e.g. (1) a feature file, (2) a class with complex 
+      regular expressions to link up the feature file (3) the actual test code. This obviously puts off new users.
+    </td>
+    <td>
+      VFA you can write your first full E2E with a single method of a single class making it breeze for new users. 
+    </td>
+  </tr>
+  <tr>
+    <td><b>Structure</b></td>
+    <td>
+      Knowing how to properly structure your tests can be daunting and confusing for users, especially as the size of 
+      the codebase starts to increase.
+    </td>
+    <td> 
+      VFA enforces an opinionated structure (_feature_ -> _scenario_ -> _steps_ -> _actions_) which ensures a high 
+      quality structure with many advantages (especially when the size of the codebase increases).
+    </td>
+  </tr>
+  <tr>
+    <td><b>Confusing Logs</b></td>
+    <td>
+      A common complaint are tests which produce messy logs where it isn't clear what is happening (at either a high or
+      low level).
+    </td>
+    <td>
+      VFA produces beautiful logs and shows high level contextual BDD (steps) on the left-hand-side and lower-level 
+      action logs on the right-hand-side which saves users valuable time when understanding / fixing broken tests.
+    </td>
+  </tr>
+  <tr>
+    <td><b>Stack Traces</b></td>
+    <td>
+      Another complaint are logs from tests which contain huge Java exception stack traces.  
+    </td>
+    <td>
+     VFA ensures stack traces are kept to a bare minimum which not only looks better and saves time when debugging and
+     fixing broken tests.
+    </td>
+  </tr>
+  <tr>
+    <td><b>Configurability</b></td>
+    <td>
+      Configuring tests on e.g. different environments can be tricky. 
+    </td>
+    <td>
+      VFA uses [Micronaut](https://micronaut.io/) which provides easy and powerful configurability.
+    </td>
   </tr>
 </table>
 
-1.
-    - engineers often complain that creating a new UI automation projects takes a long time to set up. VFA removes that
-      time with a project generator   
-      [VFA Starter](https://start.videofirst.io)) which generates everything you need to get started.
-2. **Complexity** - some frameworks like Cucumber require you create multiple files
-   (e.g. a feature file, a class and test code) when creating your first test. This obviously puts off new users. With
-   VFA you can write your first full E2E with a single method of a single class.
-3. **Structure** - it can be confusing for new users to know how to properly structure tests. VFA enforces an
-   opinionated structure (_feature_ -> _scenario_ -> _steps_ -> _actions_) which ensures a high quality structure with
-   many advantages (including scaling the test codebase).
-4. **Confusing Logs** - a common complaint is messy logs where it isn't clear what is happening at either a high or low
-   level. VFA produces beautiful logs and shows high level contextual BDD
-   (steps) on the left-hand-side and lower-level action logs on the right-hand-side which saves users valuable time when
-   understanding / fixing broken tests.
-5. **Java Stack Traces** - another complaint is massive Java exception stack traces. VFA keeps stack traces to a bare
-   minimum which looks better and saves time debugging / fixing broken tests.
-7. **Configurability** - another problem testers encounter is configuring their tests, especially on different
-   environments. VFA uses [Micronaut](https://micronaut.io/) which provides easy and powerful configurability.
-
 ## What's Next
+
+todo
 
 ## License
 
