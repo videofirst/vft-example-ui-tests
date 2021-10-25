@@ -2,18 +2,18 @@
 
 ## VFA (Video First Automation)
 
-VFA (**Video First Automation**) is a Java based BDD (Behavior-Driven Development) framework from
-the same folk who created [Video First](https://www.videofirst.io) (a UI testing platform which uses
-video to capture and share UI tests).
+VFA is a Java based BDD (Behavior-Driven Development) framework from the same folk who created
+[Video First](https://www.videofirst.io) (a UI testing platform which uses video to capture and
+share UI tests).
 
 VFA enables developers and testers to _quickly_ and _easily_ create beautiful automated tests with
-zero loss of power or flexibility. It focuses on E2E (end-to-end) user interface tests but also
+zero loss of power or flexibility. It focuses on E2E _(end-to-end)_ user interface tests but also
 supports testing e.g. API endpoints.
 
 ## Example Test
 
 The best way to show VFA in action is with an example. The following test searching for the film
-"The Green Mile" on the [IMDB](https://www.imdb.com) (Internet Movie DataBase) website.
+"The Green Mile" on the [IMDB](https://www.imdb.com) _(Internet Movie DataBase)_ website.
 
 ```java
 
@@ -25,16 +25,16 @@ import io.videofirst.vfa.web.actions.WebActions;
 
 import javax.inject.Inject;
 
-@Feature
+@Feature                                             // 1) This marks a class as a VFA feature 
 public class SearchFilms {
 
     @Inject
-    private WebActions web;    // Injected low-level action class
+    private WebActions web;
 
-    @Scenario
+    @Scenario                                        // 2) This marks a method as a VFA scenario
     public void search_for_film_The_Green_Mile() {
-        given("a user is at the homepage");
-        web.open("https://www.imdb.com");
+        given("a user is at the homepage");          // 3) Static method creates a VFA step
+        web.open("https://www.imdb.com");            // 4) This methods runs Lower-level VFA action 
 
         when("the user types the \"The Green Mile\" into search box");
         web.type("id=suggestion-search", "The Green Mile");
@@ -81,8 +81,8 @@ that can then be used afterwards to generate test reports.
 
 ## What Problems does VFA Solve?
 
-VFA is a the result of chatting to many testers and engineers about their experiences creating and
-running E2E user interface tests.
+VFA is the result of many chats with lots of testers and engineers about their experiences creating
+and running E2E user interface tests. These problems included: -
 
 1. **Getting Started** - engineers often complain that creating a new UI automation projects takes a
    long time to set up. VFA removes that time with a project generator   
