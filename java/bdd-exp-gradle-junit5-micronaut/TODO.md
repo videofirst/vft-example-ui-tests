@@ -42,11 +42,12 @@ TODO
     [x] Ensure that @Scenario method can't start with action.
     [x] Ensure that @Scenario method ends with at least one action after last Step.
     [x] Must have at least one step in a @Scenario method.
-  [ ] Modules
-    [ ] Create new vfa repo (in bitbucket?)
+  [.] Modules
+    [x] Create README.md
     [ ] Refactor into modules - for now (1 platform) + (1 selenide).
     [ ] Create selenide hierarchy.
     [ ] put "com.codeborne.selenide.impl" into it's own property hierarchy.
+    [ ] Create new vfa GitHub repo 
   [ ] Release
     [ ] Basic docs (use adoc?)
     [ ] Aim for Alpha Release end of October.
