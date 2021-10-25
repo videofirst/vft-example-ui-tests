@@ -83,67 +83,71 @@ VFA is the result of many chats with lots of testers and engineers about their e
 interface tests. These problems included: -
 
 <table>
-  <tr>
-    <th>Problem</th>
-    <th>Outline</th>
-    <th>Solution</th>
-  </tr>
-  <tr>
-    <td><b>Getting Started</b></td>
-    <td>Creating a new UI test automation project can take a considerable amount of time.</td>
-    <td>VFA provides a starter GitHub project to quickly get started (a project generator is also coming soon).</td>
-  </tr>  
-  <tr>
-    <td><b>Complexity</b></td>
-    <td>
-      Some frameworks like Cucumber require you create multiple files - e.g. (1) a feature file, (2) a class with complex 
-      regular expressions to link up the feature file (3) the actual test code. This obviously puts off new users.
-    </td>
-    <td>
-      VFA you can write your first full E2E with a single method of a single class making it breeze for new users. 
-    </td>
-  </tr>
-  <tr>
-    <td><b>Structure</b></td>
-    <td>
-      Knowing how to properly structure your tests can be daunting and confusing for users, especially as the size of 
-      the codebase starts to increase.
-    </td>
-    <td> 
-      VFA enforces an opinionated structure (_feature_ -> _scenario_ -> _steps_ -> _actions_) which ensures a high 
-      quality structure with many advantages (especially when the size of the codebase increases).
-    </td>
-  </tr>
-  <tr>
-    <td><b>Confusing Logs</b></td>
-    <td>
-      A common complaint are tests which produce messy logs where it isn't clear what is happening (at either a high or
-      low level).
-    </td>
-    <td>
-      VFA produces beautiful logs and shows high level contextual BDD (steps) on the left-hand-side and lower-level 
-      action logs on the right-hand-side which saves users valuable time when understanding / fixing broken tests.
-    </td>
-  </tr>
-  <tr>
-    <td><b>Stack Traces</b></td>
-    <td>
-      Another complaint are logs from tests which contain huge Java exception stack traces.  
-    </td>
-    <td>
-     VFA ensures stack traces are kept to a bare minimum which not only looks better and saves time when debugging and
-     fixing broken tests.
-    </td>
-  </tr>
-  <tr>
-    <td><b>Configurability</b></td>
-    <td>
-      Configuring tests on e.g. different environments can be tricky. 
-    </td>
-    <td>
-      VFA uses [Micronaut](https://micronaut.io/) which provides easy and powerful configurability.
-    </td>
-  </tr>
+  <thead>
+    <tr>
+      <th>Problem</th>
+      <th>Outline</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td nowrap><b>1. Getting Started</b></tdnowrap>
+      <td>Creating a new UI test automation project can take a considerable amount of time.</td>
+      <td>VFA provides a starter GitHub project to quickly get started (a project generator is also coming soon).</td>
+    </tr>  
+    <tr>
+      <td nowrap><b>2. Complexity</b></td>
+      <td>
+        Some frameworks like Cucumber require you create multiple files - e.g. (1) a feature file, (2) a class with complex 
+        regular expressions to link up the feature file (3) the actual test code. This obviously puts off new users.
+      </td>
+      <td>
+        VFA you can write your first full E2E with a single method of a single class making it breeze for new users. 
+      </td>
+    </tr>
+    <tr>
+      <td nowrap><b>3. Structure</b></td>
+      <td>
+        Knowing how to properly structure your tests can be daunting and confusing for users, especially as the size of 
+        the codebase starts to increase.
+      </td>
+      <td> 
+        VFA enforces an opinionated structure (_feature_ -> _scenario_ -> _steps_ -> _actions_) which ensures a high 
+        quality structure with many advantages (especially when the size of the codebase increases).
+      </td>
+    </tr>
+    <tr>
+      <td nowrap><b>4. Confusing Logs</b></td>
+      <td>
+        A common complaint are tests which produce messy logs where it isn't clear what is happening (at either a high or
+        low level).
+      </td>
+      <td>
+        VFA produces beautiful logs and shows high level contextual BDD (steps) on the left-hand-side and lower-level 
+        action logs on the right-hand-side which saves users valuable time when understanding / fixing broken tests.
+      </td>
+    </tr>
+    <tr>
+      <td nowrap><b>5. Stack Traces</b></td>
+      <td>
+        Another complaint are logs from tests which contain huge Java exception stack traces.  
+      </td>
+      <td>
+       VFA ensures stack traces are kept to a bare minimum which not only looks better and saves time when debugging and
+       fixing broken tests.
+      </td>
+    </tr>
+    <tr>
+      <td nowrap><b>6. Configurability</b></td>
+      <td>
+        Configuring tests on e.g. different environments can be tricky. 
+      </td>
+      <td>
+        VFA uses [Micronaut](https://micronaut.io/) which provides easy and powerful configurability.
+      </td>
+    </tr>
+  </tbody>
 </table>
 
 ## What's Next
